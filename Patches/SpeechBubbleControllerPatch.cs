@@ -47,11 +47,11 @@ public class SpeechBubbleControllerPatch
         }
         else if (newSpeechController.actor != Player.Instance && InteractionController.Instance.dialogMode && InteractionController.Instance.talkingTo == newSpeechController.interactable)
         {
-            babbleType = BabbleType.FirstPersonSpeech;
+            babbleType = BabbleType.ConversationalSpeech;
         }
         else
         {
-            babbleType = BabbleType.ThirdPersonSpeech;
+            babbleType = BabbleType.OverheardSpeech;
         }
         
         BabblerPool.Play(__instance.actualString, babbleType, anyHuman);

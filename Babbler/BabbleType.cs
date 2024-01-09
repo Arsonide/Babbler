@@ -2,7 +2,7 @@
 
 public enum BabbleType
 {
-    FirstPersonSpeech,
-    ThirdPersonSpeech,
+    ConversationalSpeech,
+    OverheardSpeech,
     PhoneSpeech,
 }

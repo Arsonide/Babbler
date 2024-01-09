@@ -9,10 +9,6 @@ namespace Babbler;
 
 public class Babbler : MonoBehaviour
 {
-    private const float PHONETIC_OVERLAP = 0.2f;
-    private const float MIN_PITCH = 0.65f;
-    private const float MAX_PITCH = 3f;
-    
     public bool IsBabbling { get; private set; }
     
     private List<PhoneticSound> _phoneticsToBabble = new List<PhoneticSound>();
@@ -102,16 +98,18 @@ public class Babbler : MonoBehaviour
         _currentBabbleType = babbleType;
         _currentHuman = human;
         _currentSourceTransform = babbleType != BabbleType.PhoneSpeech ? _currentHuman.lookAtThisTransform : GetPlayerPhoneTransform();
-        _currentPitch = Mathf.Lerp(MIN_PITCH, MAX_PITCH, 1f - _currentHuman.genderScale);
+        _currentPitch = Mathf.Lerp(BabblerConfig.MinimumPitch, BabblerConfig.MaximumPitch, 1f - _currentHuman.genderScale);
         
         switch (_currentBabbleType)
         {
-            case BabbleType.FirstPersonSpeech:
+            case BabbleType.ConversationalSpeech:
+                _currentVolume = BabblerConfig.ConversationalVolume;
+                break;
             case BabbleType.PhoneSpeech:
-                _currentVolume = BabblerConfig.FirstPartyVolume;
+                _currentVolume = BabblerConfig.PhoneVolume;
                 break;
             default:
-                _currentVolume = BabblerConfig.ThirdPartyVolume;
+                _currentVolume = BabblerConfig.OverheardVolume;
                 break;
         }
         
@@ -135,7 +133,7 @@ public class Babbler : MonoBehaviour
 
             _activeChannels.Add(channel);
             
-            yield return new WaitForSeconds(Mathf.Max(0f, phonetic.Length - PHONETIC_OVERLAP));
+            yield return new WaitForSeconds(Mathf.Max(0f, phonetic.Length - BabblerConfig.SyllableSpeed));
         }
         
         // Releasing will set the gameobject inactive, which will StopBabbleRoutine.
