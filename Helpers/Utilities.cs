@@ -4,7 +4,7 @@ namespace Babbler;
 
 public static class Utilities
 {
-    public const bool DEBUG_BUILD = true;
+    public const bool DEBUG_BUILD = false;
     
     public static void Log(string message, LogLevel level = LogLevel.Info)
     {

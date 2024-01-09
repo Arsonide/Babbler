@@ -6,7 +6,6 @@ public static class FMODReferences
 {
     public static FMOD.System System { get; private set; }
     
-    private static ChannelGroup MasterGroup;
     private static ChannelGroup SpeechGroup;
     private static ChannelGroup PhoneGroup;
 
@@ -16,9 +15,8 @@ public static class FMODReferences
     {
         System = FMODUnity.RuntimeManager.CoreSystem;
         
-        System.getMasterChannelGroup(out MasterGroup);
-        System.createChannelGroup("BabblerPhoneGroup", out PhoneGroup);
         System.createChannelGroup("BabblerSpeechGroup", out SpeechGroup);
+        System.createChannelGroup("BabblerPhoneGroup", out PhoneGroup);
         
         System.createDSPByType(DSP_TYPE.MULTIBAND_EQ, out PhoneDSP);
 
@@ -37,11 +35,6 @@ public static class FMODReferences
 
     public static ChannelGroup GetChannelGroup(BabbleType babbleType)
     {
-        if (babbleType == BabbleType.PhoneSpeech)
-        {
-            return PhoneGroup;
-        }
-
-        return SpeechGroup;
+        return babbleType == BabbleType.PhoneSpeech ? PhoneGroup : SpeechGroup;
     }
 }

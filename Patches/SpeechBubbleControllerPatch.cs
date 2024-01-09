@@ -65,7 +65,6 @@ public class SpeechBubbleControllerPatch
         }
 
         string inputLower = input.ToLowerInvariant();
-        
         int count = 1;
         
         for (int i = 1; i < inputLower.Length; i++)

@@ -2,24 +2,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using FMOD;
 using UnityEngine;
+using FMOD;
 
 namespace Babbler;
 
 public class Babbler : MonoBehaviour
 {
-    public bool IsBabbling { get; private set; }
-    
-    private List<PhoneticSound> _phoneticsToBabble = new List<PhoneticSound>();
-    private List<Channel> _activeChannels = new List<Channel>();
+    private readonly List<PhoneticSound> _phoneticsToBabble = new List<PhoneticSound>();
+    private readonly List<Channel> _activeChannels = new List<Channel>();
     private Coroutine _babbleCoroutine;
     
     private Human _currentHuman;
-    private Transform _currentSourceTransform;
+    private Transform _currentSource;
+    
+    private BabbleType _currentBabbleType;
     private float _currentPitch;
     private float _currentVolume;
-    private BabbleType _currentBabbleType;
 
     private void OnEnable()
     {
@@ -33,7 +32,7 @@ public class Babbler : MonoBehaviour
 
     private void Update()
     {
-        Vector3 position = _currentSourceTransform.position;
+        Vector3 position = _currentSource.position;
         bool dirty = false;
         
         for (int i = _activeChannels.Count - 1; i >= 0; --i)
@@ -57,28 +56,6 @@ public class Babbler : MonoBehaviour
         }
     }
 
-    private void PopulatePhonetics(string input)
-    {
-        _phoneticsToBabble.Clear();
-        ReadOnlySpan<char> inputSpan = input.ToLowerInvariant().AsSpan();
-
-        for (int i = 0; i < inputSpan.Length; ++i)
-        {
-            ReadOnlySpan<char> span = inputSpan.Slice(i, Math.Min(2, inputSpan.Length - i));
-            string spanString = span.ToString();
-
-            if (span.Length > 1 && PhoneticSoundDatabase.TryGetPhonetic(spanString, out PhoneticSound phonetic))
-            {
-                _phoneticsToBabble.Add(phonetic);
-                i++;
-            }
-            else if (PhoneticSoundDatabase.TryGetPhonetic(spanString[0].ToString(), out phonetic))
-            {
-                _phoneticsToBabble.Add(phonetic);
-            }
-        }
-    }
-
     public void StopBabbleRoutine()
     {
         if (_babbleCoroutine != null)
@@ -87,17 +64,16 @@ public class Babbler : MonoBehaviour
             _babbleCoroutine = null;
         }
 
-        IsBabbling = false;
         _activeChannels.Clear();
     }
 
-    public void StartBabbleRoutine( string babbleInput, BabbleType babbleType, Human human)
+    public void StartBabbleRoutine(string babbleInput, BabbleType babbleType, Human human)
     {
         StopBabbleRoutine();
         
         _currentBabbleType = babbleType;
         _currentHuman = human;
-        _currentSourceTransform = babbleType != BabbleType.PhoneSpeech ? _currentHuman.lookAtThisTransform : GetPlayerPhoneTransform();
+        _currentSource = babbleType != BabbleType.PhoneSpeech ? _currentHuman.lookAtThisTransform : GetPlayerPhoneTransform();
         _currentPitch = Mathf.Lerp(BabblerConfig.MinimumPitch, BabblerConfig.MaximumPitch, 1f - _currentHuman.genderScale);
         
         switch (_currentBabbleType)
@@ -119,8 +95,6 @@ public class Babbler : MonoBehaviour
 
     private IEnumerator BabbleRoutine()
     {
-        IsBabbling = true;
-        
         foreach (PhoneticSound phonetic in _phoneticsToBabble)
         {
             FMODReferences.System.playSound(phonetic.Sound, FMODReferences.GetChannelGroup(_currentBabbleType), false, out Channel channel);
@@ -128,7 +102,7 @@ public class Babbler : MonoBehaviour
             channel.setPitch(_currentPitch);
             channel.setVolume(_currentVolume);
         
-            SetChannelPosition(_currentSourceTransform.position, channel);
+            SetChannelPosition(_currentSource.position, channel);
             FMODReferences.System.update();
 
             _activeChannels.Add(channel);
@@ -136,8 +110,30 @@ public class Babbler : MonoBehaviour
             yield return new WaitForSeconds(Mathf.Max(0f, phonetic.Length - BabblerConfig.SyllableSpeed));
         }
         
-        // Releasing will set the gameobject inactive, which will StopBabbleRoutine.
+        // Releasing will set the GameObject inactive, which will trigger StopBabbleRoutine.
         BabblerPool.ReleaseBabbler(this);
+    }
+    
+    private void PopulatePhonetics(string input)
+    {
+        _phoneticsToBabble.Clear();
+        ReadOnlySpan<char> inputSpan = input.ToLowerInvariant().AsSpan();
+
+        for (int i = 0; i < inputSpan.Length; ++i)
+        {
+            ReadOnlySpan<char> span = inputSpan.Slice(i, Math.Min(2, inputSpan.Length - i));
+            string spanString = span.ToString();
+
+            if (span.Length > 1 && PhoneticSoundDatabase.TryGetPhonetic(spanString, out PhoneticSound phonetic))
+            {
+                _phoneticsToBabble.Add(phonetic);
+                i++;
+            }
+            else if (PhoneticSoundDatabase.TryGetPhonetic(spanString[0].ToString(), out phonetic))
+            {
+                _phoneticsToBabble.Add(phonetic);
+            }
+        }
     }
 
     private void SetChannelPosition(Vector3 position, Channel channel)
