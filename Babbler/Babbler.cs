@@ -15,7 +15,7 @@ public class Babbler : MonoBehaviour
     
     public bool IsBabbling { get; private set; }
     
-    private List<BabblePhonetic> _phoneticsToBabble = new List<BabblePhonetic>();
+    private List<PhoneticSound> _phoneticsToBabble = new List<PhoneticSound>();
     private List<Channel> _activeChannels = new List<Channel>();
     private Coroutine _babbleCoroutine;
     
@@ -71,12 +71,12 @@ public class Babbler : MonoBehaviour
             ReadOnlySpan<char> span = inputSpan.Slice(i, Math.Min(2, inputSpan.Length - i));
             string spanString = span.ToString();
 
-            if (span.Length > 1 && BabblerPlugin.TryGetPhonetic(spanString, out BabblePhonetic phonetic))
+            if (span.Length > 1 && PhoneticSoundDatabase.TryGetPhonetic(spanString, out PhoneticSound phonetic))
             {
                 _phoneticsToBabble.Add(phonetic);
                 i++;
             }
-            else if (BabblerPlugin.TryGetPhonetic(spanString[0].ToString(), out phonetic))
+            else if (PhoneticSoundDatabase.TryGetPhonetic(spanString[0].ToString(), out phonetic))
             {
                 _phoneticsToBabble.Add(phonetic);
             }
@@ -123,7 +123,7 @@ public class Babbler : MonoBehaviour
     {
         IsBabbling = true;
         
-        foreach (BabblePhonetic phonetic in _phoneticsToBabble)
+        foreach (PhoneticSound phonetic in _phoneticsToBabble)
         {
             FMODReferences.System.playSound(phonetic.Sound, FMODReferences.GetChannelGroup(_currentBabbleType), false, out Channel channel);
             

@@ -1,6 +1,6 @@
 ﻿namespace Babbler;
 
-public class BabblePhonetic
+public class PhoneticSound
 {
     public string Phonetic;
     public string FilePath;
