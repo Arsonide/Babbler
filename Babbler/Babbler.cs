@@ -73,8 +73,15 @@ public class Babbler : MonoBehaviour
         
         _currentBabbleType = babbleType;
         _currentHuman = human;
-        _currentSource = babbleType != BabbleType.PhoneSpeech ? _currentHuman.lookAtThisTransform : GetPlayerPhoneTransform();
-        _currentPitch = Mathf.Lerp(BabblerConfig.MinimumPitch, BabblerConfig.MaximumPitch, 1f - _currentHuman.genderScale);
+        _currentSource = babbleType != BabbleType.PhoneSpeech ? _currentHuman?.lookAtThisTransform : GetPlayerPhoneTransform();
+
+        if (_currentSource == null)
+        {
+            _currentSource = Player.Instance?.transform;
+        }
+        
+        float genderScale = _currentHuman != null ? _currentHuman.genderScale : 0.5f;
+        _currentPitch = Mathf.Lerp(BabblerConfig.MinimumPitch, BabblerConfig.MaximumPitch, 1f - genderScale);
         
         switch (_currentBabbleType)
         {
@@ -157,11 +164,10 @@ public class Babbler : MonoBehaviour
 
     private Transform GetPlayerPhoneTransform()
     {
-        // These all appear to be valid at different times so search for everything and fall back to the player GameObject if we can't find one.
+        // These all appear to be valid at different times so search for everything.
         GameObject receiver = Player.Instance.interactingWith?.controller?.phoneReciever ??
                               Player.Instance.phoneInteractable?.controller?.phoneReciever ??
-                              Player.Instance.answeringPhone?.interactable?.controller?.phoneReciever ??
-                              Player.Instance.gameObject;
+                              Player.Instance.answeringPhone?.interactable?.controller?.phoneReciever;
 
         return receiver?.transform;
     }

@@ -13,7 +13,7 @@ public static class PhoneticSoundDatabase
     public static void Initialize()
     {
         Map.Clear();
-        string directory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(), "sounds");
+        string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException();
         
         foreach (string filePath in Directory.GetFiles(directory, "*.wav"))
         {
