@@ -5,6 +5,8 @@ using SOD.Common.BepInEx;
 namespace Babbler;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInProcess("Shadows of Doubt.exe")]
+[BepInDependency(SOD.Common.Plugin.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
 public class BabblerPlugin : PluginController<BabblerPlugin>
 {
     public override void Load()
