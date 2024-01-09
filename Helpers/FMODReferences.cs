@@ -35,6 +35,6 @@ public static class FMODReferences
 
     public static ChannelGroup GetChannelGroup(BabbleType babbleType)
     {
-        return babbleType == BabbleType.PhoneSpeech ? PhoneGroup : SpeechGroup;
+        return babbleType == BabbleType.PhoneSpeech && BabblerConfig.DistortPhoneSpeech ? PhoneGroup : SpeechGroup;
     }
 }
