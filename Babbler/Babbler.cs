@@ -108,10 +108,10 @@ public class Babbler : MonoBehaviour
         {
             case BabbleType.FirstPersonSpeech:
             case BabbleType.PhoneSpeech:
-                _currentVolume = BabblerPlugin.FirstPartyVolume;
+                _currentVolume = BabblerConfig.FirstPartyVolume;
                 break;
             default:
-                _currentVolume = BabblerPlugin.ThirdPartyVolume;
+                _currentVolume = BabblerConfig.ThirdPartyVolume;
                 break;
         }
         

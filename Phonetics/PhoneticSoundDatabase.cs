@@ -10,7 +10,7 @@ public static class PhoneticSoundDatabase
 {
     private static Dictionary<string, PhoneticSound> Map = new Dictionary<string, PhoneticSound>();
 
-    public static void LoadPhonetics()
+    public static void Initialize()
     {
         Map.Clear();
         string directory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(), "sounds");
@@ -44,7 +44,7 @@ public static class PhoneticSoundDatabase
         }
     }
 
-    public static void UnloadPhonetics()
+    public static void Uninitialize()
     {
         foreach (KeyValuePair<string, PhoneticSound> pair in Map)
         {
