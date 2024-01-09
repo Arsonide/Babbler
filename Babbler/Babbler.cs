@@ -9,14 +9,20 @@ namespace Babbler;
 
 public class Babbler : MonoBehaviour
 {
+    private const float PHONETIC_OVERLAP = 0.2f;
+    private const float MIN_PITCH = 0.65f;
+    private const float MAX_PITCH = 3f;
+    
     public bool IsBabbling { get; private set; }
     
     private List<BabblePhonetic> _phoneticsToBabble = new List<BabblePhonetic>();
     private Coroutine _babbleCoroutine;
     
     private Human _currentHuman;
-    private Transform _currentHumanTransform;
+    private Transform _currentSourceTransform;
     private float _currentPitch;
+    private float _currentVolume;
+    private BabbleType _currentBabbleType;
     private Channel _currentChannel;
 
     private Transform _t;
@@ -39,14 +45,19 @@ public class Babbler : MonoBehaviour
 
     private void Update()
     {
-        if (!IsBabbling || _currentHumanTransform == null)
+        UpdateChannelPosition();
+    }
+
+    private void UpdateChannelPosition(bool force = false)
+    {
+        if (!IsBabbling || _currentSourceTransform == null)
         {
             return;
         }
 
-        _t.position = _currentHumanTransform.position;
+        _t.position = _currentSourceTransform.position;
 
-        if (_lastPosition == _t.position)
+        if (!force && _lastPosition == _t.position)
         {
             return;
         }
@@ -71,13 +82,6 @@ public class Babbler : MonoBehaviour
         FMODUnity.RuntimeManager.CoreSystem.update();
     }
 
-    private void PopulateHuman(Human human)
-    {
-        _currentHuman = human;
-        _currentHumanTransform = _currentHuman.lookAtThisTransform;
-        _currentPitch = Mathf.Lerp(0.5f, 2f, 1f - _currentHuman.genderScale);
-    }
-    
     private void PopulatePhonetics(string input)
     {
         _phoneticsToBabble.Clear();
@@ -112,10 +116,27 @@ public class Babbler : MonoBehaviour
         _lastPosition = Vector3.zero;
     }
 
-    public void StartBabbleRoutine(Human human, string babbleInput)
+    public void StartBabbleRoutine( string babbleInput, BabbleType babbleType, Human human)
     {
         StopBabbleRoutine();
-        PopulateHuman(human);
+        
+        _currentBabbleType = babbleType;
+        _currentHuman = human;
+
+        _currentSourceTransform = babbleType != BabbleType.PhoneSpeech ? _currentHuman.lookAtThisTransform : Player.Instance?.phoneInteractable?.parentTransform;
+        _currentPitch = Mathf.Lerp(MIN_PITCH, MAX_PITCH, 1f - _currentHuman.genderScale);
+        
+        switch (_currentBabbleType)
+        {
+            case BabbleType.FirstPersonSpeech:
+            case BabbleType.PhoneSpeech:
+                _currentVolume = BabblerPlugin.FirstPartyVolume;
+                break;
+            default:
+                _currentVolume = BabblerPlugin.ThirdPartyVolume;
+                break;
+        }
+        
         PopulatePhonetics(babbleInput);
         _babbleCoroutine = StartCoroutine(BabbleRoutine().WrapToIl2Cpp());
     }
@@ -126,14 +147,12 @@ public class Babbler : MonoBehaviour
         
         foreach (BabblePhonetic phonetic in _phoneticsToBabble)
         {
-            FMODUnity.RuntimeManager.CoreSystem.playSound(phonetic.Sound, BabblerPlugin.GetChannelGroup(), false, out _currentChannel);
+            FMODReferences.System.playSound(phonetic.Sound, FMODReferences.GetChannelGroup(_currentBabbleType), false, out _currentChannel);
             _currentChannel.setPitch(_currentPitch);
-            FMODUnity.RuntimeManager.CoreSystem.update();
-
-            while (_currentChannel.isPlaying(out bool isPlaying) == RESULT.OK && isPlaying)
-            {
-                yield return null;
-            }
+            _currentChannel.setVolume(_currentVolume);
+            UpdateChannelPosition(true);
+            
+            yield return new WaitForSeconds(Mathf.Max(0f, phonetic.Length - PHONETIC_OVERLAP));
         }
 
         yield return null;

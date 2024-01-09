@@ -7,10 +7,10 @@ public static class BabblerPool
 {
     private static List<Babbler> Pool = new List<Babbler>();
 
-    public static void Play(Human human, string babblerInput)
+    public static void Play(string babbleInput, BabbleType babbleType, Human human)
     {
         Babbler babbler = GetBabbler();
-        babbler.StartBabbleRoutine(human, babblerInput);
+        babbler.StartBabbleRoutine(babbleInput, babbleType, human);
     }
     
     private static Babbler GetBabbler()
