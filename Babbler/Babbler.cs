@@ -16,6 +16,7 @@ public class Babbler : MonoBehaviour
     public bool IsBabbling { get; private set; }
     
     private List<BabblePhonetic> _phoneticsToBabble = new List<BabblePhonetic>();
+    private List<Channel> _activeChannels = new List<Channel>();
     private Coroutine _babbleCoroutine;
     
     private Human _currentHuman;
@@ -23,16 +24,7 @@ public class Babbler : MonoBehaviour
     private float _currentPitch;
     private float _currentVolume;
     private BabbleType _currentBabbleType;
-    private Channel _currentChannel;
 
-    private Transform _t;
-    private Vector3 _lastPosition;
-    
-    private void Awake()
-    {
-        _t = transform;
-    }
-    
     private void OnEnable()
     {
         StopBabbleRoutine();
@@ -45,41 +37,28 @@ public class Babbler : MonoBehaviour
 
     private void Update()
     {
-        UpdateChannelPosition();
-    }
-
-    private void UpdateChannelPosition(bool force = false)
-    {
-        if (!IsBabbling || _currentSourceTransform == null)
+        Vector3 position = _currentSourceTransform.position;
+        bool dirty = false;
+        
+        for (int i = _activeChannels.Count - 1; i >= 0; --i)
         {
-            return;
+            Channel channel = _activeChannels[i];
+            
+            if (channel.isPlaying(out bool isPlaying) == RESULT.OK && isPlaying)
+            {
+                SetChannelPosition(position, channel);
+                dirty = true;
+            }
+            else
+            {
+                _activeChannels.RemoveAt(i);
+            }
         }
 
-        _t.position = _currentSourceTransform.position;
-
-        if (!force && _lastPosition == _t.position)
+        if (dirty)
         {
-            return;
+            FMODReferences.System.update();
         }
-
-        _lastPosition = _t.position;
-                
-        VECTOR position = new VECTOR
-        {
-            x = _lastPosition.x,
-            y = _lastPosition.y,
-            z = _lastPosition.z,
-        };
-                
-        VECTOR velocity = new VECTOR
-        {
-            x = 0f,
-            y = 0f,
-            z = 0f,
-        };
-
-        _currentChannel.set3DAttributes(ref position, ref velocity);
-        FMODUnity.RuntimeManager.CoreSystem.update();
     }
 
     private void PopulatePhonetics(string input)
@@ -113,7 +92,7 @@ public class Babbler : MonoBehaviour
         }
 
         IsBabbling = false;
-        _lastPosition = Vector3.zero;
+        _activeChannels.Clear();
     }
 
     public void StartBabbleRoutine( string babbleInput, BabbleType babbleType, Human human)
@@ -122,8 +101,7 @@ public class Babbler : MonoBehaviour
         
         _currentBabbleType = babbleType;
         _currentHuman = human;
-
-        _currentSourceTransform = babbleType != BabbleType.PhoneSpeech ? _currentHuman.lookAtThisTransform : Player.Instance?.phoneInteractable?.parentTransform;
+        _currentSourceTransform = babbleType != BabbleType.PhoneSpeech ? _currentHuman.lookAtThisTransform : GetPlayerPhoneTransform();
         _currentPitch = Mathf.Lerp(MIN_PITCH, MAX_PITCH, 1f - _currentHuman.genderScale);
         
         switch (_currentBabbleType)
@@ -147,17 +125,50 @@ public class Babbler : MonoBehaviour
         
         foreach (BabblePhonetic phonetic in _phoneticsToBabble)
         {
-            FMODReferences.System.playSound(phonetic.Sound, FMODReferences.GetChannelGroup(_currentBabbleType), false, out _currentChannel);
-            _currentChannel.setPitch(_currentPitch);
-            _currentChannel.setVolume(_currentVolume);
-            UpdateChannelPosition(true);
+            FMODReferences.System.playSound(phonetic.Sound, FMODReferences.GetChannelGroup(_currentBabbleType), false, out Channel channel);
+            
+            channel.setPitch(_currentPitch);
+            channel.setVolume(_currentVolume);
+        
+            SetChannelPosition(_currentSourceTransform.position, channel);
+            FMODReferences.System.update();
+
+            _activeChannels.Add(channel);
             
             yield return new WaitForSeconds(Mathf.Max(0f, phonetic.Length - PHONETIC_OVERLAP));
         }
-
-        yield return null;
         
         // Releasing will set the gameobject inactive, which will StopBabbleRoutine.
         BabblerPool.ReleaseBabbler(this);
+    }
+
+    private void SetChannelPosition(Vector3 position, Channel channel)
+    {
+        VECTOR pos = new VECTOR
+        {
+            x = position.x,
+            y = position.y,
+            z = position.z,
+        };
+                
+        VECTOR vel = new VECTOR
+        {
+            x = 0f,
+            y = 0f,
+            z = 0f,
+        };
+
+        channel.set3DAttributes(ref pos, ref vel);
+    }
+
+    private Transform GetPlayerPhoneTransform()
+    {
+        // These all appear to be valid at different times so search for everything and fall back to the player GameObject if we can't find one.
+        GameObject receiver = Player.Instance.interactingWith?.controller?.phoneReciever ??
+                              Player.Instance.phoneInteractable?.controller?.phoneReciever ??
+                              Player.Instance.answeringPhone?.interactable?.controller?.phoneReciever ??
+                              Player.Instance.gameObject;
+
+        return receiver?.transform;
     }
 }

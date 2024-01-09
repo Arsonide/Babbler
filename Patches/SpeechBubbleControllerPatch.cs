@@ -32,12 +32,16 @@ public class SpeechBubbleControllerPatch
         // Search around for a human because they don't seem to be assigned consistently?
         Human directHuman = actor as Human;
         Human aiHuman = actor?.ai?.human;
-        Human telephoneHuman = GetOtherPhoneHuman(controller);
-        Human anyHuman = directHuman ?? aiHuman ?? telephoneHuman;
 
-        BabbleType babbleType = BabbleType.FirstPersonSpeech;
+        Human speakingHuman = directHuman ?? aiHuman;
+        Human telephoneHuman = GetOtherPhoneHuman(controller);
         
-        if (telephoneHuman != null)
+        Human anyHuman = speakingHuman ?? telephoneHuman;
+
+        BabbleType babbleType;
+        
+        // We need to verify speaking human is null otherwise any time we are on a phone call ALL voices in the background are classified as phone voices.
+        if (speakingHuman == null && telephoneHuman != null)
         {
             babbleType = BabbleType.PhoneSpeech;
         }

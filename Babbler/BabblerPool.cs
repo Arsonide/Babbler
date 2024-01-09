@@ -27,6 +27,7 @@ public static class BabblerPool
         else
         {
             GameObject go = new GameObject("Babbler");
+            go.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             babbler = go.AddComponent<Babbler>();
         }
         
