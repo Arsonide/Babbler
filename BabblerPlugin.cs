@@ -5,8 +5,6 @@ using SOD.Common.BepInEx;
 namespace Babbler;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInProcess("Shadows of Doubt.exe")]
-[BepInDependency(SOD.Common.Plugin.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
 public class BabblerPlugin : PluginController<BabblerPlugin>
 {
     public override void Load()
@@ -21,17 +19,10 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
             return;
         }
 
-        Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
-        
         Harmony.PatchAll();
+        ClassInjector.RegisterTypeInIl2Cpp<SpeakerHost>();
         
-        Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is patched!");
-        
-        ClassInjector.RegisterTypeInIl2Cpp<Babbler>();
-        Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} has added custom types!");
-        
-        FMODReferences.Initialize();
-        PhoneticSoundDatabase.Initialize();
+        Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
 
     public override bool Unload()

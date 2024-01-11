@@ -1,6 +1,6 @@
 ﻿namespace Babbler;
 
-public enum BabbleType
+public enum SpeechContext
 {
     ConversationalSpeech,
     OverheardSpeech,

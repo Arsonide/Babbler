@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace Babbler.Patches;
+namespace Babbler;
 
 [HarmonyPatch(typeof(SpeechBubbleController), "Setup")]
 public class SpeechBubbleControllerPatch
@@ -37,24 +37,24 @@ public class SpeechBubbleControllerPatch
         Human telephoneHuman = GetOtherPhoneHuman(controller);
         
         Human anyHuman = speakingHuman ?? telephoneHuman;
-
-        BabbleType babbleType;
+        
+        SpeechContext speechContext;
         
         // We need to verify speaking human is null otherwise any time we are on a phone call ALL voices in the background are classified as phone voices.
         if (speakingHuman == null && telephoneHuman != null)
         {
-            babbleType = BabbleType.PhoneSpeech;
+            speechContext = SpeechContext.PhoneSpeech;
         }
         else if (newSpeechController.actor != Player.Instance && InteractionController.Instance.dialogMode && InteractionController.Instance.talkingTo == newSpeechController.interactable)
         {
-            babbleType = BabbleType.ConversationalSpeech;
+            speechContext = SpeechContext.ConversationalSpeech;
         }
         else
         {
-            babbleType = BabbleType.OverheardSpeech;
+            speechContext = SpeechContext.OverheardSpeech;
         }
         
-        BabblerPool.Play(__instance.actualString, babbleType, anyHuman);
+        SpeakerHostPool.Play(__instance.actualString, speechContext, anyHuman);
     }
     
     private static bool HasCharacterRepeated(string input, int times)
