@@ -1,27 +1,30 @@
 ﻿using HarmonyLib;
+using Babbler.Implementation.Common;
+using Babbler.Implementation.Hosts;
 
-namespace Babbler;
+namespace Babbler.Hooks;
 
 [HarmonyPatch(typeof(SpeechBubbleController), "Setup")]
-public class SpeechBubbleControllerPatch
+public class SpeechBubbleControllerHook
 {
+    [HarmonyPostfix]
     public static void Postfix(SpeechBubbleController __instance, SpeechController.QueueElement newSpeech, SpeechController newSpeechController)
     {
-        string babbleInput = __instance?.actualString;
+        string speechInput = __instance?.actualString;
 
-        if (string.IsNullOrWhiteSpace(babbleInput))
+        if (string.IsNullOrWhiteSpace(speechInput))
         {
             return;
         }
 
         // This is used for things like [Sneeze] or [Sigh]. Don't babble for emotes.
-        if (babbleInput.StartsWith("[") && babbleInput.EndsWith("]"))
+        if (speechInput.StartsWith("[") && speechInput.EndsWith("]"))
         {
             return;
         }
 
         // This should filter out things like "Zzz" and "Brrr".
-        if (HasCharacterRepeated(babbleInput, 3))
+        if (HasCharacterRepeated(speechInput, 3))
         {
             return;
         }
@@ -34,12 +37,13 @@ public class SpeechBubbleControllerPatch
         Human aiHuman = actor?.ai?.human;
 
         Human speakingHuman = directHuman ?? aiHuman;
-        Human telephoneHuman = GetOtherPhoneHuman(controller);
+        Human telephoneHuman = GetOtherPhoneHuman();
         
         Human anyHuman = speakingHuman ?? telephoneHuman;
         
         SpeechContext speechContext;
         
+        // TODO maybe break getting this context into a submethod.
         // We need to verify speaking human is null otherwise any time we are on a phone call ALL voices in the background are classified as phone voices.
         if (speakingHuman == null && telephoneHuman != null)
         {
@@ -87,7 +91,7 @@ public class SpeechBubbleControllerPatch
         return false;
     }
 
-    private static Human GetOtherPhoneHuman(SpeechController controller)
+    private static Human GetOtherPhoneHuman()
     {
         TelephoneController.PhoneCall call = Player.Instance?.activeCall;
 

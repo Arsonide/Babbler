@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using FMOD;
 using UnityEngine;
+using FMOD;
+using Babbler.Implementation.Common;
+using Babbler.Implementation.Config;
 
-namespace Babbler;
+namespace Babbler.Implementation.Speakers;
 
 public abstract class BaseSpeaker
 {
@@ -16,6 +18,16 @@ public abstract class BaseSpeaker
     protected float SpeechVolume { get; private set; }
 
     protected readonly List<Channel> ActiveChannels = new List<Channel>();
+    
+    public virtual void InitializeSpeaker()
+    {
+        
+    }
+
+    public virtual void UninitializeSpeaker()
+    {
+        
+    }
     
     public virtual void StopSpeaker()
     {
@@ -56,7 +68,7 @@ public abstract class BaseSpeaker
 
         if (dirty)
         {
-            FMODReferences.System.update();
+            FMODRegistry.System.update();
         }
     }
 
@@ -67,7 +79,16 @@ public abstract class BaseSpeaker
 
     protected virtual float CacheSpeechVolume(SpeechContext speechContext)
     {
-        return 1f;
+        // TODO: Maybe this could be part of the channel group instead?
+        switch (speechContext)
+        {
+            case SpeechContext.ConversationalSpeech:
+                return BabblerConfig.ConversationalVolume;
+            case SpeechContext.PhoneSpeech:
+                return BabblerConfig.PhoneVolume;
+            default:
+                return BabblerConfig.OverheardVolume;
+        }
     }
 
     private Transform CacheSpeechSource(SpeechContext speechContext, Human speechPerson)

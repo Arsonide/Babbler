@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Babbler.Implementation.Common;
 
-namespace Babbler;
+namespace Babbler.Implementation.Hosts;
 
 public static class SpeakerHostPool
 {
@@ -9,11 +10,11 @@ public static class SpeakerHostPool
 
     public static void Play(string speechInput, SpeechContext speechContext, Human speechPerson)
     {
-        SpeakerHost speakerHost = GetSpeaker();
+        SpeakerHost speakerHost = GetSpeakerHost();
         speakerHost.Speaker.StartSpeaker(speechInput, speechContext, speechPerson);
     }
     
-    private static SpeakerHost GetSpeaker()
+    private static SpeakerHost GetSpeakerHost()
     {
         SpeakerHost speakerHost;
         int lastIndex = Pool.Count - 1;
@@ -34,7 +35,7 @@ public static class SpeakerHostPool
         return speakerHost;
     }
 
-    public static void ReleaseBabbler(SpeakerHost speakerHost)
+    public static void ReleaseSpeakerHost(SpeakerHost speakerHost)
     {
         speakerHost.gameObject.SetActive(false);
         Pool.Add(speakerHost);

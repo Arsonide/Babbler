@@ -1,8 +1,9 @@
-﻿using FMOD;
+﻿using Babbler.Implementation.Config;
+using FMOD;
 
-namespace Babbler;
+namespace Babbler.Implementation.Common;
 
-public static class FMODReferences
+public static class FMODRegistry
 {
     public static FMOD.System System { get; private set; }
     

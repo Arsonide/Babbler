@@ -1,4 +1,4 @@
-﻿namespace Babbler;
+﻿namespace Babbler.Implementation.Common;
 
 public enum SpeechContext
 {

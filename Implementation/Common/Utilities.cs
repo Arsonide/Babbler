@@ -1,9 +1,10 @@
 ﻿using BepInEx.Logging;
 
-namespace Babbler;
+namespace Babbler.Implementation.Common;
 
 public static class Utilities
 {
+    // TODO actually implement debug logs.
     public const bool DEBUG_BUILD = false;
     
     public static void Log(string message, LogLevel level = LogLevel.Info)
