@@ -13,9 +13,9 @@ public static class BlurbSoundRegistry
     public static void Initialize()
     {
         Map.Clear();
-        string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException();
+        string directory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(), "Blurbs");
         
-        // TODO fix directory structure with plugins and re-sort our blurb sounds. Also put them into a voice subdirectory.
+        // TODO set up blurb "voices" in subdirectories.
         foreach (string filePath in Directory.GetFiles(directory, "*.wav"))
         {
             string noExtension = Path.GetFileNameWithoutExtension(filePath);
