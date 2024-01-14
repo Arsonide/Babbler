@@ -77,21 +77,23 @@ public abstract class BaseSpeaker
     private Transform CacheSpeechSource(SpeechContext speechContext, Human speechPerson)
     {
         Transform result;
-        
-        if (speechContext == SpeechContext.PhoneSpeech)
-        {
-            // These all appear to be valid at different times so search for everything.
-            GameObject receiver = Player.Instance.interactingWith?.controller?.phoneReciever ??
-                                  Player.Instance.phoneInteractable?.controller?.phoneReciever ??
-                                  Player.Instance.answeringPhone?.interactable?.controller?.phoneReciever;
 
-            result = receiver?.transform;
-        }
-        else
+        switch (speechContext)
         {
-            result = speechPerson?.lookAtThisTransform;
+            case SpeechContext.PhoneSpeech:
+            case SpeechContext.PhoneShout:
+                // These all appear to be valid at different times so search for everything.
+                GameObject receiver = Player.Instance.interactingWith?.controller?.phoneReciever ??
+                                      Player.Instance.phoneInteractable?.controller?.phoneReciever ??
+                                      Player.Instance.answeringPhone?.interactable?.controller?.phoneReciever;
+
+                result = receiver?.transform;
+                break;
+            default:
+                result = speechPerson?.lookAtThisTransform;
+                break;
         }
-        
+
         // Fallback in case something weird happens, which does happen.
         if (result == null)
         {

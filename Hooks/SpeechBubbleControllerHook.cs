@@ -41,24 +41,26 @@ public class SpeechBubbleControllerHook
         
         Human anyHuman = speakingHuman ?? telephoneHuman;
 
-        SpeechContext speechContext = GetSpeechContext(speakingHuman, telephoneHuman, newSpeechController);
+        SpeechContext speechContext = GetSpeechContext(speechInput, speakingHuman, telephoneHuman, newSpeechController);
         SpeakerHostPool.Play(__instance.actualString, speechContext, anyHuman);
     }
 
-    private static SpeechContext GetSpeechContext(Human speakingHuman, Human telephoneHuman, SpeechController speechController)
+    private static SpeechContext GetSpeechContext(string speechInput, Human speakingHuman, Human telephoneHuman, SpeechController speechController)
     {
+        bool shouting = IsAllCaps(speechInput);
+        
         // We need to verify speaking human is null otherwise any time we are on a phone call ALL voices in the background are classified as phone voices.
         if (speakingHuman == null && telephoneHuman != null)
         {
-            return SpeechContext.PhoneSpeech;
-        }
-        
-        if (speechController.actor != Player.Instance && InteractionController.Instance.dialogMode && InteractionController.Instance.talkingTo == speechController.interactable)
-        {
-            return SpeechContext.ConversationalSpeech;
+            return shouting ? SpeechContext.PhoneShout : SpeechContext.PhoneSpeech;
         }
 
-        return SpeechContext.OverheardSpeech;
+        if (speechController.actor != Player.Instance && InteractionController.Instance.dialogMode && InteractionController.Instance.talkingTo == speechController.interactable)
+        {
+            return shouting ? SpeechContext.ConversationalShout : SpeechContext.ConversationalSpeech;
+        }
+
+        return shouting ? SpeechContext.OverheardShout : SpeechContext.OverheardSpeech;
     }
     
     private static bool HasCharacterRepeated(string input, int times)
@@ -89,6 +91,19 @@ public class SpeechBubbleControllerHook
         }
 
         return false;
+    }
+    
+    private static bool IsAllCaps(string input)
+    {
+        foreach (char c in input)
+        {
+            if (char.IsLetter(c) && !char.IsUpper(c))
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     private static Human GetOtherPhoneHuman()

@@ -11,8 +11,11 @@ public static class FMODRegistry
     
     private static ChannelGroup ConversationalGroup;
     private static ChannelGroup OverheardGroup;
-    private static ChannelGroup ShoutGroup;
     private static ChannelGroup PhoneGroup;
+
+    private static ChannelGroup ConversationalShoutGroup;
+    private static ChannelGroup OverheardShoutGroup;
+    private static ChannelGroup PhoneShoutGroup;
     
     public static void Initialize()
     {
@@ -20,7 +23,6 @@ public static class FMODRegistry
         
         SetupConversationalGroup();
         SetupOverheardGroup();
-        SetupShoutGroup();
         SetupPhoneGroup();
         
         Utilities.Log("FMODRegistry has initialized!", LogLevel.Debug);
@@ -29,46 +31,25 @@ public static class FMODRegistry
     private static void SetupConversationalGroup()
     {
         TryCreateChannelGroup("BabblerConversationalGroup", out ConversationalGroup);
+        TryCreateChannelGroup("BabblerConversationalShoutGroup", out ConversationalShoutGroup);
         ConversationalGroup.setVolume(BabblerConfig.ConversationalVolume);
+        ConversationalShoutGroup.setVolume(BabblerConfig.ConversationalVolume * BabblerConfig.ConversationalShoutMultiplier);
     }
 
     private static void SetupOverheardGroup()
     {
         TryCreateChannelGroup("BabblerOverheardGroup", out OverheardGroup);
+        TryCreateChannelGroup("BabblerOverheardShoutGroup", out OverheardShoutGroup);
         OverheardGroup.setVolume(BabblerConfig.OverheardVolume);
+        OverheardShoutGroup.setVolume(BabblerConfig.OverheardVolume * BabblerConfig.OverheardShoutMultiplier);
     }
-    
-    private static void SetupShoutGroup()
-    {
-        // Not used currently, just something I'm experimenting with for ALL CAPS DIALOG THAT IS DETECTED.
-        TryCreateChannelGroup("BabblerShoutGroup", out ShoutGroup);
-        ShoutGroup.setVolume(BabblerConfig.ShoutVolume);
 
-        TryCreateDSP(DSP_TYPE.DISTORTION, out DSP distortionDSP);
-        distortionDSP.setParameterFloat((int)DSP_DISTORTION.LEVEL, 0.5f);
-        
-        TryCreateDSP(DSP_TYPE.MULTIBAND_EQ, out DSP eqDSP);
-        eqDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_GAIN, 2.0f);
-        eqDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 2500f);
-        
-        TryCreateDSP(DSP_TYPE.TREMOLO, out DSP tremoloDSP);
-        tremoloDSP.setParameterFloat((int)DSP_TREMOLO.FREQUENCY, 6f);
-        tremoloDSP.setParameterFloat((int)DSP_TREMOLO.DEPTH, 0.4f);
-        
-        TryCreateDSP(DSP_TYPE.COMPRESSOR, out DSP compressorDSP);
-        compressorDSP.setParameterFloat((int)DSP_COMPRESSOR.THRESHOLD, -10f);
-        compressorDSP.setParameterFloat((int)DSP_COMPRESSOR.RATIO, 4f);
-        
-        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, distortionDSP);
-        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, eqDSP);
-        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, tremoloDSP);
-        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, compressorDSP);
-    }
-    
     private static void SetupPhoneGroup()
     {
         TryCreateChannelGroup("BabblerPhoneGroup", out PhoneGroup);
+        TryCreateChannelGroup("BabblerPhoneShoutGroup", out PhoneShoutGroup);
         PhoneGroup.setVolume(BabblerConfig.PhoneVolume);
+        PhoneShoutGroup.setVolume(BabblerConfig.PhoneVolume * BabblerConfig.PhoneShoutMultiplier);
 
         if (!BabblerConfig.DistortPhoneSpeech)
         {
@@ -88,6 +69,7 @@ public static class FMODRegistry
         phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
 
         PhoneGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneDSP);
+        PhoneShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneDSP);
     }
 
     public static ChannelGroup GetChannelGroup(SpeechContext speechContext)
@@ -98,10 +80,14 @@ public static class FMODRegistry
                 return ConversationalGroup;
             case SpeechContext.OverheardSpeech:
                 return OverheardGroup;
-            case SpeechContext.ShoutSpeech:
-                return ShoutGroup;
             case SpeechContext.PhoneSpeech:
                 return PhoneGroup;
+            case SpeechContext.ConversationalShout:
+                return ConversationalShoutGroup;
+            case SpeechContext.OverheardShout:
+                return OverheardShoutGroup;
+            case SpeechContext.PhoneShout:
+                return PhoneShoutGroup;
             default:
                 return OverheardGroup;
         }
