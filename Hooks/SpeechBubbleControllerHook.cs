@@ -35,30 +35,30 @@ public class SpeechBubbleControllerHook
         // Search around for a human because they don't seem to be assigned consistently?
         Human directHuman = actor as Human;
         Human aiHuman = actor?.ai?.human;
-
+        
         Human speakingHuman = directHuman ?? aiHuman;
         Human telephoneHuman = GetOtherPhoneHuman();
         
         Human anyHuman = speakingHuman ?? telephoneHuman;
-        
-        SpeechContext speechContext;
-        
-        // TODO maybe break getting this context into a submethod.
+
+        SpeechContext speechContext = GetSpeechContext(speakingHuman, telephoneHuman, newSpeechController);
+        SpeakerHostPool.Play(__instance.actualString, speechContext, anyHuman);
+    }
+
+    private static SpeechContext GetSpeechContext(Human speakingHuman, Human telephoneHuman, SpeechController speechController)
+    {
         // We need to verify speaking human is null otherwise any time we are on a phone call ALL voices in the background are classified as phone voices.
         if (speakingHuman == null && telephoneHuman != null)
         {
-            speechContext = SpeechContext.PhoneSpeech;
-        }
-        else if (newSpeechController.actor != Player.Instance && InteractionController.Instance.dialogMode && InteractionController.Instance.talkingTo == newSpeechController.interactable)
-        {
-            speechContext = SpeechContext.ConversationalSpeech;
-        }
-        else
-        {
-            speechContext = SpeechContext.OverheardSpeech;
+            return SpeechContext.PhoneSpeech;
         }
         
-        SpeakerHostPool.Play(__instance.actualString, speechContext, anyHuman);
+        if (speechController.actor != Player.Instance && InteractionController.Instance.dialogMode && InteractionController.Instance.talkingTo == speechController.interactable)
+        {
+            return SpeechContext.ConversationalSpeech;
+        }
+
+        return SpeechContext.OverheardSpeech;
     }
     
     private static bool HasCharacterRepeated(string input, int times)
