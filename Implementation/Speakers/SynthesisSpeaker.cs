@@ -18,7 +18,6 @@ public class SynthesisSpeaker : BaseSpeaker
     private SpeechSynthesizer _synthesizer;
     private MemoryStream _memoryStream;
     
-    // TODO Figure out the lifetime of SpeakerHost, these may be getting destroyed on scene load for no reason, and that might mess up the pool.
     public override void InitializeSpeaker()
     {
         base.InitializeSpeaker();

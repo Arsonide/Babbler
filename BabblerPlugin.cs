@@ -87,7 +87,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
             return;
         }
         
-        // Nothing here, yet. Synthesis doesn't need to uninitialize currently.
+        SpeakerHostPool.CleanupSpeakerHosts();
     }
 
     private void UninitializeDeferred()

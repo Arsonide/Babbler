@@ -6,8 +6,9 @@ namespace Babbler.Implementation.Hosts;
 
 public static class SpeakerHostPool
 {
-    private static List<SpeakerHost> Pool = new List<SpeakerHost>();
-
+    private static List<SpeakerHost> AvailableHosts = new List<SpeakerHost>();
+    private static List<SpeakerHost> AllHosts = new List<SpeakerHost>();
+    
     public static void Play(string speechInput, SpeechContext speechContext, Human speechPerson)
     {
         SpeakerHost speakerHost = GetSpeakerHost();
@@ -17,12 +18,12 @@ public static class SpeakerHostPool
     private static SpeakerHost GetSpeakerHost()
     {
         SpeakerHost speakerHost;
-        int lastIndex = Pool.Count - 1;
+        int lastIndex = AvailableHosts.Count - 1;
 
         if (lastIndex >= 0)
         {
-            speakerHost = Pool[lastIndex];
-            Pool.RemoveAt(lastIndex);
+            speakerHost = AvailableHosts[lastIndex];
+            AvailableHosts.RemoveAt(lastIndex);
             speakerHost.gameObject.SetActive(true);
         }
         else
@@ -30,6 +31,8 @@ public static class SpeakerHostPool
             GameObject go = new GameObject("BabblerSpeakerHost");
             go.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             speakerHost = go.AddComponent<SpeakerHost>();
+            Object.DontDestroyOnLoad(go);
+            AllHosts.Add(speakerHost);
         }
         
         return speakerHost;
@@ -38,6 +41,22 @@ public static class SpeakerHostPool
     public static void ReleaseSpeakerHost(SpeakerHost speakerHost)
     {
         speakerHost.gameObject.SetActive(false);
-        Pool.Add(speakerHost);
+        AvailableHosts.Add(speakerHost);
+    }
+
+    public static void CleanupSpeakerHosts()
+    {
+        for (int i = AllHosts.Count - 1; i >= 0; --i)
+        {
+            SpeakerHost speakerHost = AllHosts[i];
+
+            if (speakerHost.gameObject.activeSelf)
+            {
+                speakerHost.gameObject.SetActive(false);
+            }
+
+            // This will uninitialize their BaseSpeakers, which will dispose of resources.
+            Object.DestroyImmediate(speakerHost.gameObject);
+        }
     }
 }
