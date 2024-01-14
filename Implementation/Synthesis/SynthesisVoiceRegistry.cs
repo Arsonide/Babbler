@@ -6,6 +6,7 @@ using UnityEngine;
 using BepInEx.Logging;
 using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
+using Babbler.Implementation.Config;
 
 namespace Babbler.Implementation.Synthesis;
 
@@ -69,6 +70,13 @@ public static class SynthesisVoiceRegistry
         synthesizer.SpeakAsync("Initialize");
         
         Utilities.Log($"SynthesisVoiceRegistry has initialized! Male Voices: {MaleVoices.Count}, Female Voices: {FemaleVoices.Count}, Non-Binary Voices: {NonBinaryVoices.Count}", LogLevel.Debug);
+
+        // If we are in Synthesis mode but have no voices, revert to Blurbs. We ship with at least one Blurbs voice so we know it should work.
+        if (AllVoices.Count <= 0 && BabblerConfig.Mode == SpeechMode.Synthesis)
+        {
+            BabblerConfig.Mode = SpeechMode.Blurbs;
+            Utilities.Log("The plugin is configured for Synthesis but no voices are installed, reverting to Blurbs mode!", LogLevel.Error);
+        }
     }
 
     private static void OnSpeakCompleted(object sender, SpeakCompletedEventArgs e)
