@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Babbler.Implementation.Common;
 using FMOD;
 
 namespace Babbler.Implementation.Blurbs;
@@ -61,10 +62,7 @@ public static class BlurbSoundRegistry
     
     private static BlurbSound CreateBlurbSound(string filePath, string phonetic)
     {
-        RESULT result = FMODUnity.RuntimeManager.CoreSystem.createSound(filePath, MODE.DEFAULT | MODE._3D, out Sound sound);
-
-        // TODO we should check other usages of createX and see if we're checking this result consistently.
-        if (result != RESULT.OK)
+        if (!FMODRegistry.TryCreateSound(filePath, MODE.DEFAULT | MODE._3D, out Sound sound))
         {
             return null;
         }

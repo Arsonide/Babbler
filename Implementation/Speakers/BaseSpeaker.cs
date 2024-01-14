@@ -68,7 +68,7 @@ public abstract class BaseSpeaker
 
         if (dirty)
         {
-            FMODRegistry.System.update();
+            FMODRegistry.TryUpdate();
         }
     }
 

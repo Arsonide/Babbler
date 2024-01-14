@@ -75,14 +75,21 @@ public class SynthesisSpeaker : BaseSpeaker
             numchannels = 1,
         };
 
-        FMODUnity.RuntimeManager.CoreSystem.createSound(_memoryStream.ToArray(), MODE.OPENMEMORY | MODE.OPENRAW | MODE._3D, ref soundInfo, out Sound sound);
-        FMODUnity.RuntimeManager.CoreSystem.playSound(sound, FMODRegistry.GetChannelGroup(SpeechContext), false, out Channel channel);
+        if (!FMODRegistry.TryCreateSound(_memoryStream.ToArray(), MODE.OPENMEMORY | MODE.OPENRAW | MODE._3D, ref soundInfo, out Sound sound))
+        {
+            return;
+        }
+
+        if (!FMODRegistry.TryPlaySound(sound, FMODRegistry.GetChannelGroup(SpeechContext), out Channel channel))
+        {
+            return;
+        }
         
         channel.setPitch(SpeechPitch);
         channel.setVolume(SpeechVolume);
         
         SetChannelPosition(SpeechSource.position, channel);
-        FMODRegistry.System.update();
+        FMODRegistry.TryUpdate();
     }
     
     protected override float CacheSpeechPitch(Human speechPerson)

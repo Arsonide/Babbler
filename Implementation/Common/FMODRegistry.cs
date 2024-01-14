@@ -1,11 +1,13 @@
 ﻿using Babbler.Implementation.Config;
+using BepInEx.Logging;
 using FMOD;
 
 namespace Babbler.Implementation.Common;
 
 public static class FMODRegistry
 {
-    public static FMOD.System System { get; private set; }
+    // All direct interactions with System are done through helper methods so we can log if there are errors.
+    private static FMOD.System System;
     
     private static ChannelGroup SpeechGroup;
     private static ChannelGroup PhoneGroup;
@@ -15,7 +17,7 @@ public static class FMODRegistry
     {
         // TODO: Set SpeechContext volume here on the ChannelGroups so we don't need to do it every time we play a sound.
         System = FMODUnity.RuntimeManager.CoreSystem;
-        System.createChannelGroup("BabblerSpeechGroup", out SpeechGroup);
+        TryCreateChannelGroup("BabblerSpeechGroup", out SpeechGroup);
         SetupPhoneEffects();
         SetupShoutEffects();
     }
@@ -27,9 +29,9 @@ public static class FMODRegistry
 
     private static void SetupPhoneEffects()
     {
-        System.createChannelGroup("BabblerPhoneGroup", out PhoneGroup);
+        TryCreateChannelGroup("BabblerPhoneGroup", out PhoneGroup);
 
-        System.createDSPByType(DSP_TYPE.MULTIBAND_EQ, out DSP phoneDSP);
+        TryCreateDSP(DSP_TYPE.MULTIBAND_EQ, out DSP phoneDSP);
 
         phoneDSP.setParameterInt((int)DSP_MULTIBAND_EQ.A_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.HIGHPASS_48DB);
         phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 300f);
@@ -47,26 +49,108 @@ public static class FMODRegistry
     private static void SetupShoutEffects()
     {
         // Not used currently, just something I'm experimenting with for ALL CAPS DIALOG THAT IS DETECTED.
-        System.createChannelGroup("BabblerShoutGroup", out ShoutGroup);
+        TryCreateChannelGroup("BabblerShoutGroup", out ShoutGroup);
         
-        System.createDSPByType(DSP_TYPE.DISTORTION, out DSP distortionDsp);
-        distortionDsp.setParameterFloat((int)DSP_DISTORTION.LEVEL, 0.5f);
+        TryCreateDSP(DSP_TYPE.DISTORTION, out DSP distortionDSP);
+        distortionDSP.setParameterFloat((int)DSP_DISTORTION.LEVEL, 0.5f);
         
-        System.createDSPByType(DSP_TYPE.MULTIBAND_EQ, out DSP eqDsp);
-        eqDsp.setParameterFloat((int)DSP_MULTIBAND_EQ.A_GAIN, 2.0f);
-        eqDsp.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 2500f);
+        TryCreateDSP(DSP_TYPE.MULTIBAND_EQ, out DSP eqDSP);
+        eqDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_GAIN, 2.0f);
+        eqDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 2500f);
         
-        System.createDSPByType(DSP_TYPE.TREMOLO, out DSP tremoloDsp);
-        tremoloDsp.setParameterFloat((int)DSP_TREMOLO.FREQUENCY, 6f);
-        tremoloDsp.setParameterFloat((int)DSP_TREMOLO.DEPTH, 0.4f);
+        TryCreateDSP(DSP_TYPE.TREMOLO, out DSP tremoloDSP);
+        tremoloDSP.setParameterFloat((int)DSP_TREMOLO.FREQUENCY, 6f);
+        tremoloDSP.setParameterFloat((int)DSP_TREMOLO.DEPTH, 0.4f);
         
-        System.createDSPByType(DSP_TYPE.COMPRESSOR, out DSP compressorDsp);
-        compressorDsp.setParameterFloat((int)DSP_COMPRESSOR.THRESHOLD, -10f);
-        compressorDsp.setParameterFloat((int)DSP_COMPRESSOR.RATIO, 4f);
+        TryCreateDSP(DSP_TYPE.COMPRESSOR, out DSP compressorDSP);
+        compressorDSP.setParameterFloat((int)DSP_COMPRESSOR.THRESHOLD, -10f);
+        compressorDSP.setParameterFloat((int)DSP_COMPRESSOR.RATIO, 4f);
         
-        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, distortionDsp);
-        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, eqDsp);
-        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, tremoloDsp);
-        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, compressorDsp);
+        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, distortionDSP);
+        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, eqDSP);
+        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, tremoloDSP);
+        ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, compressorDSP);
     }
+    
+#region System Interactions
+    
+    private static bool TryCreateChannelGroup(string name, out ChannelGroup channelGroup)
+    {
+        RESULT result = System.createChannelGroup("BabblerSpeechGroup", out channelGroup);
+
+        if (result == RESULT.OK)
+        {
+            return true;
+        }
+
+        Utilities.Log($"FMODRegistry failed to create channel group \"{name}\" at {Utilities.GetCallingMethodName()}. Error: {result.ToString()}", LogLevel.Error);
+        return false;
+    }
+
+    private static bool TryCreateDSP(DSP_TYPE dspType, out DSP dsp)
+    {
+        RESULT result = System.createDSPByType(dspType, out dsp);
+
+        if (result == RESULT.OK)
+        {
+            return true;
+        }
+
+        Utilities.Log($"FMODRegistry failed to create DSP \"{dspType.ToString()}\" at {Utilities.GetCallingMethodName()}. Error: {result.ToString()}", LogLevel.Error);
+        return false;
+    }
+    
+    public static bool TryCreateSound(string name, MODE mode, out Sound sound)
+    {
+        RESULT result = System.createSound(name, mode, out sound);
+
+        if (result == RESULT.OK)
+        {
+            return true;
+        }
+
+        Utilities.Log($"FMODRegistry failed to create sound \"{name}\" at {Utilities.GetCallingMethodName()}. Error: {result.ToString()}", LogLevel.Error);
+        return false;
+    }
+    
+    public static bool TryCreateSound(byte[] data, MODE mode, ref CREATESOUNDEXINFO extraInfo, out Sound sound)
+    {
+        RESULT result = System.createSound(data, mode, ref extraInfo, out sound);
+
+        if (result == RESULT.OK)
+        {
+            return true;
+        }
+
+        Utilities.Log($"FMODRegistry failed to create sound \"MemoryStream\" at {Utilities.GetCallingMethodName()}. Error: {result.ToString()}", LogLevel.Error);
+        return false;
+    }
+    
+    public static bool TryPlaySound(Sound sound, ChannelGroup channelGroup, out Channel channel)
+    {
+        RESULT result = System.playSound(sound, channelGroup, false, out channel);
+
+        if (result == RESULT.OK)
+        {
+            return true;
+        }
+
+        Utilities.Log($"FMODRegistry failed to play sound at {Utilities.GetCallingMethodName()}. Error: {result.ToString()}", LogLevel.Error);
+        return false;
+    }
+    
+    public static bool TryUpdate()
+    {
+        RESULT result = System.update();
+
+        if (result == RESULT.OK)
+        {
+            return true;
+        }
+
+        Utilities.Log($"FMODRegistry failed to update core system at {Utilities.GetCallingMethodName()}. Error: {result.ToString()}", LogLevel.Error);
+        return false;
+    }
+
+#endregion
 }

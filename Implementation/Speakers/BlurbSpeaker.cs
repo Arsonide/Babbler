@@ -38,13 +38,16 @@ public class BlurbSpeaker : BaseSpeaker
     {
         foreach (BlurbSound blurb in _blurbsToSpeak)
         {
-            FMODRegistry.System.playSound(blurb.Sound, FMODRegistry.GetChannelGroup(SpeechContext), false, out Channel channel);
+            if (!FMODRegistry.TryPlaySound(blurb.Sound, FMODRegistry.GetChannelGroup(SpeechContext), out Channel channel))
+            {
+                continue;
+            }
             
             channel.setPitch(SpeechPitch);
             channel.setVolume(SpeechVolume);
         
             SetChannelPosition(SpeechSource.position, channel);
-            FMODRegistry.System.update();
+            FMODRegistry.TryUpdate();
 
             ActiveChannels.Add(channel);
             
