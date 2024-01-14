@@ -85,8 +85,6 @@ public class SynthesisSpeaker : BaseSpeaker
         }
         
         channel.setPitch(SpeechPitch);
-        channel.setVolume(SpeechVolume);
-        
         SetChannelPosition(SpeechSource.position, channel);
         FMODRegistry.TryUpdate();
     }

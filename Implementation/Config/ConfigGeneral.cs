@@ -11,8 +11,9 @@ public static partial class BabblerConfig
     public static bool DistortPhoneSpeech = true;
     
     public static float ConversationalVolume = 0.7f;
-    public static float PhoneVolume = 0.5f;
     public static float OverheardVolume = 0.3f;
+    public static float ShoutVolume = 2.5f;
+    public static float PhoneVolume = 0.5f;
 
     public static float FemaleThreshold = 0.49f;
     public static float MaleThreshold = 0.51f;
@@ -32,11 +33,14 @@ public static partial class BabblerConfig
         ConversationalVolume = config.Bind("Volume", "Conversational Volume", 0.7f,
                                            new ConfigDescription("How loud voices will be when you are speaking directly to a person.")).Value;
         
-        PhoneVolume = config.Bind("Volume", "Phone Volume", 0.5f,
-                                  new ConfigDescription("How loud voices will be when you are talking with a person over the phone.")).Value;
-        
         OverheardVolume = config.Bind("Volume", "Overheard Volume", 0.3f,
                                       new ConfigDescription("How loud voices that you overhear nearby will be when you are not talking directly to them.")).Value;
+        
+        ShoutVolume = config.Bind("Volume", "Shout Volume", 2.5f,
+                                      new ConfigDescription("How loud overheard voices that are \"shouting\" (in all caps) will be.")).Value;
+        
+        PhoneVolume = config.Bind("Volume", "Phone Volume", 0.5f,
+                                  new ConfigDescription("How loud voices will be when you are talking with a person over the phone.")).Value;
         
         FemaleThreshold = config.Bind("Gender", "Female Threshold", 0.49f,
                                       new ConfigDescription("Increase for more female voices, decrease for less, defaults to what the stock game uses for citizens.",

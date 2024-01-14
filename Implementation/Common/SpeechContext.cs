@@ -4,5 +4,6 @@ public enum SpeechContext
 {
     ConversationalSpeech,
     OverheardSpeech,
+    ShoutSpeech,
     PhoneSpeech,
 }

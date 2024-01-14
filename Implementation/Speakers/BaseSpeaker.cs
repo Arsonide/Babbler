@@ -15,7 +15,6 @@ public abstract class BaseSpeaker
     protected Human SpeechPerson { get; private set; }
     protected Transform SpeechSource { get; private set; }
     protected float SpeechPitch { get; private set; }
-    protected float SpeechVolume { get; private set; }
 
     protected readonly List<Channel> ActiveChannels = new List<Channel>();
     
@@ -43,7 +42,6 @@ public abstract class BaseSpeaker
 
         SpeechSource = CacheSpeechSource(speechContext, speechPerson);
         SpeechPitch = CacheSpeechPitch(speechPerson);
-        SpeechVolume = CacheSpeechVolume(speechContext);
     }
 
     public virtual void UpdateSpeaker()
@@ -75,20 +73,6 @@ public abstract class BaseSpeaker
     protected virtual float CacheSpeechPitch(Human speechPerson)
     {
         return 1f;
-    }
-
-    protected virtual float CacheSpeechVolume(SpeechContext speechContext)
-    {
-        // TODO: Maybe this could be part of the channel group instead?
-        switch (speechContext)
-        {
-            case SpeechContext.ConversationalSpeech:
-                return BabblerConfig.ConversationalVolume;
-            case SpeechContext.PhoneSpeech:
-                return BabblerConfig.PhoneVolume;
-            default:
-                return BabblerConfig.OverheardVolume;
-        }
     }
 
     private Transform CacheSpeechSource(SpeechContext speechContext, Human speechPerson)

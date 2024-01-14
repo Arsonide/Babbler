@@ -9,48 +9,38 @@ public static class FMODRegistry
     // All direct interactions with System are done through helper methods so we can log if there are errors.
     private static FMOD.System System;
     
-    private static ChannelGroup SpeechGroup;
+    private static ChannelGroup ConversationalGroup;
+    private static ChannelGroup OverheardGroup;
+    private static ChannelGroup ShoutGroup;
     private static ChannelGroup PhoneGroup;
-    public static ChannelGroup ShoutGroup;
     
     public static void Initialize()
     {
-        // TODO: Set SpeechContext volume here on the ChannelGroups so we don't need to do it every time we play a sound.
         System = FMODUnity.RuntimeManager.CoreSystem;
-        TryCreateChannelGroup("BabblerSpeechGroup", out SpeechGroup);
-        SetupPhoneEffects();
-        SetupShoutEffects();
+        SetupConversationalGroup();
+        SetupOverheardGroup();
+        SetupShoutGroup();
+        SetupPhoneGroup();
     }
-
-    public static ChannelGroup GetChannelGroup(SpeechContext speechContext)
+    
+    private static void SetupConversationalGroup()
     {
-        return speechContext == SpeechContext.PhoneSpeech && BabblerConfig.DistortPhoneSpeech ? PhoneGroup : SpeechGroup;
+        TryCreateChannelGroup("BabblerConversationalGroup", out ConversationalGroup);
+        ConversationalGroup.setVolume(BabblerConfig.ConversationalVolume);
     }
 
-    private static void SetupPhoneEffects()
+    private static void SetupOverheardGroup()
     {
-        TryCreateChannelGroup("BabblerPhoneGroup", out PhoneGroup);
-
-        TryCreateDSP(DSP_TYPE.MULTIBAND_EQ, out DSP phoneDSP);
-
-        phoneDSP.setParameterInt((int)DSP_MULTIBAND_EQ.A_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.HIGHPASS_48DB);
-        phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 300f);
-        
-        phoneDSP.setParameterInt((int)DSP_MULTIBAND_EQ.B_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.PEAKING);
-        phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_FREQUENCY, 1700f);
-        phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_Q, 1f);
-
-        phoneDSP.setParameterInt((int)DSP_MULTIBAND_EQ.C_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.LOWPASS_48DB);
-        phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
-        
-        PhoneGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneDSP);
+        TryCreateChannelGroup("BabblerOverheardGroup", out OverheardGroup);
+        OverheardGroup.setVolume(BabblerConfig.OverheardVolume);
     }
-
-    private static void SetupShoutEffects()
+    
+    private static void SetupShoutGroup()
     {
         // Not used currently, just something I'm experimenting with for ALL CAPS DIALOG THAT IS DETECTED.
         TryCreateChannelGroup("BabblerShoutGroup", out ShoutGroup);
-        
+        ShoutGroup.setVolume(BabblerConfig.ShoutVolume);
+
         TryCreateDSP(DSP_TYPE.DISTORTION, out DSP distortionDSP);
         distortionDSP.setParameterFloat((int)DSP_DISTORTION.LEVEL, 0.5f);
         
@@ -70,6 +60,48 @@ public static class FMODRegistry
         ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, eqDSP);
         ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, tremoloDSP);
         ShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, compressorDSP);
+    }
+    
+    private static void SetupPhoneGroup()
+    {
+        TryCreateChannelGroup("BabblerPhoneGroup", out PhoneGroup);
+        PhoneGroup.setVolume(BabblerConfig.PhoneVolume);
+
+        if (!BabblerConfig.DistortPhoneSpeech)
+        {
+            return;
+        }
+
+        TryCreateDSP(DSP_TYPE.MULTIBAND_EQ, out DSP phoneDSP);
+
+        phoneDSP.setParameterInt((int)DSP_MULTIBAND_EQ.A_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.HIGHPASS_48DB);
+        phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 300f);
+
+        phoneDSP.setParameterInt((int)DSP_MULTIBAND_EQ.B_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.PEAKING);
+        phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_FREQUENCY, 1700f);
+        phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_Q, 1f);
+
+        phoneDSP.setParameterInt((int)DSP_MULTIBAND_EQ.C_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.LOWPASS_48DB);
+        phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
+
+        PhoneGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneDSP);
+    }
+
+    public static ChannelGroup GetChannelGroup(SpeechContext speechContext)
+    {
+        switch (speechContext)
+        {
+            case SpeechContext.ConversationalSpeech:
+                return ConversationalGroup;
+            case SpeechContext.OverheardSpeech:
+                return OverheardGroup;
+            case SpeechContext.ShoutSpeech:
+                return ShoutGroup;
+            case SpeechContext.PhoneSpeech:
+                return PhoneGroup;
+            default:
+                return OverheardGroup;
+        }
     }
     
 #region System Interactions

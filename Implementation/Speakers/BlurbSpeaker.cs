@@ -44,8 +44,6 @@ public class BlurbSpeaker : BaseSpeaker
             }
             
             channel.setPitch(SpeechPitch);
-            channel.setVolume(SpeechVolume);
-        
             SetChannelPosition(SpeechSource.position, channel);
             FMODRegistry.TryUpdate();
 
