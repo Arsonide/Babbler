@@ -7,7 +7,7 @@ namespace Babbler.Implementation.Hosts;
 
 public class SpeakerHost : MonoBehaviour
 {
-    public BaseSpeaker Speaker { get; private set; }
+    public BaseSpeaker Speaker;
 
     private void Awake()
     {
