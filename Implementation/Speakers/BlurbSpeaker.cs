@@ -12,6 +12,8 @@ namespace Babbler.Implementation.Speakers;
 
 public class BlurbSpeaker : BaseSpeaker
 {
+    private const int PRIME = 97;
+    
     private readonly List<BlurbSound> _blurbsToSpeak = new List<BlurbSound>();
     private Coroutine _blurbCoroutine;
 
@@ -30,10 +32,15 @@ public class BlurbSpeaker : BaseSpeaker
     {
         base.StartSpeaker(speechInput, speechContext, speechPerson);
 
+        if (BabblerConfig.MonosyllabicBlurbs)
+        {
+            speechInput = ProcessMonosyllabicBlurb(speechInput, speechPerson);
+        }
+
         PopulateBlurbSounds(speechInput);
         _blurbCoroutine = UniverseLib.RuntimeHelper.StartCoroutine(BlurbRoutine());
     }
-    
+
     private IEnumerator BlurbRoutine()
     {
         foreach (BlurbSound blurb in _blurbsToSpeak)
@@ -52,6 +59,19 @@ public class BlurbSpeaker : BaseSpeaker
         }
         
         OnFinishedSpeaking?.Invoke();
+    }
+    
+    private string ProcessMonosyllabicBlurb(string speechInput, Human speechPerson)
+    {
+        char monosyllable = PickMonosyllable(speechPerson);
+        Utilities.GlobalStringBuilder.Clear();
+        
+        foreach (char c in speechInput)
+        {
+            Utilities.GlobalStringBuilder.Append(char.IsLetter(c) ? monosyllable : c);
+        }
+
+        return Utilities.GlobalStringBuilder.ToString();
     }
     
     private void PopulateBlurbSounds(string speechInput)
@@ -90,5 +110,16 @@ public class BlurbSpeaker : BaseSpeaker
             default:
                 return Mathf.Lerp(BabblerConfig.BlurbsPitchNonBinaryMinimum, BabblerConfig.BlurbsPitchNonBinaryMaximum, characteristics.Pitch);
         }
+    }
+    
+    public char PickMonosyllable(Human human)
+    {
+        int alphabetLength = 26;
+        int baseCharCode = 'a';
+
+        int letterIndex = Math.Abs((human.seed.GetHashCode() * PRIME) % alphabetLength);
+        char determinedLetter = (char)(baseCharCode + letterIndex);
+
+        return determinedLetter;
     }
 }
