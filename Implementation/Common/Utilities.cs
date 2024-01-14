@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using BepInEx.Logging;
@@ -10,7 +11,8 @@ public static class Utilities
     public const bool DEBUG_BUILD = false;
 
     public static readonly StringBuilder GlobalStringBuilder = new StringBuilder();
-    
+    public static readonly Random GlobalRandom = new Random();
+
     public static void Log(string message, LogLevel level = LogLevel.Info)
     {
         // Debug does not appear, presumably because it's for some functionality we don't have. We'll use it to filter based on DEBUG_BUILD instead.
@@ -52,5 +54,10 @@ public static class Utilities
         }
         
         return callingMethod.Name;
+    }
+
+    public static float GetRandomFloat(float minimum, float maximum)
+    {
+        return minimum + (GlobalRandom.NextSingle() * (maximum - minimum));
     }
 }

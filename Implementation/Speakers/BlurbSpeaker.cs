@@ -49,13 +49,20 @@ public class BlurbSpeaker : BaseSpeaker
             {
                 continue;
             }
-            
-            channel.setPitch(SpeechPitch);
+
+            channel.setPitch(SpeechPitch * Utilities.GetRandomFloat(BabblerConfig.MinimumSyllablePitchVariance, BabblerConfig.MaximumSyllablePitchVariance));
             SetChannelPosition(SpeechSource.position, channel);
             FMODRegistry.TryUpdate();
 
             ActiveChannels.Add(channel);
-            yield return blurb.Yield;
+
+            float delay = BabblerConfig.BaseSyllableDelay + Utilities.GetRandomFloat(BabblerConfig.MinimumSyllableDelayVariance, BabblerConfig.MaximumSyllableDelayVariance);
+            float syllableExpiration = Time.realtimeSinceStartup + blurb.Length + delay;
+
+            while (Time.realtimeSinceStartup < syllableExpiration)
+            {
+                yield return null;
+            }
         }
         
         OnFinishedSpeaking?.Invoke();

@@ -9,6 +9,5 @@ public class BlurbSound
     public string FilePath;
     public FMOD.Sound Sound;
     public float Length;
-    public WaitForSeconds Yield;
     public bool Released;
 }

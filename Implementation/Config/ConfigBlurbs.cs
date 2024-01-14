@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using UnityEngine;
 
 namespace Babbler.Implementation.Config;
 
@@ -6,8 +7,14 @@ public static partial class BabblerConfig
 {
     public static bool UseMonosyllabicBlurbs = false;
     public static string ValidMonosyllables = "aeiouybdglmptvw";
-    public static float SyllableSpeed = 0.2f;
 
+    public static float BaseSyllableDelay = -0.2f;
+    public static float MinimumSyllableDelayVariance = 0f;
+    public static float MaximumSyllableDelayVariance = 0.4f;
+
+    public static float MinimumSyllablePitchVariance = 0.8f;
+    public static float MaximumSyllablePitchVariance = 1.2f;
+    
     public static float BlurbsPitchMaleMinimum = 0.8f;
     public static float BlurbsPitchMaleMaximum = 1.2f;
     
@@ -25,8 +32,20 @@ public static partial class BabblerConfig
         ValidMonosyllables = config.Bind("Blurbs", "Valid Monosyllables", "aeiouybdglmptvw",
                                          new ConfigDescription("When using monosyllabic blurbs, citizens will choose from these syllables.")).Value;
         
-        SyllableSpeed = config.Bind("Blurbs", "Syllable Speed", 0.2f,
-                                    new ConfigDescription("Determines the pauses between blurbs in a character's speech. Higher numbers make them talk slower.")).Value;
+        BaseSyllableDelay = config.Bind("Blurbs", "Base Syllable Delay", -0.2f,
+                                        new ConfigDescription("The delay of each syllable is its length plus this. Negative numbers cause overlapping syllables.")).Value;
+        
+        MinimumSyllableDelayVariance = config.Bind("Blurbs", "Minimum Syllable Delay Variance", 0f,
+                                                   new ConfigDescription("A random value between minimum and maximum syllable delay variance is added to the base delay to create more random delays between syllables.")).Value;
+        
+        MaximumSyllableDelayVariance = config.Bind("Blurbs", "Maximum Syllable Delay Variance", 0.4f,
+                                                   new ConfigDescription("A random value between minimum and maximum syllable delay variance is added to the base delay to create more random delays between syllables.")).Value;
+        
+        MinimumSyllablePitchVariance = config.Bind("Blurbs", "Minimum Syllable Pitch Variance", 0.8f,
+                                                   new ConfigDescription("A random value between minimum and maximum syllable pitch variance is multiplied against the syllable pitch to make individual syllables sound different.")).Value;
+        
+        MaximumSyllablePitchVariance = config.Bind("Blurbs", "Maximum Syllable Pitch Variance", 1.2f,
+                                                   new ConfigDescription("A random value between minimum and maximum syllable pitch variance is multiplied against the syllable pitch to make individual syllables sound different.")).Value;
         
         BlurbsPitchMaleMinimum = config.Bind("Blurbs", "Blurbs Pitch Male Minimum", 0.8f,
                                              new ConfigDescription("Lowest possible pitch for male voices in Blurbs mode.")).Value;
@@ -45,5 +64,15 @@ public static partial class BabblerConfig
         
         BlurbsPitchNonBinaryMaximum = config.Bind("Blurbs", "Blurbs Pitch Non-Binary Maximum", 1.2f,
                                                 new ConfigDescription("Highest possible pitch for non-binary voices in Blurbs mode.")).Value;
+
+        float minSyllableDelayVariance = Mathf.Min(MinimumSyllableDelayVariance, MaximumSyllableDelayVariance);
+        float maxSyllableDelayVariance = Mathf.Max(MinimumSyllableDelayVariance, MaximumSyllableDelayVariance);
+        MinimumSyllableDelayVariance = minSyllableDelayVariance;
+        MaximumSyllableDelayVariance = maxSyllableDelayVariance;
+        
+        float minSyllablePitchVariance = Mathf.Min(MinimumSyllablePitchVariance, MaximumSyllablePitchVariance);
+        float maxSyllablePitchVariance = Mathf.Max(MinimumSyllablePitchVariance, MaximumSyllablePitchVariance);
+        MinimumSyllablePitchVariance = minSyllablePitchVariance;
+        MaximumSyllablePitchVariance = maxSyllablePitchVariance;
     }
 }

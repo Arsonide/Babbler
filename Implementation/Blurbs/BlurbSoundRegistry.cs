@@ -83,7 +83,6 @@ public static class BlurbSoundRegistry
             FilePath = filePath,
             Sound = sound,
             Length = floatLength,
-            Yield = new WaitForSeconds(Mathf.Max(0f, floatLength - BabblerConfig.SyllableSpeed)),
             Released = false,
         };
 
