@@ -50,9 +50,7 @@ public class BlurbSpeaker : BaseSpeaker
             FMODRegistry.TryUpdate();
 
             ActiveChannels.Add(channel);
-            
-            // TODO perhaps we can pool this instantiation.
-            yield return new WaitForSeconds(Mathf.Max(0f, blurb.Length - BabblerConfig.SyllableSpeed));
+            yield return blurb.Yield;
         }
         
         OnFinishedSpeaking?.Invoke();

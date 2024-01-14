@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Babbler.Implementation.Common;
+using Babbler.Implementation.Config;
 using FMOD;
+using UnityEngine;
 
 namespace Babbler.Implementation.Blurbs;
 
@@ -68,10 +70,16 @@ public static class BlurbSoundRegistry
         }
         
         sound.getLength(out uint length, TIMEUNIT.MS);
+        float floatLength = length / 1000f;
         
         BlurbSound newBlurb = new BlurbSound()
         {
-            Phonetic = phonetic, FilePath = filePath, Sound = sound, Length = length / 1000f, Released = false,
+            Phonetic = phonetic,
+            FilePath = filePath,
+            Sound = sound,
+            Length = floatLength,
+            Yield = new WaitForSeconds(Mathf.Max(0f, floatLength - BabblerConfig.SyllableSpeed)),
+            Released = false,
         };
 
         return newBlurb;

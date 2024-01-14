@@ -1,4 +1,6 @@
-﻿namespace Babbler.Implementation.Blurbs;
+﻿using UnityEngine;
+
+namespace Babbler.Implementation.Blurbs;
 
 public class BlurbSound
 {
@@ -7,5 +9,6 @@ public class BlurbSound
     public string FilePath;
     public FMOD.Sound Sound;
     public float Length;
+    public WaitForSeconds Yield;
     public bool Released;
 }
