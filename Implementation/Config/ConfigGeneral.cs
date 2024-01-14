@@ -1,5 +1,6 @@
-﻿using Babbler.Implementation.Common;
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
+using BepInEx.Logging;
+using Babbler.Implementation.Common;
 
 namespace Babbler.Implementation.Config;
 
@@ -56,5 +57,7 @@ public static partial class BabblerConfig
 
         InitializeBlurbs(config);
         InitializeSynthesis(config);
+        
+        Utilities.Log("BabblerConfig has initialized!", LogLevel.Debug);
     }
 }

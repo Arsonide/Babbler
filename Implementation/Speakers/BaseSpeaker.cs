@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMOD;
 using Babbler.Implementation.Common;
-using Babbler.Implementation.Config;
 
 namespace Babbler.Implementation.Speakers;
 
@@ -77,7 +76,7 @@ public abstract class BaseSpeaker
 
     private Transform CacheSpeechSource(SpeechContext speechContext, Human speechPerson)
     {
-        Transform result = null;
+        Transform result;
         
         if (speechContext == SpeechContext.PhoneSpeech)
         {

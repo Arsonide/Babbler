@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using BepInEx.Logging;
 using Babbler.Implementation.Common;
 
 namespace Babbler.Implementation.Hosts;
@@ -33,6 +34,7 @@ public static class SpeakerHostPool
             speakerHost = go.AddComponent<SpeakerHost>();
             Object.DontDestroyOnLoad(go);
             AllHosts.Add(speakerHost);
+            Utilities.Log($"Created speaker host, current count is {AllHosts.Count}.", LogLevel.Debug);
         }
         
         return speakerHost;
@@ -58,5 +60,7 @@ public static class SpeakerHostPool
             // This will uninitialize their BaseSpeakers, which will dispose of resources.
             Object.DestroyImmediate(speakerHost.gameObject);
         }
+        
+        Utilities.Log("Cleaned up all speaker hosts.", LogLevel.Debug);
     }
 }

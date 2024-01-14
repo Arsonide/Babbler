@@ -1,6 +1,6 @@
-﻿using Babbler.Implementation.Config;
+﻿using FMOD;
 using BepInEx.Logging;
-using FMOD;
+using Babbler.Implementation.Config;
 
 namespace Babbler.Implementation.Common;
 
@@ -17,10 +17,13 @@ public static class FMODRegistry
     public static void Initialize()
     {
         System = FMODUnity.RuntimeManager.CoreSystem;
+        
         SetupConversationalGroup();
         SetupOverheardGroup();
         SetupShoutGroup();
         SetupPhoneGroup();
+        
+        Utilities.Log("FMODRegistry has initialized!", LogLevel.Debug);
     }
     
     private static void SetupConversationalGroup()

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using UnityEngine;
+using FMOD;
+using BepInEx.Logging;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
-using FMOD;
-using UnityEngine;
 
 namespace Babbler.Implementation.Blurbs;
 
@@ -46,6 +47,8 @@ public static class BlurbSoundRegistry
                 Map[phonetic] = newBlurb;
             }
         }
+        
+        Utilities.Log($"BlurbSoundRegistry has initialized! Syllables: {Map.Count}", LogLevel.Debug);
     }
 
     public static void Uninitialize()
@@ -60,6 +63,8 @@ public static class BlurbSoundRegistry
             pair.Value.Sound.release();
             pair.Value.Released = true;
         }
+        
+        Utilities.Log("BlurbSoundRegistry has uninitialized!", LogLevel.Debug);
     }
     
     private static BlurbSound CreateBlurbSound(string filePath, string phonetic)

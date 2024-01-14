@@ -3,7 +3,9 @@
 using System.Collections.Generic;
 using System.Speech.Synthesis;
 using UnityEngine;
+using BepInEx.Logging;
 using Babbler.Implementation.Characteristics;
+using Babbler.Implementation.Common;
 
 namespace Babbler.Implementation.Synthesis;
 
@@ -65,6 +67,8 @@ public static class SynthesisVoiceRegistry
 
         synthesizer.SetOutputToNull();
         synthesizer.SpeakAsync("Initialize");
+        
+        Utilities.Log($"SynthesisVoiceRegistry has initialized! Male Voices: {MaleVoices.Count}, Female Voices: {FemaleVoices.Count}, Non-Binary Voices: {NonBinaryVoices.Count}", LogLevel.Debug);
     }
 
     private static void OnSpeakCompleted(object sender, SpeakCompletedEventArgs e)

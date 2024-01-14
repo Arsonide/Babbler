@@ -28,7 +28,7 @@ public static class Utilities
 #pragma warning restore CS0162
         }
         
-        BabblerPlugin.Log.Log(level, $"Babbler: {message}");
+        BabblerPlugin.Log.Log(level, message);
     }
     
     public static string GetCallingMethodName()

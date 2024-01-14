@@ -1,5 +1,6 @@
 ﻿using Il2CppInterop.Runtime.Injection;
 using BepInEx;
+using BepInEx.Logging;
 using SOD.Common.BepInEx;
 using Babbler.Implementation.Blurbs;
 using Babbler.Implementation.Common;
@@ -26,16 +27,17 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         
         if (!BabblerConfig.Enabled)
         {
-            Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is disabled.");
+            Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is disabled.");
             return;
         }
 
-        ClassInjector.RegisterTypeInIl2Cpp<SpeakerHost>();       
+        Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
         Harmony.PatchAll();
+        Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is patched!");
+        ClassInjector.RegisterTypeInIl2Cpp<SpeakerHost>();       
+        Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} has added custom types!");
         
         InitializeImmediate();
-        
-        Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
 
     public override bool Unload()
@@ -53,6 +55,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         }
 
         _hasInitializedImmediate = true;
+        Utilities.Log("Plugin is running immediate initialization.", LogLevel.Debug);
         
         // This must initialize the moment the game starts to "kickstart" Microsoft Speech Synthesis with a silent sound.
         // Without playing this sound immediately, the game will crash. I do not know why.
@@ -70,7 +73,8 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         }
 
         _hasInitializedDeferred = true;
-        
+        Utilities.Log("Plugin is running deferred initialization.", LogLevel.Debug);
+
         // Wait for the main menu to load this stuff because FMOD's listener is ready at that time.
         FMODRegistry.Initialize();
 
@@ -87,6 +91,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
             return;
         }
         
+        Utilities.Log("Plugin is running immediate uninitialization.", LogLevel.Debug);
         SpeakerHostPool.CleanupSpeakerHosts();
     }
 
@@ -97,6 +102,8 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
             return;
         }
         
+        Utilities.Log("Plugin is running deferred uninitialization.", LogLevel.Debug);
+
         if (BabblerConfig.Mode == SpeechMode.Blurbs)
         {
             BlurbSoundRegistry.Uninitialize();
