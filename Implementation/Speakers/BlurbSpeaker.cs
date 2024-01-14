@@ -32,7 +32,7 @@ public class BlurbSpeaker : BaseSpeaker
     {
         base.StartSpeaker(speechInput, speechContext, speechPerson);
 
-        if (BabblerConfig.MonosyllabicBlurbs)
+        if (BabblerConfig.UseMonosyllabicBlurbs)
         {
             speechInput = ProcessMonosyllabicBlurb(speechInput, speechPerson);
         }
@@ -114,12 +114,7 @@ public class BlurbSpeaker : BaseSpeaker
     
     public char PickMonosyllable(Human human)
     {
-        int alphabetLength = 26;
-        int baseCharCode = 'a';
-
-        int letterIndex = Math.Abs((human.seed.GetHashCode() * PRIME) % alphabetLength);
-        char determinedLetter = (char)(baseCharCode + letterIndex);
-
-        return determinedLetter;
+        int index = Math.Abs((human.seed.GetHashCode() * PRIME) % BabblerConfig.ValidMonosyllables.Length);
+        return BabblerConfig.ValidMonosyllables[index];
     }
 }
