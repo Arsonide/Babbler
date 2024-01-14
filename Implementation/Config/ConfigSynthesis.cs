@@ -15,22 +15,22 @@ public static partial class BabblerConfig
 
     private static void InitializeSynthesis(ConfigFile config)
     {
-        SynthesisPitchMaleMinimum = config.Bind("Synthesis Pitch", "Synthesis Pitch Male Minimum", 0.5f,
+        SynthesisPitchMaleMinimum = config.Bind("Synthesis", "Synthesis Pitch Male Minimum", 0.5f,
                                                 new ConfigDescription("Lowest possible pitch for male voices in Synthesis mode.")).Value;
         
-        SynthesisPitchMaleMaximum = config.Bind("Synthesis Pitch", "Synthesis Pitch Male Maximum", 1.3f,
+        SynthesisPitchMaleMaximum = config.Bind("Synthesis", "Synthesis Pitch Male Maximum", 1.3f,
                                                 new ConfigDescription("Highest possible pitch for male voices in Synthesis mode.")).Value;
         
-        SynthesisPitchFemaleMinimum = config.Bind("Synthesis Pitch", "Synthesis Pitch Female Minimum", 0.7f,
+        SynthesisPitchFemaleMinimum = config.Bind("Synthesis", "Synthesis Pitch Female Minimum", 0.7f,
                                                   new ConfigDescription("Lowest possible pitch for female voices in Synthesis mode.")).Value;
         
-        SynthesisPitchFemaleMaximum = config.Bind("Synthesis Pitch", "Synthesis Pitch Female Maximum", 1.5f,
+        SynthesisPitchFemaleMaximum = config.Bind("Synthesis", "Synthesis Pitch Female Maximum", 1.5f,
                                                   new ConfigDescription("Highest possible pitch for female voices in Synthesis mode.")).Value;
         
-        SynthesisPitchNonBinaryMinimum = config.Bind("Synthesis Pitch", "Synthesis Pitch Non-Binary Minimum", 0.5f,
+        SynthesisPitchNonBinaryMinimum = config.Bind("Synthesis", "Synthesis Pitch Non-Binary Minimum", 0.5f,
                                                    new ConfigDescription("Lowest possible pitch for non-binary voices in Synthesis mode.")).Value;
         
-        SynthesisPitchNonBinaryMaximum = config.Bind("Synthesis Pitch", "Synthesis Pitch Non-Binary Maximum", 1.5f,
+        SynthesisPitchNonBinaryMaximum = config.Bind("Synthesis", "Synthesis Pitch Non-Binary Maximum", 1.5f,
                                                    new ConfigDescription("Highest possible pitch for non-binary voices in Synthesis mode.")).Value;
     }
 }

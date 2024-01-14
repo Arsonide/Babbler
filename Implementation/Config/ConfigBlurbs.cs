@@ -20,22 +20,22 @@ public static partial class BabblerConfig
         SyllableSpeed = config.Bind("Blurbs", "Syllable Speed", 0.2f,
                                     new ConfigDescription("Determines the pauses between blurbs in a character's speech. Higher numbers make them talk slower.")).Value;
         
-        BlurbsPitchMaleMinimum = config.Bind("Blurbs", "Pitch Male Minimum", 0.8f,
+        BlurbsPitchMaleMinimum = config.Bind("Blurbs", "Blurbs Pitch Male Minimum", 0.8f,
                                              new ConfigDescription("Lowest possible pitch for male voices in Blurbs mode.")).Value;
         
-        BlurbsPitchMaleMaximum = config.Bind("Blurbs", "Pitch Male Maximum", 1.2f,
+        BlurbsPitchMaleMaximum = config.Bind("Blurbs", "Blurbs Pitch Male Maximum", 1.2f,
                                              new ConfigDescription("Highest possible pitch for male voices in Blurbs mode.")).Value;
         
-        BlurbsPitchFemaleMinimum = config.Bind("Blurbs", "Pitch Female Minimum", 0.8f,
+        BlurbsPitchFemaleMinimum = config.Bind("Blurbs", "Blurbs Pitch Female Minimum", 0.8f,
                                                new ConfigDescription("Lowest possible pitch for female voices in Blurbs mode.")).Value;
         
-        BlurbsPitchFemaleMaximum = config.Bind("Blurbs", "Pitch Female Maximum", 1.2f,
+        BlurbsPitchFemaleMaximum = config.Bind("Blurbs", "Blurbs Pitch Female Maximum", 1.2f,
                                                new ConfigDescription("Highest possible pitch for female voices in Blurbs mode.")).Value;
         
-        BlurbsPitchNonBinaryMinimum = config.Bind("Blurbs", "Pitch Non-Binary Minimum", 0.8f,
+        BlurbsPitchNonBinaryMinimum = config.Bind("Blurbs", "Blurbs Pitch Non-Binary Minimum", 0.8f,
                                                 new ConfigDescription("Lowest possible pitch for non-binary voices in Blurbs mode.")).Value;
         
-        BlurbsPitchNonBinaryMaximum = config.Bind("Blurbs", "Pitch Non-Binary Maximum", 1.2f,
+        BlurbsPitchNonBinaryMaximum = config.Bind("Blurbs", "Blurbs Pitch Non-Binary Maximum", 1.2f,
                                                 new ConfigDescription("Highest possible pitch for non-binary voices in Blurbs mode.")).Value;
     }
 }
