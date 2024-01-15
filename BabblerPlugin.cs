@@ -80,7 +80,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
 
         if (BabblerConfig.Mode == SpeechMode.Phonetic)
         {
-            PhoneticSoundRegistry.Initialize();
+            PhoneticVoiceRegistry.Initialize();
         }
     }
 
@@ -106,7 +106,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
 
         if (BabblerConfig.Mode == SpeechMode.Phonetic)
         {
-            PhoneticSoundRegistry.Uninitialize();
+            PhoneticVoiceRegistry.Uninitialize();
         }
     }
 }

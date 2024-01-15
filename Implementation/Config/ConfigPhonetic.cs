@@ -8,21 +8,21 @@ public static partial class BabblerConfig
     public static bool UseMonosyllabicPhonetics = false;
     public static string ValidMonosyllables = "aeiouybdglmptvw";
 
-    public static float BaseSyllableDelay = -0.2f;
+    public static float BaseSyllableDelay = -0.175f;
     public static float MinimumSyllableDelayVariance = 0f;
     public static float MaximumSyllableDelayVariance = 0.4f;
 
     public static float MinimumSyllablePitchVariance = 0.8f;
     public static float MaximumSyllablePitchVariance = 1.2f;
     
-    public static float PhoneticPitchMaleMinimum = 0.8f;
-    public static float PhoneticPitchMaleMaximum = 1.2f;
+    public static float PhoneticFrequencyMaleMinimum = 100f;
+    public static float PhoneticFrequencyMaleMaximum = 180f;
     
-    public static float PhoneticPitchFemaleMinimum = 0.8f;
-    public static float PhoneticPitchFemaleMaximum = 1.2f;
+    public static float PhoneticFrequencyFemaleMinimum = 165f;
+    public static float PhoneticFrequencyFemaleMaximum = 255f;
     
-    public static float PhoneticPitchNonBinaryMinimum = 0.8f;
-    public static float PhoneticPitchNonBinaryMaximum = 1.2f;
+    public static float PhoneticFrequencyNonBinaryMinimum = 100f;
+    public static float PhoneticFrequencyNonBinaryMaximum = 255f;
 
     private static void InitializePhonetic(ConfigFile config)
     {
@@ -32,7 +32,7 @@ public static partial class BabblerConfig
         ValidMonosyllables = config.Bind("Phonetic", "Valid Monosyllables", "aeiouybdglmptvw",
                                          new ConfigDescription("When using monosyllabic phonetics, citizens will choose from these syllables.")).Value;
         
-        BaseSyllableDelay = config.Bind("Phonetic", "Base Syllable Delay", -0.2f,
+        BaseSyllableDelay = config.Bind("Phonetic", "Base Syllable Delay", -0.175f,
                                         new ConfigDescription("The delay of each syllable is its length plus this. Negative numbers cause overlapping syllables.")).Value;
         
         MinimumSyllableDelayVariance = config.Bind("Phonetic", "Minimum Syllable Delay Variance", 0f,
@@ -47,23 +47,23 @@ public static partial class BabblerConfig
         MaximumSyllablePitchVariance = config.Bind("Phonetic", "Maximum Syllable Pitch Variance", 1.2f,
                                                    new ConfigDescription("A random value between minimum and maximum syllable pitch variance is multiplied against the syllable pitch to make individual syllables sound different.")).Value;
         
-        PhoneticPitchMaleMinimum = config.Bind("Phonetic", "Phonetic Pitch Male Minimum", 0.8f,
-                                             new ConfigDescription("Lowest possible pitch for male voices in Phonetic mode.")).Value;
+        PhoneticFrequencyMaleMinimum = config.Bind("Phonetic", "Phonetic Frequency Male Minimum", 100f,
+                                             new ConfigDescription("Lowest possible frequency (in hertz) for male voices in Phonetic mode.")).Value;
         
-        PhoneticPitchMaleMaximum = config.Bind("Phonetic", "Phonetic Pitch Male Maximum", 1.2f,
-                                             new ConfigDescription("Highest possible pitch for male voices in Phonetic mode.")).Value;
+        PhoneticFrequencyMaleMaximum = config.Bind("Phonetic", "Phonetic Frequency Male Maximum", 180f,
+                                             new ConfigDescription("Highest possible frequency (in hertz) for male voices in Phonetic mode.")).Value;
         
-        PhoneticPitchFemaleMinimum = config.Bind("Phonetic", "Phonetic Pitch Female Minimum", 0.8f,
-                                               new ConfigDescription("Lowest possible pitch for female voices in Phonetic mode.")).Value;
+        PhoneticFrequencyFemaleMinimum = config.Bind("Phonetic", "Phonetic Frequency Female Minimum", 165f,
+                                               new ConfigDescription("Lowest possible frequency (in hertz) for female voices in Phonetic mode.")).Value;
         
-        PhoneticPitchFemaleMaximum = config.Bind("Phonetic", "Phonetic Pitch Female Maximum", 1.2f,
-                                               new ConfigDescription("Highest possible pitch for female voices in Phonetic mode.")).Value;
+        PhoneticFrequencyFemaleMaximum = config.Bind("Phonetic", "Phonetic Frequency Female Maximum", 255f,
+                                               new ConfigDescription("Highest possible frequency (in hertz) for female voices in Phonetic mode.")).Value;
         
-        PhoneticPitchNonBinaryMinimum = config.Bind("Phonetic", "Phonetic Pitch Non-Binary Minimum", 0.8f,
-                                                new ConfigDescription("Lowest possible pitch for non-binary voices in Phonetic mode.")).Value;
+        PhoneticFrequencyNonBinaryMinimum = config.Bind("Phonetic", "Phonetic Frequency Non-Binary Minimum", 100f,
+                                                new ConfigDescription("Lowest possible frequency (in hertz) for non-binary voices in Phonetic mode.")).Value;
         
-        PhoneticPitchNonBinaryMaximum = config.Bind("Phonetic", "Phonetic Pitch Non-Binary Maximum", 1.2f,
-                                                new ConfigDescription("Highest possible pitch for non-binary voices in Phonetic mode.")).Value;
+        PhoneticFrequencyNonBinaryMaximum = config.Bind("Phonetic", "Phonetic Frequency Non-Binary Maximum", 255f,
+                                                new ConfigDescription("Highest possible frequency (in hertz) for non-binary voices in Phonetic mode.")).Value;
 
         float minSyllableDelayVariance = Mathf.Min(MinimumSyllableDelayVariance, MaximumSyllableDelayVariance);
         float maxSyllableDelayVariance = Mathf.Max(MinimumSyllableDelayVariance, MaximumSyllableDelayVariance);

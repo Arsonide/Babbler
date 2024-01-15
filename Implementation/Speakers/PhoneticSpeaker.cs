@@ -16,6 +16,7 @@ public class PhoneticSpeaker : BaseSpeaker
     
     private readonly List<PhoneticSound> _phoneticsToSpeak = new List<PhoneticSound>();
     private Coroutine _phoneticCoroutine;
+    private PhoneticVoice _currentVoice;
 
     public override void StopSpeaker()
     {
@@ -91,12 +92,12 @@ public class PhoneticSpeaker : BaseSpeaker
             ReadOnlySpan<char> span = inputSpan.Slice(i, Math.Min(2, inputSpan.Length - i));
             string spanString = span.ToString();
 
-            if (span.Length > 1 && PhoneticSoundRegistry.TryGetPhoneticSound(spanString, out PhoneticSound phoneticSound))
+            if (span.Length > 1 && _currentVoice.TryGetPhoneticSound(spanString, out PhoneticSound phoneticSound))
             {
                 _phoneticsToSpeak.Add(phoneticSound);
                 i++;
             }
-            else if (PhoneticSoundRegistry.TryGetPhoneticSound(spanString[0].ToString(), out phoneticSound))
+            else if (_currentVoice.TryGetPhoneticSound(spanString[0].ToString(), out phoneticSound))
             {
                 _phoneticsToSpeak.Add(phoneticSound);
             }
@@ -105,18 +106,31 @@ public class PhoneticSpeaker : BaseSpeaker
 
     protected override float CacheSpeechPitch(Human speechPerson)
     {
-        // TODO Voices are only really relevant to Synthesis until we add them to Phonetic mode.
-        VoiceCharacteristics characteristics = VoiceCharacteristics.Create(speechPerson, true, true, true);
+        
+        // While we have a human, use this as an opportunity to choose the SpeechSynthesis voice.
+        _currentVoice = PhoneticVoiceRegistry.GetVoice(speechPerson, out VoiceCharacteristics characteristics);
+        
+        float minimumFrequency;
+        float maximumFrequency;
         
         switch (characteristics.Category)
         {
             case VoiceCategory.Male:
-                return Mathf.Lerp(BabblerConfig.PhoneticPitchMaleMinimum, BabblerConfig.PhoneticPitchMaleMaximum, characteristics.Pitch);
+                minimumFrequency = BabblerConfig.PhoneticFrequencyMaleMinimum;
+                maximumFrequency = BabblerConfig.PhoneticFrequencyMaleMaximum;
+                break;
             case VoiceCategory.Female:
-                return Mathf.Lerp(BabblerConfig.PhoneticPitchFemaleMinimum, BabblerConfig.PhoneticPitchFemaleMaximum, characteristics.Pitch);
+                minimumFrequency = BabblerConfig.PhoneticFrequencyFemaleMinimum;
+                maximumFrequency = BabblerConfig.PhoneticFrequencyFemaleMaximum;
+                break;
             default:
-                return Mathf.Lerp(BabblerConfig.PhoneticPitchNonBinaryMinimum, BabblerConfig.PhoneticPitchNonBinaryMaximum, characteristics.Pitch);
+                minimumFrequency = BabblerConfig.PhoneticFrequencyNonBinaryMinimum;
+                maximumFrequency = BabblerConfig.PhoneticFrequencyNonBinaryMaximum;
+                break;
         }
+
+        float frequency = minimumFrequency + (characteristics.Pitch * (maximumFrequency - minimumFrequency));
+        return frequency / _currentVoice.Frequency;
     }
     
     public char PickMonosyllable(Human human)
