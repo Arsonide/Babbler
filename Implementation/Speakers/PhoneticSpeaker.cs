@@ -33,11 +33,7 @@ public class PhoneticSpeaker : BaseSpeaker
     {
         base.StartSpeaker(speechInput, speechContext, speechPerson);
 
-        if (BabblerConfig.UseMonosyllabicPhonetics)
-        {
-            speechInput = ProcessMonosyllabicPhonetics(speechInput, speechPerson);
-        }
-
+        ProcessSpeechInput(speechPerson, ref speechInput);
         PopulatePhoneticSounds(speechInput);
         _phoneticCoroutine = UniverseLib.RuntimeHelper.StartCoroutine(PhoneticRoutine());
     }
@@ -68,20 +64,12 @@ public class PhoneticSpeaker : BaseSpeaker
         
         OnFinishedSpeaking?.Invoke();
     }
-    
-    private string ProcessMonosyllabicPhonetics(string speechInput, Human speechPerson)
-    {
-        char monosyllable = PickMonosyllable(speechPerson);
-        Utilities.GlobalStringBuilder.Clear();
-        
-        foreach (char c in speechInput)
-        {
-            Utilities.GlobalStringBuilder.Append(char.IsLetter(c) ? monosyllable : c);
-        }
 
-        return Utilities.GlobalStringBuilder.ToString();
+    protected virtual void ProcessSpeechInput(Human speechPerson, ref string speechInput)
+    {
+        // Do nothing, this is for DroningSpeaker.
     }
-    
+
     private void PopulatePhoneticSounds(string speechInput)
     {
         _phoneticsToSpeak.Clear();

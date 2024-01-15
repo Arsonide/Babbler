@@ -78,9 +78,12 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         // Wait for the main menu to load this stuff because FMOD's listener is ready at that time.
         FMODRegistry.Initialize();
 
-        if (BabblerConfig.Mode == SpeechMode.Phonetic)
+        switch (BabblerConfig.Mode)
         {
-            PhoneticVoiceRegistry.Initialize();
+            case SpeechMode.Phonetic:
+            case SpeechMode.Droning:
+                PhoneticVoiceRegistry.Initialize();
+                break;
         }
     }
 
@@ -104,9 +107,12 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         
         Utilities.Log("Plugin is running deferred uninitialization.", LogLevel.Debug);
 
-        if (BabblerConfig.Mode == SpeechMode.Phonetic)
+        switch (BabblerConfig.Mode)
         {
-            PhoneticVoiceRegistry.Uninitialize();
+            case SpeechMode.Phonetic:
+            case SpeechMode.Droning:
+                PhoneticVoiceRegistry.Uninitialize();
+                break;
         }
     }
 }
