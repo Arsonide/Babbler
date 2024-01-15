@@ -11,7 +11,7 @@ public class SpeakerHost : MonoBehaviour
 
     private void Awake()
     {
-        Speaker = BabblerConfig.Mode == SpeechMode.Synthesis ? new SynthesisSpeaker() : new BlurbSpeaker();
+        Speaker = BabblerConfig.Mode == SpeechMode.Synthesis ? new SynthesisSpeaker() : new PhoneticSpeaker();
         
         Speaker.OnFinishedSpeaking -= OnFinishedSpeaking;
         Speaker.OnFinishedSpeaking += OnFinishedSpeaking;

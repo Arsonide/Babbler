@@ -2,7 +2,7 @@
 
 ## What is it?
 
-This plugin aims to make Shadows of Doubt more immersive by having NPCs you encounter speak audibly, whether you are talking to them directly, over the phone, or just hearing them nearby. There are two modes of speech: Synthesis, where they speak understandably using text to speech, and Blurbs, where they speak in gibberish similar to the game "Animal Crossing", or "The Sims", or "Undertale". The default is Synthesis, because I believe it sounds better, but both modes work and are highly configurable. I will outline how configuring them works in a configuration section below.
+This plugin aims to make Shadows of Doubt more immersive by having NPCs you encounter speak audibly, whether you are talking to them directly, over the phone, or just hearing them nearby. There are two modes of speech: Synthesis, where they speak understandably using text to speech, and Phonetic, where they speak in gibberish similar to the game "Animal Crossing", or "The Sims", or "Undertale". The default is Synthesis, because I believe it sounds better, but both modes work and are highly configurable. I will outline how configuring them works in a configuration section below.
 
 ## A Note On Gender Identity
 In my effort to create an inclusive and immersive experience, I've implemented comprehensive gender identity options in this mod. While the default settings align with the unmodified settings of Shadows of Doubt, extensive configurability is provided, allowing players to tailor these aspects to their preferences. My goal is to represent everyone respectfully, ensuring a diverse and authentic experience for all. As always I welcome any player feedback.
@@ -37,7 +37,7 @@ In r2modman you should see "Config editor" on the left, in the "Other" section. 
 
 ---
 - **General - Enabled**: Another method of enabling and disabling Babbler.
-- **General - Mode**: Determines whether citizens will talk with text to speech synthesis or phonetic blurbs.
+- **General - Mode**: Determines whether citizens will talk with text to speech synthesis, phonetic sounds, or monosyllabic droning.
 - **General - Distort Phone Speech**: When enabled, a band pass is applied to phones to make them sound a little tinnier, like phones.
 ---
 - **Gender - Female Threshold**: Increase for more female voices, decrease for less, defaults to what the stock game uses for citizens.
@@ -56,12 +56,12 @@ In r2modman you should see "Config editor" on the left, in the "Other" section. 
 - **Synthesis - Synthesis Pitch Non-Binary Minimum**: Lowest possible pitch for non-binary voices in Synthesis mode.
 - **Synthesis - Synthesis Pitch Non-Binary Maximum**: Highest possible pitch for non-binary voices in Synthesis mode.
 ---
-- **Blurbs - Blurbs Pitch Male Minimum**: Lowest possible pitch for male voices in Blurbs mode.
-- **Blurbs - Blurbs Pitch Male Maximum**: Highest possible pitch for male voices in Blurbs mode.
-- **Blurbs - Blurbs Pitch Female Minimum**: Lowest possible pitch for female voices in Blurbs mode.
-- **Blurbs - Blurbs Pitch Female Maximum**: Highest possible pitch for female voices in Blurbs mode.
-- **Blurbs - Blurbs Pitch Non-Binary Minimum**: Lowest possible pitch for non-binary voices in Blurbs mode.
-- **Blurbs - Blurbs Pitch Non-Binary Maximum**: Highest possible pitch for non-binary voices in Blurbs mode.
+- **Phonetic - Phonetic Pitch Male Minimum**: Lowest possible pitch for male voices in Phonetic mode.
+- **Phonetic - Phonetic Pitch Male Maximum**: Highest possible pitch for male voices in Phonetic mode.
+- **Phonetic - Phonetic Pitch Female Minimum**: Lowest possible pitch for female voices in Phonetic mode.
+- **Phonetic - Phonetic Pitch Female Maximum**: Highest possible pitch for female voices in Phonetic mode.
+- **Phonetic - Phonetic Pitch Non-Binary Minimum**: Lowest possible pitch for non-binary voices in Phonetic mode.
+- **Phonetic - Phonetic Pitch Non-Binary Maximum**: Highest possible pitch for non-binary voices in Phonetic mode.
 ---
 
 ### Adding Voices (Synthesis Mode)
@@ -70,13 +70,13 @@ Adding new voices in Synthesis Mode is as easy as installing them on your Window
 
 Note that any time your available voices change (when you install new ones or uninstall old ones) it will cause the voices of NPCs in existing cities to change to accommodate the newly available voices.
 
-### Adding Voices (Blurbs Mode)
+### Adding Voices (Phonetic Mode)
 
-It is possible to add new voices to Blurbs mode, but it is a bit more advanced. I will be adding more Blurbs to the standard installation of Babbler soon, but if you want to dig into adding your own, here are basic instructions.
+It is possible to add new voices to Phonetic mode, but it is a bit more advanced. I will be adding more Phonetic voices to the standard installation of Babbler soon, but if you want to dig into adding your own, here are basic instructions.
 
-If you locate where the mod is installed under **%AppData%\r2modmanPlus-local\ShadowsOfDoubt**, there is a subdirectory called "Blurbs". In that subdirectory is a folder for each installed voice. The naming conventions on the folders is important because it helps the mod load the syllables. In the folder for each voice, you will find wav files for each syllable. Again, the naming conventions here are important, the wav file will be named **something_syllable.wav**. After the underscore is the text that this syllable will be played for.
+If you locate where the mod is installed under **%AppData%\r2modmanPlus-local\ShadowsOfDoubt**, there is a subdirectory called "Phonemes". In that subdirectory is a folder for each installed voice. The naming conventions on the folders is important because it helps the mod load the syllables. In the folder for each voice, you will find wav files for each syllable. Again, the naming conventions here are important, the wav file will be named **something_syllable.wav**. After the underscore is the text that this syllable will be played for.
 
-Just like adding voices for Synthesis Mode, changing the number of available Blurbs voices will cause the NPCs in existing games to change their voices to accomodate the newly available voices.
+Just like adding voices for Synthesis Mode, changing the number of available Phonetic voices will cause the NPCs in existing games to change their voices to accomodate the newly available voices.
  
 ## License
 

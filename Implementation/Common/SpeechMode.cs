@@ -2,6 +2,7 @@
 
 public enum SpeechMode
 {
-    Blurbs,
+    Phonetic,
     Synthesis,
+    Droning,
 }

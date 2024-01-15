@@ -3,28 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMOD;
-using Babbler.Implementation.Blurbs;
+using Babbler.Implementation.Phonetic;
 using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
 
 namespace Babbler.Implementation.Speakers;
 
-public class BlurbSpeaker : BaseSpeaker
+public class PhoneticSpeaker : BaseSpeaker
 {
     private const int PRIME = 97;
     
-    private readonly List<BlurbSound> _blurbsToSpeak = new List<BlurbSound>();
-    private Coroutine _blurbCoroutine;
+    private readonly List<PhoneticSound> _phoneticsToSpeak = new List<PhoneticSound>();
+    private Coroutine _phoneticCoroutine;
 
     public override void StopSpeaker()
     {
         base.StopSpeaker();
 
-        if (_blurbCoroutine != null)
+        if (_phoneticCoroutine != null)
         {
-            UniverseLib.RuntimeHelper.StopCoroutine(_blurbCoroutine);
-            _blurbCoroutine = null;
+            UniverseLib.RuntimeHelper.StopCoroutine(_phoneticCoroutine);
+            _phoneticCoroutine = null;
         }
     }
 
@@ -32,20 +32,20 @@ public class BlurbSpeaker : BaseSpeaker
     {
         base.StartSpeaker(speechInput, speechContext, speechPerson);
 
-        if (BabblerConfig.UseMonosyllabicBlurbs)
+        if (BabblerConfig.UseMonosyllabicPhonetics)
         {
-            speechInput = ProcessMonosyllabicBlurb(speechInput, speechPerson);
+            speechInput = ProcessMonosyllabicPhonetics(speechInput, speechPerson);
         }
 
-        PopulateBlurbSounds(speechInput);
-        _blurbCoroutine = UniverseLib.RuntimeHelper.StartCoroutine(BlurbRoutine());
+        PopulatePhoneticSounds(speechInput);
+        _phoneticCoroutine = UniverseLib.RuntimeHelper.StartCoroutine(PhoneticRoutine());
     }
 
-    private IEnumerator BlurbRoutine()
+    private IEnumerator PhoneticRoutine()
     {
-        foreach (BlurbSound blurb in _blurbsToSpeak)
+        foreach (PhoneticSound phoneme in _phoneticsToSpeak)
         {
-            if (!FMODRegistry.TryPlaySound(blurb.Sound, FMODRegistry.GetChannelGroup(SpeechContext), out Channel channel))
+            if (!FMODRegistry.TryPlaySound(phoneme.Sound, FMODRegistry.GetChannelGroup(SpeechContext), out Channel channel))
             {
                 continue;
             }
@@ -57,7 +57,7 @@ public class BlurbSpeaker : BaseSpeaker
             ActiveChannels.Add(channel);
 
             float delay = BabblerConfig.BaseSyllableDelay + Utilities.GetRandomFloat(BabblerConfig.MinimumSyllableDelayVariance, BabblerConfig.MaximumSyllableDelayVariance);
-            float syllableExpiration = Time.realtimeSinceStartup + blurb.Length + delay;
+            float syllableExpiration = Time.realtimeSinceStartup + phoneme.Length + delay;
 
             while (Time.realtimeSinceStartup < syllableExpiration)
             {
@@ -68,7 +68,7 @@ public class BlurbSpeaker : BaseSpeaker
         OnFinishedSpeaking?.Invoke();
     }
     
-    private string ProcessMonosyllabicBlurb(string speechInput, Human speechPerson)
+    private string ProcessMonosyllabicPhonetics(string speechInput, Human speechPerson)
     {
         char monosyllable = PickMonosyllable(speechPerson);
         Utilities.GlobalStringBuilder.Clear();
@@ -81,9 +81,9 @@ public class BlurbSpeaker : BaseSpeaker
         return Utilities.GlobalStringBuilder.ToString();
     }
     
-    private void PopulateBlurbSounds(string speechInput)
+    private void PopulatePhoneticSounds(string speechInput)
     {
-        _blurbsToSpeak.Clear();
+        _phoneticsToSpeak.Clear();
         ReadOnlySpan<char> inputSpan = speechInput.ToLowerInvariant().AsSpan();
 
         for (int i = 0; i < inputSpan.Length; ++i)
@@ -91,31 +91,31 @@ public class BlurbSpeaker : BaseSpeaker
             ReadOnlySpan<char> span = inputSpan.Slice(i, Math.Min(2, inputSpan.Length - i));
             string spanString = span.ToString();
 
-            if (span.Length > 1 && BlurbSoundRegistry.TryGetBlurbSound(spanString, out BlurbSound blurbSound))
+            if (span.Length > 1 && PhoneticSoundRegistry.TryGetPhoneticSound(spanString, out PhoneticSound phoneticSound))
             {
-                _blurbsToSpeak.Add(blurbSound);
+                _phoneticsToSpeak.Add(phoneticSound);
                 i++;
             }
-            else if (BlurbSoundRegistry.TryGetBlurbSound(spanString[0].ToString(), out blurbSound))
+            else if (PhoneticSoundRegistry.TryGetPhoneticSound(spanString[0].ToString(), out phoneticSound))
             {
-                _blurbsToSpeak.Add(blurbSound);
+                _phoneticsToSpeak.Add(phoneticSound);
             }
         }
     }
 
     protected override float CacheSpeechPitch(Human speechPerson)
     {
-        // We're just blurbin' so we have all the voices.
+        // TODO Voices are only really relevant to Synthesis until we add them to Phonetic mode.
         VoiceCharacteristics characteristics = VoiceCharacteristics.Create(speechPerson, true, true, true);
         
         switch (characteristics.Category)
         {
             case VoiceCategory.Male:
-                return Mathf.Lerp(BabblerConfig.BlurbsPitchMaleMinimum, BabblerConfig.BlurbsPitchMaleMaximum, characteristics.Pitch);
+                return Mathf.Lerp(BabblerConfig.PhoneticPitchMaleMinimum, BabblerConfig.PhoneticPitchMaleMaximum, characteristics.Pitch);
             case VoiceCategory.Female:
-                return Mathf.Lerp(BabblerConfig.BlurbsPitchFemaleMinimum, BabblerConfig.BlurbsPitchFemaleMaximum, characteristics.Pitch);
+                return Mathf.Lerp(BabblerConfig.PhoneticPitchFemaleMinimum, BabblerConfig.PhoneticPitchFemaleMaximum, characteristics.Pitch);
             default:
-                return Mathf.Lerp(BabblerConfig.BlurbsPitchNonBinaryMinimum, BabblerConfig.BlurbsPitchNonBinaryMaximum, characteristics.Pitch);
+                return Mathf.Lerp(BabblerConfig.PhoneticPitchNonBinaryMinimum, BabblerConfig.PhoneticPitchNonBinaryMaximum, characteristics.Pitch);
         }
     }
     

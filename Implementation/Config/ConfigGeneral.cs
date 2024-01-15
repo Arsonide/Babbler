@@ -29,7 +29,7 @@ public static partial class BabblerConfig
                               new ConfigDescription("Another method of enabling and disabling Babbler.")).Value;
         
         Mode = config.Bind("General", "Mode", SpeechMode.Synthesis,
-                           new ConfigDescription("Determines whether citizens will talk with text to speech synthesis or phonetic blurbs. Changing requires game restart.")).Value;
+                           new ConfigDescription("Determines whether citizens will talk with text to speech synthesis, phonetic sounds, or monosyllabic droning.")).Value;
 
         DistortPhoneSpeech = config.Bind("General", "Distort Phone Speech", true,
                                          new ConfigDescription("When enabled, a band pass is applied to phones to make them sound a little tinnier, like phones.")).Value;
@@ -64,7 +64,7 @@ public static partial class BabblerConfig
                                       new ConfigDescription("Adds a random element to voice gender selection, increase for more diverse voices.",
                                                             new AcceptableValueRange<float>(0f, 1f))).Value;
 
-        InitializeBlurbs(config);
+        InitializePhonetic(config);
         InitializeSynthesis(config);
         
         Utilities.Log("BabblerConfig has initialized!", LogLevel.Debug);

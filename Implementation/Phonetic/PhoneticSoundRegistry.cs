@@ -2,24 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using UnityEngine;
 using FMOD;
 using BepInEx.Logging;
 using Babbler.Implementation.Common;
-using Babbler.Implementation.Config;
 
-namespace Babbler.Implementation.Blurbs;
+namespace Babbler.Implementation.Phonetic;
 
-public static class BlurbSoundRegistry
+public static class PhoneticSoundRegistry
 {
-    private static Dictionary<string, BlurbSound> Map = new Dictionary<string, BlurbSound>();
+    private static Dictionary<string, PhoneticSound> Map = new Dictionary<string, PhoneticSound>();
 
     public static void Initialize()
     {
         Map.Clear();
-        string directory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(), "Blurbs");
+        string directory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(), "Phonemes");
         
-        // TODO set up blurb "voices" in subdirectories.
+        // TODO set up phonetic "voices" in subdirectories.
         foreach (string filePath in Directory.GetFiles(directory, "*.wav"))
         {
             string noExtension = Path.GetFileNameWithoutExtension(filePath);
@@ -31,29 +29,29 @@ public static class BlurbSoundRegistry
             }
 
             string phonetic = split[1].ToLowerInvariant();
-            BlurbSound newBlurb = CreateBlurbSound(filePath, phonetic);
+            PhoneticSound newPhonetic = CreatePhoneticSound(filePath, phonetic);
             
             // Space is used for all punctuation marks. Otherwise, the phonetic is the phonetic.
             if (phonetic.Contains("space"))
             {
-                Map[" "] = newBlurb;
-                Map[","] = newBlurb;
-                Map["."] = newBlurb;
-                Map["?"] = newBlurb;
-                Map["!"] = newBlurb;
+                Map[" "] = newPhonetic;
+                Map[","] = newPhonetic;
+                Map["."] = newPhonetic;
+                Map["?"] = newPhonetic;
+                Map["!"] = newPhonetic;
             }
             else
             {
-                Map[phonetic] = newBlurb;
+                Map[phonetic] = newPhonetic;
             }
         }
         
-        Utilities.Log($"BlurbSoundRegistry has initialized! Syllables: {Map.Count}", LogLevel.Debug);
+        Utilities.Log($"PhoneticSoundRegistry has initialized! Syllables: {Map.Count}", LogLevel.Debug);
     }
 
     public static void Uninitialize()
     {
-        foreach (KeyValuePair<string, BlurbSound> pair in Map)
+        foreach (KeyValuePair<string, PhoneticSound> pair in Map)
         {
             if (pair.Value.Released)
             {
@@ -64,10 +62,10 @@ public static class BlurbSoundRegistry
             pair.Value.Released = true;
         }
         
-        Utilities.Log("BlurbSoundRegistry has uninitialized!", LogLevel.Debug);
+        Utilities.Log("PhoneticSoundRegistry has uninitialized!", LogLevel.Debug);
     }
     
-    private static BlurbSound CreateBlurbSound(string filePath, string phonetic)
+    private static PhoneticSound CreatePhoneticSound(string filePath, string phonetic)
     {
         if (!FMODRegistry.TryCreateSound(filePath, MODE.DEFAULT | MODE._3D, out Sound sound))
         {
@@ -77,7 +75,7 @@ public static class BlurbSoundRegistry
         sound.getLength(out uint length, TIMEUNIT.MS);
         float floatLength = length / 1000f;
         
-        BlurbSound newBlurb = new BlurbSound()
+        PhoneticSound newPhonetic = new PhoneticSound()
         {
             Phonetic = phonetic,
             FilePath = filePath,
@@ -86,10 +84,10 @@ public static class BlurbSoundRegistry
             Released = false,
         };
 
-        return newBlurb;
+        return newPhonetic;
     }
 
-    public static bool TryGetBlurbSound(string phonetic, out BlurbSound result)
+    public static bool TryGetPhoneticSound(string phonetic, out PhoneticSound result)
     {
         return Map.TryGetValue(phonetic, out result);
     }

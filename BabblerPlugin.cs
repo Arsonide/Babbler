@@ -2,7 +2,7 @@
 using BepInEx;
 using BepInEx.Logging;
 using SOD.Common.BepInEx;
-using Babbler.Implementation.Blurbs;
+using Babbler.Implementation.Phonetic;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
 using Babbler.Implementation.Hosts;
@@ -78,9 +78,9 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         // Wait for the main menu to load this stuff because FMOD's listener is ready at that time.
         FMODRegistry.Initialize();
 
-        if (BabblerConfig.Mode == SpeechMode.Blurbs)
+        if (BabblerConfig.Mode == SpeechMode.Phonetic)
         {
-            BlurbSoundRegistry.Initialize();
+            PhoneticSoundRegistry.Initialize();
         }
     }
 
@@ -104,9 +104,9 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         
         Utilities.Log("Plugin is running deferred uninitialization.", LogLevel.Debug);
 
-        if (BabblerConfig.Mode == SpeechMode.Blurbs)
+        if (BabblerConfig.Mode == SpeechMode.Phonetic)
         {
-            BlurbSoundRegistry.Uninitialize();
+            PhoneticSoundRegistry.Uninitialize();
         }
     }
 }

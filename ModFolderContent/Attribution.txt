@@ -30,7 +30,7 @@ SOFTWARE.
 
 =======================================================================
 
-Some of the blurb sounds in Babbler are from https://github.com/equalo-official/animalese-generator, and are licensed under the following license:
+Some of the phonetic sounds in Babbler are from https://github.com/equalo-official/animalese-generator, and are licensed under the following license:
 
 =======================================================================
 
