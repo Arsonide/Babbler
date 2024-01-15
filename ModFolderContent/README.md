@@ -58,6 +58,7 @@ You will find a ton of other settings in the configuration panel to tweak how NP
 #### 1. General
 - **General - Enabled**: Another method of enabling and disabling Babbler.
 - **General - Mode**: Determines whether citizens will talk with text to speech synthesis, phonetic sounds, or monosyllabic droning.
+- **General - Version**: Babbler uses this to reset your configuration between major versions. Don't modify it or it will reset your configuration!
 - **General - Distort Phone Speech**: When enabled, a band pass is applied to phones to make them sound a little tinnier, like phones.
 ---
 #### 2. Gender

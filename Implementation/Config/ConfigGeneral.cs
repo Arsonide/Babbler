@@ -6,6 +6,10 @@ namespace Babbler.Implementation.Config;
 
 public static partial class BabblerConfig
 {
+    private const string ExpectedVersion = "5bfaa70c5dea4c5daf06a563d033ba9a";
+    
+    public static ConfigEntry<string> Version;
+
     public static ConfigEntry<bool> Enabled;
     public static ConfigEntry<SpeechMode> Mode;
 
@@ -27,9 +31,12 @@ public static partial class BabblerConfig
     {
         Enabled = config.Bind("1. General", "Enabled", true,
                               new ConfigDescription("Another method of enabling and disabling Babbler."));
-        
+
         Mode = config.Bind("1. General", "Mode", SpeechMode.Synthesis,
                            new ConfigDescription("Determines whether citizens will talk with text to speech synthesis, phonetic sounds, or monosyllabic droning."));
+        
+        Version = config.Bind("1. General", "Version", string.Empty,
+                              new ConfigDescription("Babbler uses this to reset your configuration between major versions. Don't modify it or it will reset your configuration!"));
 
         DistortPhoneSpeech = config.Bind("1. General", "Distort Phone Speech", true,
                                          new ConfigDescription("When enabled, a band pass is applied to phones to make them sound a little tinnier, like phones."));
@@ -68,7 +75,21 @@ public static partial class BabblerConfig
         InitializePhonetic(config);
         InitializeDroning(config);
 
+        ProcessUpgrades();
+        
         Utilities.Log("BabblerConfig has initialized!", LogLevel.Debug);
+    }
+    
+    private static void ProcessUpgrades()
+    {
+        if (Version.Value == ExpectedVersion)
+        {
+            return;
+        }
+
+        Utilities.Log("Detected either a new installation or a major upgrade of Babbler, resetting the configuration file!");
+        Version.Value = ExpectedVersion;
+        Reset();
     }
 
     private static void Reset()
