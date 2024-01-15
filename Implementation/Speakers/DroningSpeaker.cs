@@ -25,14 +25,14 @@ public class DroningSpeaker : PhoneticSpeaker
     
     private char PickPhoneme(Human human)
     {
-        return BabblerConfig.DroningValidPhonemes[Utilities.GetDeterministicInteger(human.seed.GetHashCode(), PRIME_PHONEME, 0, BabblerConfig.DroningValidPhonemes.Length)];
+        return BabblerConfig.DroningValidPhonemes.Value[Utilities.GetDeterministicInteger(human.seed.GetHashCode(), PRIME_PHONEME, 0, BabblerConfig.DroningValidPhonemes.Value.Length)];
     }
     
     protected override void CacheSpeechVarianceFactors(Human speechPerson)
     {
         int hash = speechPerson.seed.GetHashCode();
 
-        if (Utilities.GetDeterministicFloat(hash, PRIME_DELAY_CHANCE, 0f, 1f) <= BabblerConfig.DroningChanceDelayVariance)
+        if (Utilities.GetDeterministicFloat(hash, PRIME_DELAY_CHANCE, 0f, 1f) <= BabblerConfig.DroningChanceDelayVariance.Value)
         {
             CurrentDelayVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_DELAY_FACTOR, 0f, 1f);
         }
@@ -41,7 +41,7 @@ public class DroningSpeaker : PhoneticSpeaker
             CurrentDelayVarianceFactor = -1f;
         }
         
-        if (Utilities.GetDeterministicFloat(hash, PRIME_PITCH_CHANCE, 0f, 1f) <= BabblerConfig.DroningChancePitchVariance)
+        if (Utilities.GetDeterministicFloat(hash, PRIME_PITCH_CHANCE, 0f, 1f) <= BabblerConfig.DroningChancePitchVariance.Value)
         {
             CurrentPitchVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_PITCH_FACTOR, 0f, 1f);
         }
@@ -53,14 +53,14 @@ public class DroningSpeaker : PhoneticSpeaker
 
     protected override float GetPhonemeDelay()
     {
-        float naturalDelay = BabblerConfig.DroningSpeechDelay;
+        float naturalDelay = BabblerConfig.DroningSpeechDelay.Value;
 
         if (CurrentDelayVarianceFactor < 0f)
         {
             return naturalDelay;
         }
         
-        float targetDelay = BabblerConfig.DroningSpeechDelay + Utilities.GetRandomFloat(BabblerConfig.DroningMinDelayVariance, BabblerConfig.DroningMaxDelayVariance);
+        float targetDelay = BabblerConfig.DroningSpeechDelay.Value + Utilities.GetRandomFloat(BabblerConfig.DroningMinDelayVariance.Value, BabblerConfig.DroningMaxDelayVariance.Value);
         return Mathf.Lerp(naturalDelay, targetDelay, CurrentDelayVarianceFactor);
     }
     
@@ -73,7 +73,7 @@ public class DroningSpeaker : PhoneticSpeaker
             return naturalPitch;
         }
 
-        float targetPitch = naturalPitch * Utilities.GetRandomFloat(BabblerConfig.DroningMinPitchVariance, BabblerConfig.DroningMaxPitchVariance);
+        float targetPitch = naturalPitch * Utilities.GetRandomFloat(BabblerConfig.DroningMinPitchVariance.Value, BabblerConfig.DroningMaxPitchVariance.Value);
         return Mathf.Lerp(naturalPitch, targetPitch, CurrentPitchVarianceFactor);
     }
 }

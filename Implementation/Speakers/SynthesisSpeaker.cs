@@ -98,12 +98,12 @@ public class SynthesisSpeaker : BaseSpeaker
         switch (characteristics.Category)
         {
             case VoiceCategory.Male:
-                return Mathf.Lerp(BabblerConfig.SynthesisMinPitchMale, BabblerConfig.SynthesisMaxPitchMale, characteristics.Pitch);
+                return Mathf.Lerp(BabblerConfig.SynthesisMinPitchMale.Value, BabblerConfig.SynthesisMaxPitchMale.Value, characteristics.Pitch);
             case VoiceCategory.Female:
-                return Mathf.Lerp(BabblerConfig.SynthesisMinPitchFemale, BabblerConfig.SynthesisMaxPitchFemale, characteristics.Pitch);
+                return Mathf.Lerp(BabblerConfig.SynthesisMinPitchFemale.Value, BabblerConfig.SynthesisMaxPitchFemale.Value, characteristics.Pitch);
             case VoiceCategory.NonBinary:
             default:
-                return Mathf.Lerp(BabblerConfig.SynthesisMinPitchNonBinary, BabblerConfig.SynthesisMaxPitchNonBinary, characteristics.Pitch);
+                return Mathf.Lerp(BabblerConfig.SynthesisMinPitchNonBinary.Value, BabblerConfig.SynthesisMaxPitchNonBinary.Value, characteristics.Pitch);
         }
     }
 }

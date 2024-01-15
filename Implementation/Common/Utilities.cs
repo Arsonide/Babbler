@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using Random = System.Random;
 
@@ -75,11 +76,11 @@ public static class Utilities
         return normalizedHash * (max - min) + min;
     }
 
-    public static void EnforceMinMax(ref float minimum, ref float maximum)
+    public static void EnforceMinMax(ref ConfigEntry<float> minimum, ref ConfigEntry<float> maximum)
     {
-        float min = Mathf.Min(minimum, maximum);
-        float max = Mathf.Max(minimum, maximum);
-        minimum = min;
-        maximum = max;
+        float min = Mathf.Min(minimum.Value, maximum.Value);
+        float max = Mathf.Max(minimum.Value, maximum.Value);
+        minimum.Value = min;
+        maximum.Value = max;
     }
 }

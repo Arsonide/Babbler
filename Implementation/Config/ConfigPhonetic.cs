@@ -5,65 +5,65 @@ namespace Babbler.Implementation.Config;
 
 public static partial class BabblerConfig
 {
-    public static float PhoneticSpeechDelay = -0.175f;
+    public static ConfigEntry<float> PhoneticSpeechDelay;
+    
+    public static ConfigEntry<float> PhoneticChanceDelayVariance;
+    public static ConfigEntry<float> PhoneticMinDelayVariance;
+    public static ConfigEntry<float> PhoneticMaxDelayVariance;
 
-    public static float PhoneticChanceDelayVariance = 0f;
-    public static float PhoneticMinDelayVariance = 0f;
-    public static float PhoneticMaxDelayVariance = 0f;
-
-    public static float PhoneticChancePitchVariance = 0.2f;
-    public static float PhoneticMinPitchVariance = 0.9f;
-    public static float PhoneticMaxPitchVariance = 1.1f;
+    public static ConfigEntry<float> PhoneticChancePitchVariance;
+    public static ConfigEntry<float> PhoneticMinPitchVariance;
+    public static ConfigEntry<float> PhoneticMaxPitchVariance;
     
-    public static float PhoneticMinFrequencyMale = 100f;
-    public static float PhoneticMaxFrequencyMale = 180f;
+    public static ConfigEntry<float> PhoneticMinFrequencyMale;
+    public static ConfigEntry<float> PhoneticMaxFrequencyMale;
     
-    public static float PhoneticMinFrequencyFemale = 165f;
-    public static float PhoneticMaxFrequencyFemale = 255f;
+    public static ConfigEntry<float> PhoneticMinFrequencyFemale;
+    public static ConfigEntry<float> PhoneticMaxFrequencyFemale;
     
-    public static float PhoneticMinFrequencyNonBinary = 100f;
-    public static float PhoneticMaxFrequencyNonBinary = 255f;
+    public static ConfigEntry<float> PhoneticMinFrequencyNonBinary;
+    public static ConfigEntry<float> PhoneticMaxFrequencyNonBinary;
 
     private static void InitializePhonetic(ConfigFile config)
     {
         PhoneticSpeechDelay = config.Bind("5. Phonetic", "Speech Delay", -0.175f,
-                                          new ConfigDescription("The delay of each phoneme is its length plus this. Negative numbers cause overlapping phonemes.")).Value;
+                                          new ConfigDescription("The delay of each phoneme is its length plus this. Negative numbers cause overlapping phonemes."));
         
         PhoneticChanceDelayVariance = config.Bind("5. Phonetic", "Chance Delay Variance", 0f,
-                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme delay.")).Value;
+                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme delay."));
         
         PhoneticMinDelayVariance = config.Bind("5. Phonetic", "Min Delay Variance", 0f,
-                                               new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it.")).Value;
+                                               new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it."));
         
         PhoneticMaxDelayVariance = config.Bind("5. Phonetic", "Max Delay Variance", 0f,
-                                               new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it.")).Value;
+                                               new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it."));
         
         PhoneticChancePitchVariance = config.Bind("5. Phonetic", "Chance Pitch Variance", 0.2f,
-                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme pitch.")).Value;
+                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme pitch."));
         
         PhoneticMinPitchVariance = config.Bind("5. Phonetic", "Min Pitch Variance", 0.9f,
-                                               new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.")).Value;
+                                               new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it."));
         
         PhoneticMaxPitchVariance = config.Bind("5. Phonetic", "Max Pitch Variance", 1.1f,
-                                               new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.")).Value;
+                                               new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it."));
 
         PhoneticMinFrequencyMale = config.Bind("5. Phonetic", "Min Frequency Male", 100f,
-                                               new ConfigDescription("Lowest possible frequency (in hertz) for male voices.")).Value;
+                                               new ConfigDescription("Lowest possible frequency (in hertz) for male voices."));
         
         PhoneticMaxFrequencyMale = config.Bind("5. Phonetic", "Max Frequency Male", 180f,
-                                             new ConfigDescription("Highest possible frequency (in hertz) for male voices.")).Value;
+                                             new ConfigDescription("Highest possible frequency (in hertz) for male voices."));
         
         PhoneticMinFrequencyFemale = config.Bind("5. Phonetic", "Min Frequency Female", 165f,
-                                               new ConfigDescription("Lowest possible frequency (in hertz) for female voices.")).Value;
+                                               new ConfigDescription("Lowest possible frequency (in hertz) for female voices."));
         
         PhoneticMaxFrequencyFemale = config.Bind("5. Phonetic", "Max Frequency Female", 255f,
-                                               new ConfigDescription("Highest possible frequency (in hertz) for female voices.")).Value;
+                                               new ConfigDescription("Highest possible frequency (in hertz) for female voices."));
         
         PhoneticMinFrequencyNonBinary = config.Bind("5. Phonetic", "Min Frequency Non-Binary", 100f,
-                                                new ConfigDescription("Lowest possible frequency (in hertz) for non-binary voices.")).Value;
+                                                new ConfigDescription("Lowest possible frequency (in hertz) for non-binary voices."));
         
         PhoneticMaxFrequencyNonBinary = config.Bind("5. Phonetic", "Max Frequency Non-Binary", 255f,
-                                                new ConfigDescription("Highest possible frequency (in hertz) for non-binary voices.")).Value;
+                                                new ConfigDescription("Highest possible frequency (in hertz) for non-binary voices."));
         
         Utilities.EnforceMinMax(ref PhoneticMinDelayVariance, ref PhoneticMaxDelayVariance);
         Utilities.EnforceMinMax(ref PhoneticMinPitchVariance, ref PhoneticMaxPitchVariance);

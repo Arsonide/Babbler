@@ -73,9 +73,9 @@ public static class SynthesisVoiceRegistry
         Utilities.Log($"SynthesisVoiceRegistry has initialized! Male Voices: {MaleVoices.Count}, Female Voices: {FemaleVoices.Count}, Non-Binary Voices: {NonBinaryVoices.Count}", LogLevel.Debug);
 
         // If we are in Synthesis mode but have no voices, revert to Phonetic mode. We ship with phonetic voices so we know it should work.
-        if (AllVoices.Count <= 0 && BabblerConfig.Mode == SpeechMode.Synthesis)
+        if (AllVoices.Count <= 0 && BabblerConfig.Mode.Value == SpeechMode.Synthesis)
         {
-            BabblerConfig.Mode = SpeechMode.Phonetic;
+            BabblerConfig.Mode.Value = SpeechMode.Phonetic;
             Utilities.Log("The plugin is configured for Synthesis but no voices are installed, reverting to Phonetic mode!", LogLevel.Error);
         }
     }

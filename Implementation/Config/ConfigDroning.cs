@@ -5,70 +5,70 @@ namespace Babbler.Implementation.Config;
 
 public static partial class BabblerConfig
 {
-    public static string DroningValidPhonemes = "aeiouybdglmptvw";
+    public static ConfigEntry<string> DroningValidPhonemes;
 
-    public static float DroningSpeechDelay = -0.175f;
+    public static ConfigEntry<float> DroningSpeechDelay;
 
-    public static float DroningChanceDelayVariance = 0.4f;
-    public static float DroningMinDelayVariance = 0f;
-    public static float DroningMaxDelayVariance = 0.3f;
+    public static ConfigEntry<float> DroningChanceDelayVariance;
+    public static ConfigEntry<float> DroningMinDelayVariance;
+    public static ConfigEntry<float> DroningMaxDelayVariance;
 
-    public static float DroningChancePitchVariance = 0.2f;
-    public static float DroningMinPitchVariance = 0.8f;
-    public static float DroningMaxPitchVariance = 1.2f;
+    public static ConfigEntry<float> DroningChancePitchVariance;
+    public static ConfigEntry<float> DroningMinPitchVariance;
+    public static ConfigEntry<float> DroningMaxPitchVariance;
     
-    public static float DroningMinFrequencyMale = 100f;
-    public static float DroningMaxFrequencyMale = 180f;
+    public static ConfigEntry<float> DroningMinFrequencyMale;
+    public static ConfigEntry<float> DroningMaxFrequencyMale;
     
-    public static float DroningMinFrequencyFemale = 165f;
-    public static float DroningMaxFrequencyFemale = 255f;
+    public static ConfigEntry<float> DroningMinFrequencyFemale;
+    public static ConfigEntry<float> DroningMaxFrequencyFemale;
     
-    public static float DroningMinFrequencyNonBinary = 100f;
-    public static float DroningMaxFrequencyNonBinary = 255f;
+    public static ConfigEntry<float> DroningMinFrequencyNonBinary;
+    public static ConfigEntry<float> DroningMaxFrequencyNonBinary;
 
     private static void InitializeDroning(ConfigFile config)
     {
         DroningValidPhonemes = config.Bind("6. Droning", "Valid Phonemes", "aeiouybdglmptvw",
-                                           new ConfigDescription("Citizens pick one phoneme to repeat, that is chosen from these phonemes.")).Value;
+                                           new ConfigDescription("Citizens pick one phoneme to repeat, that is chosen from these phonemes."));
         
         DroningSpeechDelay = config.Bind("6. Droning", "Speech Delay", -0.175f,
-                                          new ConfigDescription("The delay of each phoneme is its length plus this. Negative numbers cause overlapping phonemes.")).Value;
+                                          new ConfigDescription("The delay of each phoneme is its length plus this. Negative numbers cause overlapping phonemes."));
         
         DroningChanceDelayVariance = config.Bind("6. Droning", "Chance Delay Variance", 0.4f,
-                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme delay.")).Value;
+                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme delay."));
         
         DroningMinDelayVariance = config.Bind("6. Droning", "Min Delay Variance", 0f,
-                                               new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it.")).Value;
+                                               new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it."));
         
         DroningMaxDelayVariance = config.Bind("6. Droning", "Max Delay Variance", 0.3f,
-                                               new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it.")).Value;
+                                               new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it."));
         
         DroningChancePitchVariance = config.Bind("6. Droning", "Chance Pitch Variance", 0.2f,
-                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme pitch.")).Value;
+                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme pitch."));
         
         DroningMinPitchVariance = config.Bind("6. Droning", "Min Pitch Variance", 0.8f,
-                                               new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.")).Value;
+                                               new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it."));
         
         DroningMaxPitchVariance = config.Bind("6. Droning", "Max Pitch Variance", 1.2f,
-                                               new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.")).Value;
+                                               new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it."));
 
         DroningMinFrequencyMale = config.Bind("6. Droning", "Min Frequency Male", 100f,
-                                               new ConfigDescription("Lowest possible frequency (in hertz) for male voices.")).Value;
+                                               new ConfigDescription("Lowest possible frequency (in hertz) for male voices."));
         
         DroningMaxFrequencyMale = config.Bind("6. Droning", "Max Frequency Male", 180f,
-                                             new ConfigDescription("Highest possible frequency (in hertz) for male voices.")).Value;
+                                             new ConfigDescription("Highest possible frequency (in hertz) for male voices."));
         
         DroningMinFrequencyFemale = config.Bind("6. Droning", "Min Frequency Female", 165f,
-                                               new ConfigDescription("Lowest possible frequency (in hertz) for female voices.")).Value;
+                                               new ConfigDescription("Lowest possible frequency (in hertz) for female voices."));
         
         DroningMaxFrequencyFemale = config.Bind("6. Droning", "Max Frequency Female", 255f,
-                                               new ConfigDescription("Highest possible frequency (in hertz) for female voices.")).Value;
+                                               new ConfigDescription("Highest possible frequency (in hertz) for female voices."));
         
         DroningMinFrequencyNonBinary = config.Bind("6. Droning", "Min Frequency Non-Binary", 100f,
-                                                new ConfigDescription("Lowest possible frequency (in hertz) for non-binary voices.")).Value;
+                                                new ConfigDescription("Lowest possible frequency (in hertz) for non-binary voices."));
         
         DroningMaxFrequencyNonBinary = config.Bind("6. Droning", "Max Frequency Non-Binary", 255f,
-                                                new ConfigDescription("Highest possible frequency (in hertz) for non-binary voices.")).Value;
+                                                new ConfigDescription("Highest possible frequency (in hertz) for non-binary voices."));
 
         Utilities.EnforceMinMax(ref DroningMinDelayVariance, ref DroningMaxDelayVariance);
         Utilities.EnforceMinMax(ref DroningMinPitchVariance, ref DroningMaxPitchVariance);

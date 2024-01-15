@@ -32,26 +32,26 @@ public static class FMODRegistry
     {
         TryCreateChannelGroup("BabblerConversationalGroup", out ConversationalGroup);
         TryCreateChannelGroup("BabblerConversationalShoutGroup", out ConversationalShoutGroup);
-        ConversationalGroup.setVolume(BabblerConfig.ConversationalVolume);
-        ConversationalShoutGroup.setVolume(BabblerConfig.ConversationalVolume * BabblerConfig.ConversationalShoutMultiplier);
+        ConversationalGroup.setVolume(BabblerConfig.ConversationalVolume.Value);
+        ConversationalShoutGroup.setVolume(BabblerConfig.ConversationalVolume.Value * BabblerConfig.ConversationalShoutMultiplier.Value);
     }
 
     private static void SetupOverheardGroup()
     {
         TryCreateChannelGroup("BabblerOverheardGroup", out OverheardGroup);
         TryCreateChannelGroup("BabblerOverheardShoutGroup", out OverheardShoutGroup);
-        OverheardGroup.setVolume(BabblerConfig.OverheardVolume);
-        OverheardShoutGroup.setVolume(BabblerConfig.OverheardVolume * BabblerConfig.OverheardShoutMultiplier);
+        OverheardGroup.setVolume(BabblerConfig.OverheardVolume.Value);
+        OverheardShoutGroup.setVolume(BabblerConfig.OverheardVolume.Value * BabblerConfig.OverheardShoutMultiplier.Value);
     }
 
     private static void SetupPhoneGroup()
     {
         TryCreateChannelGroup("BabblerPhoneGroup", out PhoneGroup);
         TryCreateChannelGroup("BabblerPhoneShoutGroup", out PhoneShoutGroup);
-        PhoneGroup.setVolume(BabblerConfig.PhoneVolume);
-        PhoneShoutGroup.setVolume(BabblerConfig.PhoneVolume * BabblerConfig.PhoneShoutMultiplier);
+        PhoneGroup.setVolume(BabblerConfig.PhoneVolume.Value);
+        PhoneShoutGroup.setVolume(BabblerConfig.PhoneVolume.Value * BabblerConfig.PhoneShoutMultiplier.Value);
 
-        if (!BabblerConfig.DistortPhoneSpeech)
+        if (!BabblerConfig.DistortPhoneSpeech.Value)
         {
             return;
         }

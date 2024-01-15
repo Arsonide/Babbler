@@ -11,7 +11,7 @@ public class SpeakerHost : MonoBehaviour
 
     private void Awake()
     {
-        switch (BabblerConfig.Mode)
+        switch (BabblerConfig.Mode.Value)
         {
             case SpeechMode.Synthesis:
                 Speaker = new SynthesisSpeaker();

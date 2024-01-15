@@ -25,7 +25,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         
         BabblerConfig.Initialize(Config);
         
-        if (!BabblerConfig.Enabled)
+        if (!BabblerConfig.Enabled.Value)
         {
             Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is disabled.");
             return;
@@ -59,7 +59,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         
         // This must initialize the moment the game starts to "kickstart" Microsoft Speech Synthesis with a silent sound.
         // Without playing this sound immediately, the game will crash. I do not know why.
-        if (BabblerConfig.Mode == SpeechMode.Synthesis)
+        if (BabblerConfig.Mode.Value == SpeechMode.Synthesis)
         {
             SynthesisVoiceRegistry.Initialize();
         }
@@ -78,7 +78,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         // Wait for the main menu to load this stuff because FMOD's listener is ready at that time.
         FMODRegistry.Initialize();
 
-        switch (BabblerConfig.Mode)
+        switch (BabblerConfig.Mode.Value)
         {
             case SpeechMode.Phonetic:
             case SpeechMode.Droning:
@@ -107,7 +107,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         
         Utilities.Log("Plugin is running deferred uninitialization.", LogLevel.Debug);
 
-        switch (BabblerConfig.Mode)
+        switch (BabblerConfig.Mode.Value)
         {
             case SpeechMode.Phonetic:
             case SpeechMode.Droning:

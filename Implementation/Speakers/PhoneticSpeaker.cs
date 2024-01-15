@@ -110,17 +110,17 @@ public class PhoneticSpeaker : BaseSpeaker
         switch (characteristics.Category)
         {
             case VoiceCategory.Male:
-                minimumFrequency = BabblerConfig.PhoneticMinFrequencyMale;
-                maximumFrequency = BabblerConfig.PhoneticMaxFrequencyMale;
+                minimumFrequency = BabblerConfig.PhoneticMinFrequencyMale.Value;
+                maximumFrequency = BabblerConfig.PhoneticMaxFrequencyMale.Value;
                 break;
             case VoiceCategory.Female:
-                minimumFrequency = BabblerConfig.PhoneticMinFrequencyFemale;
-                maximumFrequency = BabblerConfig.PhoneticMaxFrequencyFemale;
+                minimumFrequency = BabblerConfig.PhoneticMinFrequencyFemale.Value;
+                maximumFrequency = BabblerConfig.PhoneticMaxFrequencyFemale.Value;
                 break;
             case VoiceCategory.NonBinary:
             default:
-                minimumFrequency = BabblerConfig.PhoneticMinFrequencyNonBinary;
-                maximumFrequency = BabblerConfig.PhoneticMaxFrequencyNonBinary;
+                minimumFrequency = BabblerConfig.PhoneticMinFrequencyNonBinary.Value;
+                maximumFrequency = BabblerConfig.PhoneticMaxFrequencyNonBinary.Value;
                 break;
         }
 
@@ -132,7 +132,7 @@ public class PhoneticSpeaker : BaseSpeaker
     {
         int hash = speechPerson.seed.GetHashCode();
 
-        if (Utilities.GetDeterministicFloat(hash, PRIME_DELAY_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChanceDelayVariance)
+        if (Utilities.GetDeterministicFloat(hash, PRIME_DELAY_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChanceDelayVariance.Value)
         {
             CurrentDelayVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_DELAY_FACTOR, 0f, 1f);
         }
@@ -141,7 +141,7 @@ public class PhoneticSpeaker : BaseSpeaker
             CurrentDelayVarianceFactor = -1f;
         }
         
-        if (Utilities.GetDeterministicFloat(hash, PRIME_PITCH_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChancePitchVariance)
+        if (Utilities.GetDeterministicFloat(hash, PRIME_PITCH_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChancePitchVariance.Value)
         {
             CurrentPitchVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_PITCH_FACTOR, 0f, 1f);
         }
@@ -153,14 +153,14 @@ public class PhoneticSpeaker : BaseSpeaker
 
     protected virtual float GetPhonemeDelay()
     {
-        float naturalDelay = BabblerConfig.PhoneticSpeechDelay;
+        float naturalDelay = BabblerConfig.PhoneticSpeechDelay.Value;
 
         if (CurrentDelayVarianceFactor < 0f)
         {
             return naturalDelay;
         }
         
-        float targetDelay = BabblerConfig.PhoneticSpeechDelay + Utilities.GetRandomFloat(BabblerConfig.PhoneticMinDelayVariance, BabblerConfig.PhoneticMaxDelayVariance);
+        float targetDelay = BabblerConfig.PhoneticSpeechDelay.Value + Utilities.GetRandomFloat(BabblerConfig.PhoneticMinDelayVariance.Value, BabblerConfig.PhoneticMaxDelayVariance.Value);
         return Mathf.Lerp(naturalDelay, targetDelay, CurrentDelayVarianceFactor);
     }
     
@@ -173,7 +173,7 @@ public class PhoneticSpeaker : BaseSpeaker
             return naturalPitch;
         }
 
-        float targetPitch = naturalPitch * Utilities.GetRandomFloat(BabblerConfig.PhoneticMinPitchVariance, BabblerConfig.PhoneticMaxPitchVariance);
+        float targetPitch = naturalPitch * Utilities.GetRandomFloat(BabblerConfig.PhoneticMinPitchVariance.Value, BabblerConfig.PhoneticMaxPitchVariance.Value);
         return Mathf.Lerp(naturalPitch, targetPitch, CurrentPitchVarianceFactor);
     }
 }
