@@ -30,7 +30,7 @@ SOFTWARE.
 
 =======================================================================
 
-Most of the phonetic sounds in Babbler are from https://github.com/Earu/gm_animalese, and are licensed under the following license:
+Some phonetic sounds in Babbler are from https://github.com/Earu/gm_animalese, and are licensed under the following license:
 
 =======================================================================
 
@@ -58,7 +58,7 @@ SOFTWARE.
 
 =======================================================================
 
-Some more of the phonetic sounds in Babbler are from https://github.com/equalo-official/animalese-generator, and are licensed under the following license:
+Some phonetic sounds in Babbler are from https://github.com/equalo-official/animalese-generator, and are licensed under the following license:
 
 =======================================================================
 
