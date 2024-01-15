@@ -1,8 +1,9 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using UnityEngine;
 using BepInEx.Logging;
+using Random = System.Random;
 
 namespace Babbler.Implementation.Common;
 
@@ -59,5 +60,26 @@ public static class Utilities
     public static float GetRandomFloat(float minimum, float maximum)
     {
         return minimum + (GlobalRandom.NextSingle() * (maximum - minimum));
+    }
+    
+    public static int GetDeterministicInteger(int hash, int prime, int min, int max)
+    {
+        int range = max - min;
+        int scaled = Mathf.Abs(hash * prime);
+        return scaled % range + min;
+    }
+    
+    public static float GetDeterministicFloat(int hash, int prime, float min, float max)
+    {
+        float normalizedHash = (Mathf.Abs(hash * prime) % 100000) / 100000f;
+        return normalizedHash * (max - min) + min;
+    }
+
+    public static void EnforceMinMax(ref float minimum, ref float maximum)
+    {
+        float min = Mathf.Min(minimum, maximum);
+        float max = Mathf.Max(minimum, maximum);
+        minimum = min;
+        maximum = max;
     }
 }

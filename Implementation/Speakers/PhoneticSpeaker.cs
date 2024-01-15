@@ -12,12 +12,18 @@ namespace Babbler.Implementation.Speakers;
 
 public class PhoneticSpeaker : BaseSpeaker
 {
-    private const int PRIME = 97;
+    protected const int PRIME_DELAY_CHANCE = 401;
+    protected const int PRIME_PITCH_CHANCE = 409;
+    protected const int PRIME_DELAY_FACTOR = 419;
+    protected const int PRIME_PITCH_FACTOR = 421;
     
     private readonly List<PhoneticSound> _phoneticsToSpeak = new List<PhoneticSound>();
     private Coroutine _phoneticCoroutine;
     private PhoneticVoice _currentVoice;
 
+    protected float CurrentDelayVarianceFactor;
+    protected float CurrentPitchVarianceFactor;
+    
     public override void StopSpeaker()
     {
         base.StopSpeaker();
@@ -33,6 +39,7 @@ public class PhoneticSpeaker : BaseSpeaker
     {
         base.StartSpeaker(speechInput, speechContext, speechPerson);
 
+        CacheSpeechVarianceFactors(speechPerson);
         ProcessSpeechInput(speechPerson, ref speechInput);
         PopulatePhoneticSounds(speechInput);
         _phoneticCoroutine = UniverseLib.RuntimeHelper.StartCoroutine(PhoneticRoutine());
@@ -47,13 +54,13 @@ public class PhoneticSpeaker : BaseSpeaker
                 continue;
             }
 
-            channel.setPitch(SpeechPitch * Utilities.GetRandomFloat(BabblerConfig.MinimumSyllablePitchVariance, BabblerConfig.MaximumSyllablePitchVariance));
+            channel.setPitch(GetPhonemePitch());
             SetChannelPosition(SpeechSource.position, channel);
             FMODRegistry.TryUpdate();
 
             ActiveChannels.Add(channel);
 
-            float delay = BabblerConfig.BaseSyllableDelay + Utilities.GetRandomFloat(BabblerConfig.MinimumSyllableDelayVariance, BabblerConfig.MaximumSyllableDelayVariance);
+            float delay = GetPhonemeDelay();
             float syllableExpiration = Time.realtimeSinceStartup + phoneme.Length + delay;
 
             while (Time.realtimeSinceStartup < syllableExpiration)
@@ -94,7 +101,6 @@ public class PhoneticSpeaker : BaseSpeaker
 
     protected override float CacheSpeechPitch(Human speechPerson)
     {
-        
         // While we have a human, use this as an opportunity to choose the SpeechSynthesis voice.
         _currentVoice = PhoneticVoiceRegistry.GetVoice(speechPerson, out VoiceCharacteristics characteristics);
         
@@ -104,26 +110,69 @@ public class PhoneticSpeaker : BaseSpeaker
         switch (characteristics.Category)
         {
             case VoiceCategory.Male:
-                minimumFrequency = BabblerConfig.PhoneticFrequencyMaleMinimum;
-                maximumFrequency = BabblerConfig.PhoneticFrequencyMaleMaximum;
+                minimumFrequency = BabblerConfig.PhoneticMinFrequencyMale;
+                maximumFrequency = BabblerConfig.PhoneticMaxFrequencyMale;
                 break;
             case VoiceCategory.Female:
-                minimumFrequency = BabblerConfig.PhoneticFrequencyFemaleMinimum;
-                maximumFrequency = BabblerConfig.PhoneticFrequencyFemaleMaximum;
+                minimumFrequency = BabblerConfig.PhoneticMinFrequencyFemale;
+                maximumFrequency = BabblerConfig.PhoneticMaxFrequencyFemale;
                 break;
             default:
-                minimumFrequency = BabblerConfig.PhoneticFrequencyNonBinaryMinimum;
-                maximumFrequency = BabblerConfig.PhoneticFrequencyNonBinaryMaximum;
+                minimumFrequency = BabblerConfig.PhoneticMinFrequencyNonBinary;
+                maximumFrequency = BabblerConfig.PhoneticMaxFrequencyNonBinary;
                 break;
         }
 
         float frequency = minimumFrequency + (characteristics.Pitch * (maximumFrequency - minimumFrequency));
         return frequency / _currentVoice.Frequency;
     }
-    
-    public char PickMonosyllable(Human human)
+
+    protected virtual void CacheSpeechVarianceFactors(Human speechPerson)
     {
-        int index = Math.Abs((human.seed.GetHashCode() * PRIME) % BabblerConfig.ValidMonosyllables.Length);
-        return BabblerConfig.ValidMonosyllables[index];
+        int hash = speechPerson.seed.GetHashCode();
+
+        if (Utilities.GetDeterministicFloat(hash, PRIME_DELAY_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChanceDelayVariance)
+        {
+            CurrentDelayVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_DELAY_FACTOR, 0f, 1f);
+        }
+        else
+        {
+            CurrentDelayVarianceFactor = -1f;
+        }
+        
+        if (Utilities.GetDeterministicFloat(hash, PRIME_PITCH_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChancePitchVariance)
+        {
+            CurrentPitchVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_PITCH_FACTOR, 0f, 1f);
+        }
+        else
+        {
+            CurrentPitchVarianceFactor = -1f;
+        }
+    }
+
+    protected virtual float GetPhonemeDelay()
+    {
+        float naturalDelay = BabblerConfig.PhoneticSpeechDelay;
+
+        if (CurrentDelayVarianceFactor < 0f)
+        {
+            return naturalDelay;
+        }
+        
+        float targetDelay = BabblerConfig.PhoneticSpeechDelay + Utilities.GetRandomFloat(BabblerConfig.PhoneticMinDelayVariance, BabblerConfig.DroningMaxDelayVariance);
+        return Mathf.Lerp(naturalDelay, targetDelay, CurrentDelayVarianceFactor);
+    }
+    
+    protected virtual float GetPhonemePitch()
+    {
+        float naturalPitch = SpeechPitch;
+
+        if (CurrentPitchVarianceFactor < 0f)
+        {
+            return naturalPitch;
+        }
+
+        float targetPitch = naturalPitch * Utilities.GetRandomFloat(BabblerConfig.PhoneticMinPitchVariance, BabblerConfig.PhoneticMaxPitchVariance);
+        return Mathf.Lerp(naturalPitch, targetPitch, CurrentPitchVarianceFactor);
     }
 }

@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using Babbler.Implementation.Common;
+using UnityEngine;
 using Babbler.Implementation.Config;
 
 namespace Babbler.Implementation.Characteristics;
 
 public struct VoiceCharacteristics
 {
-    private const int PRIME1 = 31;
-    private const int PRIME2 = 47;
+    private const int PRIME_DIVERSITY = 31;
+    private const int PRIME_PITCH = 47;
     
     public VoiceCategory Category;
     public float Pitch;
@@ -27,7 +28,7 @@ public struct VoiceCharacteristics
 
     private static float GetDiverseGenderScale(Human human, int hashCode)
     {
-        float diversity = ((hashCode % PRIME1) / (float)PRIME1 - 0.5f) * 2 * BabblerConfig.GenderDiversity;
+        float diversity = ((hashCode % PRIME_DIVERSITY) / (float)PRIME_DIVERSITY - 0.5f) * 2 * BabblerConfig.GenderDiversity;
         return Mathf.Clamp(human.genderScale + diversity, 0, 1);
     }
 
@@ -51,7 +52,7 @@ public struct VoiceCharacteristics
             return VoiceCategory.NonBinary;
         }
 
-        pitchScalar = (Mathf.Abs(hashCode * PRIME2) % PRIME2) / (float)PRIME2;
+        pitchScalar = Utilities.GetDeterministicFloat(hashCode, PRIME_PITCH, 0f, 1f);
         return VoiceCategory.Any;
     }
 }

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Babbler.Implementation.Characteristics;
-using UnityEngine;
+using Babbler.Implementation.Common;
 
 namespace Babbler.Implementation.Phonetic;
 
 public static class PhoneticVoiceRegistry
 {
-    private const int PRIME = 211;
+    private const int PRIME_VOICE = 211;
     
     private static readonly List<PhoneticVoice> Voices = new List<PhoneticVoice>();
     
@@ -40,6 +40,6 @@ public static class PhoneticVoiceRegistry
         characteristics = VoiceCharacteristics.Create(human, true, true, true);
 
         // Trying to avoid instantiating a System.Random, so we do some math.
-        return Voices[Mathf.Abs(human.seed.GetHashCode() * PRIME) % Voices.Count];
+        return Voices[Utilities.GetDeterministicInteger(human.seed.GetHashCode(), PRIME_VOICE, 0, Voices.Count)];
     }
 }

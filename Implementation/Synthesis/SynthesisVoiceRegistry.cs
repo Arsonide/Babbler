@@ -12,7 +12,7 @@ namespace Babbler.Implementation.Synthesis;
 
 public static class SynthesisVoiceRegistry
 {
-    private const int PRIME = 37;
+    private const int PRIME_VOICE = 37;
     
     private static List<string> MaleVoices = new List<string>();
     private static List<string> FemaleVoices = new List<string>();
@@ -112,7 +112,7 @@ public static class SynthesisVoiceRegistry
         }
         
         // Trying to avoid instantiating a System.Random, so we do some math.
-        return voices[Mathf.Abs(human.seed.GetHashCode() * PRIME) % voices.Count];
+        return voices[Utilities.GetDeterministicInteger(human.seed.GetHashCode(), PRIME_VOICE, 0, voices.Count)];
     }
 }
 
