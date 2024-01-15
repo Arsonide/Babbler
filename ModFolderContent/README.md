@@ -127,7 +127,7 @@ It is possible to add new voices to Phonetic mode, but it is a bit more advanced
 
 If you locate where the mod is installed under, there is a subdirectory called "Phonemes". In that subdirectory is a folder for each installed voice. The naming conventions on the folders is important because it helps the mod load the phonemes. It would be in the format **Name_Frequency**. The frequency is the natural frequency of the phonemes in the voice you are adding, which is needed to adjust its pitch.
 
-In the folder for each voice, you will find wav files for each phoneme. Again, the naming conventions here are important, the wav file will be named **something_syllable.wav**. If "something" is "phonetic", then the 1-2 characters after the underscore will be the letters that the phoneme is played for.
+In the folder for each voice, you will find wav files for each phoneme. Again, the naming conventions here are important, the wav file will be named **something_phoneme.wav**. If "something" is "phonetic", then the 1-2 characters after the underscore will be the letters that the phoneme is played for.
 
 If "something" is "symbol", then it will be used in very specific circumstances depending on what is after the underscore, normally for spaces and punctuation marks. See the voices that ship with the mod for examples.
 
