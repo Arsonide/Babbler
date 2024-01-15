@@ -71,4 +71,21 @@ public static partial class BabblerConfig
         Utilities.EnforceMinMax(ref PhoneticMinFrequencyFemale, ref PhoneticMaxFrequencyFemale);
         Utilities.EnforceMinMax(ref PhoneticMinFrequencyNonBinary, ref PhoneticMaxFrequencyNonBinary);
     }
+
+    public static void ResetPhonetic()
+    {
+        PhoneticSpeechDelay.Value = (float)PhoneticSpeechDelay.DefaultValue;
+        PhoneticChanceDelayVariance.Value = (float)PhoneticChanceDelayVariance.DefaultValue;
+        PhoneticMinDelayVariance.Value = (float)PhoneticMinDelayVariance.DefaultValue;
+        PhoneticMaxDelayVariance.Value = (float)PhoneticMaxDelayVariance.DefaultValue;
+        PhoneticChancePitchVariance.Value = (float)PhoneticChancePitchVariance.DefaultValue;
+        PhoneticMinPitchVariance.Value = (float)PhoneticMinPitchVariance.DefaultValue;
+        PhoneticMaxPitchVariance.Value = (float)PhoneticMaxPitchVariance.DefaultValue;
+        PhoneticMinFrequencyMale.Value = (float)PhoneticMinFrequencyMale.DefaultValue;
+        PhoneticMaxFrequencyMale.Value = (float)PhoneticMaxFrequencyMale.DefaultValue;
+        PhoneticMinFrequencyFemale.Value = (float)PhoneticMinFrequencyFemale.DefaultValue;
+        PhoneticMaxFrequencyFemale.Value = (float)PhoneticMaxFrequencyFemale.DefaultValue;
+        PhoneticMinFrequencyNonBinary.Value = (float)PhoneticMinFrequencyNonBinary.DefaultValue;
+        PhoneticMaxFrequencyNonBinary.Value = (float)PhoneticMaxFrequencyNonBinary.DefaultValue;
+    }
 }

@@ -76,4 +76,22 @@ public static partial class BabblerConfig
         Utilities.EnforceMinMax(ref DroningMinFrequencyFemale, ref DroningMaxFrequencyFemale);
         Utilities.EnforceMinMax(ref DroningMinFrequencyNonBinary, ref DroningMaxFrequencyNonBinary);
     }
+
+    public static void ResetDroning()
+    {
+        DroningValidPhonemes.Value = (string)DroningValidPhonemes.DefaultValue;
+        DroningSpeechDelay.Value = (float)DroningSpeechDelay.DefaultValue;
+        DroningChanceDelayVariance.Value = (float)DroningChanceDelayVariance.DefaultValue;
+        DroningMinDelayVariance.Value = (float)DroningMinDelayVariance.DefaultValue;
+        DroningMaxDelayVariance.Value = (float)DroningMaxDelayVariance.DefaultValue;
+        DroningChancePitchVariance.Value = (float)DroningChancePitchVariance.DefaultValue;
+        DroningMinPitchVariance.Value = (float)DroningMinPitchVariance.DefaultValue;
+        DroningMaxPitchVariance.Value = (float)DroningMaxPitchVariance.DefaultValue;
+        DroningMinFrequencyMale.Value = (float)DroningMinFrequencyMale.DefaultValue;
+        DroningMaxFrequencyMale.Value = (float)DroningMaxFrequencyMale.DefaultValue;
+        DroningMinFrequencyFemale.Value = (float)DroningMinFrequencyFemale.DefaultValue;
+        DroningMaxFrequencyFemale.Value = (float)DroningMaxFrequencyFemale.DefaultValue;
+        DroningMinFrequencyNonBinary.Value = (float)DroningMinFrequencyNonBinary.DefaultValue;
+        DroningMaxFrequencyNonBinary.Value = (float)DroningMaxFrequencyNonBinary.DefaultValue;
+    }
 }

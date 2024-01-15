@@ -70,4 +70,24 @@ public static partial class BabblerConfig
 
         Utilities.Log("BabblerConfig has initialized!", LogLevel.Debug);
     }
+
+    private static void Reset()
+    {
+        Enabled.Value = (bool)Enabled.DefaultValue;
+        Mode.Value = (SpeechMode)Mode.DefaultValue;
+        DistortPhoneSpeech.Value = (bool)DistortPhoneSpeech.DefaultValue;
+        ConversationalVolume.Value = (float)ConversationalVolume.DefaultValue;
+        OverheardVolume.Value = (float)OverheardVolume.DefaultValue;
+        PhoneVolume.Value = (float)PhoneVolume.DefaultValue;
+        ConversationalShoutMultiplier.Value = (float)ConversationalShoutMultiplier.DefaultValue;
+        OverheardShoutMultiplier.Value = (float)OverheardShoutMultiplier.DefaultValue;
+        PhoneShoutMultiplier.Value = (float)PhoneShoutMultiplier.DefaultValue;
+        FemaleThreshold.Value = (float)FemaleThreshold.DefaultValue;
+        MaleThreshold.Value = (float)MaleThreshold.DefaultValue;
+        GenderDiversity.Value = (float)GenderDiversity.DefaultValue;
+        
+        ResetSynthesis();
+        ResetPhonetic();
+        ResetDroning();
+    }
 }

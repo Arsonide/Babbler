@@ -38,4 +38,14 @@ public static partial class BabblerConfig
         Utilities.EnforceMinMax(ref SynthesisMinPitchFemale, ref SynthesisMaxPitchFemale);
         Utilities.EnforceMinMax(ref SynthesisMinPitchNonBinary, ref SynthesisMaxPitchNonBinary);
     }
+
+    public static void ResetSynthesis()
+    {
+        SynthesisMinPitchMale.Value = (float)SynthesisMinPitchMale.DefaultValue;
+        SynthesisMaxPitchMale.Value = (float)SynthesisMaxPitchMale.DefaultValue;
+        SynthesisMinPitchFemale.Value = (float)SynthesisMinPitchFemale.DefaultValue;
+        SynthesisMaxPitchFemale.Value = (float)SynthesisMaxPitchFemale.DefaultValue;
+        SynthesisMinPitchNonBinary.Value = (float)SynthesisMinPitchNonBinary.DefaultValue;
+        SynthesisMaxPitchNonBinary.Value = (float)SynthesisMaxPitchNonBinary.DefaultValue;
+    }
 }
