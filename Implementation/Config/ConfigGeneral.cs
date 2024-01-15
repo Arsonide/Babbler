@@ -15,9 +15,9 @@ public static partial class BabblerConfig
     public static float OverheardVolume = 0.3f;
     public static float PhoneVolume = 0.5f;
 
-    public static float ConversationalShoutMultiplier = 1f;
-    public static float OverheardShoutMultiplier = 10f;
-    public static float PhoneShoutMultiplier = 1f;
+    public static float ConversationalShoutMultiplier = 2.9f;
+    public static float OverheardShoutMultiplier = 6.6f;
+    public static float PhoneShoutMultiplier = 4f;
 
     public static float FemaleThreshold = 0.49f;
     public static float MaleThreshold = 0.51f;
@@ -43,13 +43,13 @@ public static partial class BabblerConfig
         PhoneVolume = config.Bind("Volume", "Phone Volume", 0.5f,
                                   new ConfigDescription("How loud voices will be when you are talking with a person over the phone.")).Value;
         
-        ConversationalShoutMultiplier = config.Bind("Volume", "Conversational Shout Multiplier", 1f,
+        ConversationalShoutMultiplier = config.Bind("Volume", "Conversational Shout Multiplier", 2.9f,
                                                     new ConfigDescription("When speaking in all caps, how much to multiply the normal conversational volume.")).Value;
         
-        OverheardShoutMultiplier = config.Bind("Volume", "Overheard Shout Multiplier", 10f,
+        OverheardShoutMultiplier = config.Bind("Volume", "Overheard Shout Multiplier", 6.6f,
                                                new ConfigDescription("When speaking in all caps, how much to multiply the normal overheard volume.")).Value;
         
-        PhoneShoutMultiplier = config.Bind("Volume", "Phone Shout Multiplier", 1f,
+        PhoneShoutMultiplier = config.Bind("Volume", "Phone Shout Multiplier", 4f,
                                            new ConfigDescription("When speaking in all caps, how much to multiply the normal phone volume.")).Value;
         
         FemaleThreshold = config.Bind("Gender", "Female Threshold", 0.49f,
@@ -63,10 +63,11 @@ public static partial class BabblerConfig
         GenderDiversity = config.Bind("Gender", "Gender Diversity", 0.05f,
                                       new ConfigDescription("Adds a random element to voice gender selection, increase for more diverse voices.",
                                                             new AcceptableValueRange<float>(0f, 1f))).Value;
-
-        InitializePhonetic(config);
-        InitializeSynthesis(config);
         
+        InitializeSynthesis(config);
+        InitializePhonetic(config);
+        InitializeDroning(config);
+
         Utilities.Log("BabblerConfig has initialized!", LogLevel.Debug);
     }
 }

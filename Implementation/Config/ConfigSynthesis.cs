@@ -4,33 +4,33 @@ namespace Babbler.Implementation.Config;
 
 public static partial class BabblerConfig
 {
-    public static float SynthesisPitchMaleMinimum = 0.5f;
-    public static float SynthesisPitchMaleMaximum = 1.3f;
+    public static float SynthesisMinPitchMale = 0.75f;
+    public static float SynthesisMaxPitchMale = 1.25f;
     
-    public static float SynthesisPitchFemaleMinimum = 0.7f;
-    public static float SynthesisPitchFemaleMaximum = 1.5f;
+    public static float SynthesisMinPitchFemale = 0.75f;
+    public static float SynthesisMaxPitchFemale = 1.25f;
     
-    public static float SynthesisPitchNonBinaryMinimum = 0.5f;
-    public static float SynthesisPitchNonBinaryMaximum = 1.5f;
+    public static float SynthesisMinPitchNonBinary = 0.75f;
+    public static float SynthesisMaxPitchNonBinary = 1.25f;
 
     private static void InitializeSynthesis(ConfigFile config)
     {
-        SynthesisPitchMaleMinimum = config.Bind("Synthesis", "Synthesis Pitch Male Minimum", 0.5f,
-                                                new ConfigDescription("Lowest possible pitch for male voices in Synthesis mode.")).Value;
+        SynthesisMinPitchMale = config.Bind("Synthesis", "Min Pitch Male", 0.75f,
+                                                new ConfigDescription("Lowest possible pitch (relative percent) for male voices.")).Value;
         
-        SynthesisPitchMaleMaximum = config.Bind("Synthesis", "Synthesis Pitch Male Maximum", 1.3f,
-                                                new ConfigDescription("Highest possible pitch for male voices in Synthesis mode.")).Value;
+        SynthesisMaxPitchMale = config.Bind("Synthesis", "Max Pitch Male", 1.25f,
+                                                new ConfigDescription("Highest possible pitch (relative percent) for male voices.")).Value;
         
-        SynthesisPitchFemaleMinimum = config.Bind("Synthesis", "Synthesis Pitch Female Minimum", 0.7f,
-                                                  new ConfigDescription("Lowest possible pitch for female voices in Synthesis mode.")).Value;
+        SynthesisMinPitchFemale = config.Bind("Synthesis", "Min Pitch Female", 0.75f,
+                                                  new ConfigDescription("Lowest possible pitch (relative percent) for female voices.")).Value;
         
-        SynthesisPitchFemaleMaximum = config.Bind("Synthesis", "Synthesis Pitch Female Maximum", 1.5f,
-                                                  new ConfigDescription("Highest possible pitch for female voices in Synthesis mode.")).Value;
+        SynthesisMaxPitchFemale = config.Bind("Synthesis", "Max Pitch Female", 1.25f,
+                                                  new ConfigDescription("Highest possible pitch (relative percent) for female voices.")).Value;
         
-        SynthesisPitchNonBinaryMinimum = config.Bind("Synthesis", "Synthesis Pitch Non-Binary Minimum", 0.5f,
-                                                   new ConfigDescription("Lowest possible pitch for non-binary voices in Synthesis mode.")).Value;
+        SynthesisMinPitchNonBinary = config.Bind("Synthesis", "Min Pitch Non-Binary", 0.75f,
+                                                   new ConfigDescription("Lowest possible pitch (relative percent) for non-binary voices.")).Value;
         
-        SynthesisPitchNonBinaryMaximum = config.Bind("Synthesis", "Synthesis Pitch Non-Binary Maximum", 1.5f,
-                                                   new ConfigDescription("Highest possible pitch for non-binary voices in Synthesis mode.")).Value;
+        SynthesisMaxPitchNonBinary = config.Bind("Synthesis", "Max Pitch Non-Binary", 1.25f,
+                                                   new ConfigDescription("Highest possible pitch (relative percent) for non-binary voices.")).Value;
     }
 }

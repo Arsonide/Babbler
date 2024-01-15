@@ -11,9 +11,9 @@ public static partial class BabblerConfig
     public static float PhoneticMinDelayVariance = 0f;
     public static float PhoneticMaxDelayVariance = 0f;
 
-    public static float PhoneticChancePitchVariance = 0f;
-    public static float PhoneticMinPitchVariance = 1f;
-    public static float PhoneticMaxPitchVariance = 1f;
+    public static float PhoneticChancePitchVariance = 0.2f;
+    public static float PhoneticMinPitchVariance = 0.9f;
+    public static float PhoneticMaxPitchVariance = 1.1f;
     
     public static float PhoneticMinFrequencyMale = 100f;
     public static float PhoneticMaxFrequencyMale = 180f;
@@ -38,13 +38,13 @@ public static partial class BabblerConfig
         PhoneticMaxDelayVariance = config.Bind("Phonetic", "Max Delay Variance", 0f,
                                                new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it.")).Value;
         
-        PhoneticChancePitchVariance = config.Bind("Phonetic", "Chance Pitch Variance", 0f,
+        PhoneticChancePitchVariance = config.Bind("Phonetic", "Chance Pitch Variance", 0.2f,
                                                   new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme pitch.")).Value;
         
-        PhoneticMinPitchVariance = config.Bind("Phonetic", "Min Pitch Variance", 1f,
+        PhoneticMinPitchVariance = config.Bind("Phonetic", "Min Pitch Variance", 0.9f,
                                                new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.")).Value;
         
-        PhoneticMaxPitchVariance = config.Bind("Phonetic", "Max Pitch Variance", 1f,
+        PhoneticMaxPitchVariance = config.Bind("Phonetic", "Max Pitch Variance", 1.1f,
                                                new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.")).Value;
 
         PhoneticMinFrequencyMale = config.Bind("Phonetic", "Min Frequency Male", 100f,
