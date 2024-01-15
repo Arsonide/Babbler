@@ -5,6 +5,7 @@
 This plugin aims to make Shadows of Doubt more immersive by having NPCs you encounter speak audibly, whether you are talking to them directly, over the phone, or just hearing them nearby. There are two modes of speech: Synthesis, where they speak understandably using text to speech, and Phonetic, where they speak in gibberish similar to the game "Animal Crossing", or "The Sims", or "Undertale". The default is Synthesis, because I believe it sounds better, but both modes work and are highly configurable. I will outline how configuring them works in a configuration section below.
 
 ## A Note On Gender Identity
+
 In my effort to create an inclusive and immersive experience, I've implemented comprehensive gender identity options in this mod. While the default settings align with the unmodified settings of Shadows of Doubt, extensive configurability is provided, allowing players to tailor these aspects to their preferences. My goal is to represent everyone respectfully, ensuring a diverse and authentic experience for all. As always I welcome any player feedback.
 
 ## Installation
@@ -31,37 +32,84 @@ Follow these steps:
 * The plugin detects when NPCs are "shouting" in all caps and raises the volume of their voices.
 * The plugin attempts to filter out "emote speech" like sleeping and sneezing.
 
-### Configuration
+### Configuration (Basic)
 
-In r2modman you should see "Config editor" on the left, in the "Other" section. If you click on that and then open up BepInEx\config\Babbler.cfg and click "Edit config", you will have many options available to you to configure Babbler to your liking, we'll go over them briefly. Just click "Save" when you are done. Note that the plugin caches a lot of things when it starts, so it's a good idea to restart the game after modifying these, or modify them before you launch the game.
+==If you read anything in this document, read this section.==
+
+In r2modman you should see "Config editor" on the left, in the "Other" section. If you click on that and then open up BepInEx\config\Babbler.cfg and click "Edit config", you will have many options available to you to configure Babbler to your liking. Just click "Save" when you are done.
+
+> If you do not see Babbler.cfg in your options, click "Start modded" to launch the game, then close both the game and r2modman. When you launch r2modman again, the config file will be there.
+
+> Note that the plugin caches a lot of things when it starts, so it's a good idea to modify these settings before you launch the game, not while the game is running.
+
+There are three modes in Babbler:
+* **Synthesis**: Uses text to speech to audibly produce intelligible speech.
+* **Phonetic**: Plays phonemes in sequence, and sounds a bit like Animal Crossing speech.
+* **Droning**: Plays one phoneme repetitively, and sounds a bit like Undertale speech.
+
+All three of these modes have extensive configuration options, but sensible defaults, meaning if you just want to get into the game, you only need to change one setting: **Mode**. You will find **Mode** in the **General** section of the configuration panel in r2modman. Just set it to one of these three options and save your configuration. All of the other settings have been set up for you.
+
+### Configuration (Advanced)
+
+You will find a ton of other settings in the configuration panel to tweak how NPCs sound to your liking, they are categorized very well. We will go through each category below, and what the options in them do.
 
 ---
+#### 1. General
 - **General - Enabled**: Another method of enabling and disabling Babbler.
 - **General - Mode**: Determines whether citizens will talk with text to speech synthesis, phonetic sounds, or monosyllabic droning.
 - **General - Distort Phone Speech**: When enabled, a band pass is applied to phones to make them sound a little tinnier, like phones.
 ---
+#### 2. Gender
 - **Gender - Female Threshold**: Increase for more female voices, decrease for less, defaults to what the stock game uses for citizens.
 - **Gender - Male Threshold**: Decrease for more male voices, increase for less, defaults to what the stock game uses for citizens.
 - **Gender - Gender Diversity**: Adds a random element to voice gender selection, increase for more diverse voices.
 ---
+#### 3. Volume
 - **Volume - Conversational Volume**: How loud voices will be when you are speaking directly to a person.
 - **Volume - Overheard Volume**: How loud voices that you overhear nearby will be when you are not talking directly to them.
-- **Volume - Shout Volume**: How loud overheard voices that are "shouting" (in all caps) will be.
 - **Volume - Phone Volume**: How loud voices will be when you are talking with a person over the phone.
+- **Volume - Conversational Shout Multiplier**: When speaking in all caps, how much to multiply the normal conversational volume.
+- **Volume - Overheard Shout Multiplier**: When speaking in all caps, how much to multiply the normal overheard volume.
+- **Volume - Phone Shout Multiplier**: When speaking in all caps, how much to multiply the normal phone volume.
 ---
-- **Synthesis - Synthesis Pitch Male Minimum**: Lowest possible pitch for male voices in Synthesis mode.
-- **Synthesis - Synthesis Pitch Male Maximum**: Highest possible pitch for male voices in Synthesis mode.
-- **Synthesis - Synthesis Pitch Female Minimum**: Lowest possible pitch for female voices in Synthesis mode.
-- **Synthesis - Synthesis Pitch Female Maximum**: Highest possible pitch for female voices in Synthesis mode.
-- **Synthesis - Synthesis Pitch Non-Binary Minimum**: Lowest possible pitch for non-binary voices in Synthesis mode.
-- **Synthesis - Synthesis Pitch Non-Binary Maximum**: Highest possible pitch for non-binary voices in Synthesis mode.
+#### 4. Synthesis
+- **Synthesis - Min Pitch Male**: Lowest possible pitch (relative percent) for male voices.
+- **Synthesis - Max Pitch Male**: Highest possible pitch (relative percent) for male voices.
+- **Synthesis - Min Pitch Female**: Lowest possible pitch (relative percent) for female voices.
+- **Synthesis - Max Pitch Female**: Highest possible pitch (relative percent) for female voices.
+- **Synthesis - Min Pitch Non-Binary**: Lowest possible pitch (relative percent) for non-binary voices.
+- **Synthesis - Max Pitch Non-Binary**: Highest possible pitch (relative percent) for non-binary voices.
 ---
-- **Phonetic - Phonetic Pitch Male Minimum**: Lowest possible pitch for male voices in Phonetic mode.
-- **Phonetic - Phonetic Pitch Male Maximum**: Highest possible pitch for male voices in Phonetic mode.
-- **Phonetic - Phonetic Pitch Female Minimum**: Lowest possible pitch for female voices in Phonetic mode.
-- **Phonetic - Phonetic Pitch Female Maximum**: Highest possible pitch for female voices in Phonetic mode.
-- **Phonetic - Phonetic Pitch Non-Binary Minimum**: Lowest possible pitch for non-binary voices in Phonetic mode.
-- **Phonetic - Phonetic Pitch Non-Binary Maximum**: Highest possible pitch for non-binary voices in Phonetic mode.
+#### 5. Phonetic
+- **Phonetic - Speech Delay**: The delay of each phoneme is its length plus this. Negative numbers cause overlapping phonemes.
+- **Phonetic - Chance Delay Variance**: This is the chance for any citizen to speak with variations in their phoneme delay.
+- **Phonetic - Min Delay Variance**: A value between the min and max delay variance is chosen to add to the speech delay to create variations in it.
+- **Phonetic - Max Delay Variance**: A value between the min and max delay variance is chosen to add to the speech delay to create variations in it.
+- **Phonetic - Chance Pitch Variance**: This is the chance for any citizen to speak with variations in their phoneme pitch.
+- **Phonetic - Min Pitch Variance**: A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.
+- **Phonetic - Max Pitch Variance**: A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.
+- **Phonetic - Min Frequency Male**: Lowest possible frequency (in hertz) for male voices.
+- **Phonetic - Max Frequency Male**: Highest possible frequency (in hertz) for male voices.
+- **Phonetic - Min Frequency Female**: Lowest possible frequency (in hertz) for female voices.
+- **Phonetic - Max Frequency Female**: Highest possible frequency (in hertz) for female voices.
+- **Phonetic - Min Frequency Non-Binary**: Lowest possible frequency (in hertz) for non-binary voices.
+- **Phonetic - Max Frequency Non-Binary**: Highest possible frequency (in hertz) for non-binary voices.
+---
+#### 6. Droning
+- **Droning - Valid Phonemes**: Citizens pick one phoneme to repeat, that is chosen from these phonemes.
+- **Droning - Speech Delay**: The delay of each phoneme is its length plus this. Negative numbers cause overlapping phonemes.
+- **Droning - Chance Delay Variance**: This is the chance for any citizen to speak with variations in their phoneme delay.
+- **Droning - Min Delay Variance**: A value between the min and max delay variance is chosen to add to the speech delay to create variations in it.
+- **Droning - Max Delay Variance**: A value between the min and max delay variance is chosen to add to the speech delay to create variations in it.
+- **Droning - Chance Pitch Variance**: This is the chance for any citizen to speak with variations in their phoneme pitch.
+- **Droning - Min Pitch Variance**: A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.
+- **Droning - Max Pitch Variance**: A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it.
+- **Droning - Min Frequency Male**: Lowest possible frequency (in hertz) for male voices.
+- **Droning - Max Frequency Male**: Highest possible frequency (in hertz) for male voices.
+- **Droning - Min Frequency Female**: Lowest possible frequency (in hertz) for female voices.
+- **Droning - Max Frequency Female**: Highest possible frequency (in hertz) for female voices.
+- **Droning - Min Frequency Non-Binary**: Lowest possible frequency (in hertz) for non-binary voices.
+- **Droning - Max Frequency Non-Binary**: Highest possible frequency (in hertz) for non-binary voices.
 ---
 
 ### Adding Voices (Synthesis Mode)
