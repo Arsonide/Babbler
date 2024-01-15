@@ -35,7 +35,8 @@ public static partial class BabblerConfig
                                           new ConfigDescription("The delay of each phoneme is its length plus this. Negative numbers cause overlapping phonemes."));
         
         DroningChanceDelayVariance = config.Bind("6. Droning", "Chance Delay Variance", 0.4f,
-                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme delay."));
+                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme delay.",
+                                                                        new AcceptableValueRange<float>(0f, 1f)));
         
         DroningMinDelayVariance = config.Bind("6. Droning", "Min Delay Variance", 0f,
                                                new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it."));
@@ -44,7 +45,8 @@ public static partial class BabblerConfig
                                                new ConfigDescription("A value between the min and max delay variance is chosen to add to the speech delay to create variations in it."));
         
         DroningChancePitchVariance = config.Bind("6. Droning", "Chance Pitch Variance", 0.2f,
-                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme pitch."));
+                                                  new ConfigDescription("This is the chance for any citizen to speak with variations in their phoneme pitch.",
+                                                                        new AcceptableValueRange<float>(0f, 1f)));
         
         DroningMinPitchVariance = config.Bind("6. Droning", "Min Pitch Variance", 0.8f,
                                                new ConfigDescription("A value between the min and max pitch variance is chosen to multiply with the phoneme pitch to create variations of it."));
