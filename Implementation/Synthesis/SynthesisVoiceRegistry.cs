@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.Speech.Synthesis;
-using UnityEngine;
 using BepInEx.Logging;
 using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
@@ -52,6 +51,8 @@ public static class SynthesisVoiceRegistry
                 case VoiceGender.Female:
                     FemaleVoices.Add(voiceName);
                     break;
+                case VoiceGender.Neutral:
+                case VoiceGender.NotSet:
                 default:
                     NonBinaryVoices.Add(voiceName);
                     break;
@@ -71,7 +72,7 @@ public static class SynthesisVoiceRegistry
         
         Utilities.Log($"SynthesisVoiceRegistry has initialized! Male Voices: {MaleVoices.Count}, Female Voices: {FemaleVoices.Count}, Non-Binary Voices: {NonBinaryVoices.Count}", LogLevel.Debug);
 
-        // If we are in Synthesis mode but have no voices, revert to Phonetic mode. We ship with at least one Phonetic voice so we know it should work.
+        // If we are in Synthesis mode but have no voices, revert to Phonetic mode. We ship with phonetic voices so we know it should work.
         if (AllVoices.Count <= 0 && BabblerConfig.Mode == SpeechMode.Synthesis)
         {
             BabblerConfig.Mode = SpeechMode.Phonetic;

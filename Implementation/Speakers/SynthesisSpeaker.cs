@@ -101,6 +101,7 @@ public class SynthesisSpeaker : BaseSpeaker
                 return Mathf.Lerp(BabblerConfig.SynthesisMinPitchMale, BabblerConfig.SynthesisMaxPitchMale, characteristics.Pitch);
             case VoiceCategory.Female:
                 return Mathf.Lerp(BabblerConfig.SynthesisMinPitchFemale, BabblerConfig.SynthesisMaxPitchFemale, characteristics.Pitch);
+            case VoiceCategory.NonBinary:
             default:
                 return Mathf.Lerp(BabblerConfig.SynthesisMinPitchNonBinary, BabblerConfig.SynthesisMaxPitchNonBinary, characteristics.Pitch);
         }

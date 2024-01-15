@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using BepInEx.Logging;
 using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
 
@@ -25,6 +26,8 @@ public static class PhoneticVoiceRegistry
             voice.Initialize(subdirectory);
             Voices.Add(voice);
         }
+        
+        Utilities.Log($"SynthesisVoiceRegistry has initialized! Voices: {Voices.Count}", LogLevel.Debug);
     }
 
     public static void Uninitialize()

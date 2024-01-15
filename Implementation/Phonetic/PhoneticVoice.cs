@@ -78,8 +78,6 @@ public class PhoneticVoice
                 _phonemes[phonetic] = newPhonetic;
             }
         }
-        
-        Utilities.Log($"Phonetic voice {Name} has initialized! Frequency: {Frequency}, Phonemes: {_phonemes.Count}", LogLevel.Debug);
     }
 
     public void Uninitialize()
@@ -94,8 +92,6 @@ public class PhoneticVoice
             pair.Value.Sound.release();
             pair.Value.Released = true;
         }
-        
-        Utilities.Log($"Phonetic voice {Name} has uninitialized!", LogLevel.Debug);
     }
     
     private PhoneticSound CreatePhoneticSound(string filePath, string phonetic)

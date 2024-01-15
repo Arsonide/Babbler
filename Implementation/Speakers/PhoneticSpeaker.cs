@@ -117,6 +117,7 @@ public class PhoneticSpeaker : BaseSpeaker
                 minimumFrequency = BabblerConfig.PhoneticMinFrequencyFemale;
                 maximumFrequency = BabblerConfig.PhoneticMaxFrequencyFemale;
                 break;
+            case VoiceCategory.NonBinary:
             default:
                 minimumFrequency = BabblerConfig.PhoneticMinFrequencyNonBinary;
                 maximumFrequency = BabblerConfig.PhoneticMaxFrequencyNonBinary;
@@ -159,7 +160,7 @@ public class PhoneticSpeaker : BaseSpeaker
             return naturalDelay;
         }
         
-        float targetDelay = BabblerConfig.PhoneticSpeechDelay + Utilities.GetRandomFloat(BabblerConfig.PhoneticMinDelayVariance, BabblerConfig.DroningMaxDelayVariance);
+        float targetDelay = BabblerConfig.PhoneticSpeechDelay + Utilities.GetRandomFloat(BabblerConfig.PhoneticMinDelayVariance, BabblerConfig.PhoneticMaxDelayVariance);
         return Mathf.Lerp(naturalDelay, targetDelay, CurrentDelayVarianceFactor);
     }
     

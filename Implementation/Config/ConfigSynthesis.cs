@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using Babbler.Implementation.Common;
 
 namespace Babbler.Implementation.Config;
 
@@ -32,5 +33,9 @@ public static partial class BabblerConfig
         
         SynthesisMaxPitchNonBinary = config.Bind("Synthesis", "Max Pitch Non-Binary", 1.25f,
                                                    new ConfigDescription("Highest possible pitch (relative percent) for non-binary voices.")).Value;
+        
+        Utilities.EnforceMinMax(ref SynthesisMinPitchMale, ref SynthesisMaxPitchMale);
+        Utilities.EnforceMinMax(ref SynthesisMinPitchFemale, ref SynthesisMaxPitchFemale);
+        Utilities.EnforceMinMax(ref SynthesisMinPitchNonBinary, ref SynthesisMaxPitchNonBinary);
     }
 }

@@ -1,5 +1,5 @@
-﻿using Babbler.Implementation.Common;
-using UnityEngine;
+﻿using UnityEngine;
+using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
 
 namespace Babbler.Implementation.Characteristics;
