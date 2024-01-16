@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Babbler</AssemblyName>
     <Description>Plugin that makes citizens audibly speak in Shadows of Doubt.</Description>
-    <Version>0.9.0</Version>
+    <Version>0.9.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
@@ -13,15 +13,15 @@
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>Babbler</RootNamespace>
-    <PackageVersion>0.9.0</PackageVersion>
+    <PackageVersion>0.9.1</PackageVersion>
     <Title>Babbler</Title>
     <Authors>Arsonide</Authors>
     <Copyright>Arsonide</Copyright>
     <PackageProjectUrl>https://github.com/Arsonide/Babbler</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Arsonide/Babbler/blob/main/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Arsonide/Babbler</RepositoryUrl>
-    <AssemblyVersion>0.9.0</AssemblyVersion>
-    <FileVersion>0.9.0</FileVersion>
+    <AssemblyVersion>0.9.1</AssemblyVersion>
+    <FileVersion>0.9.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

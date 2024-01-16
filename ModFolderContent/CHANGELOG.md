@@ -1,4 +1,9 @@
 # CHANGELOG
+**0.9.1**
+- Synthesis mode has an issue where it only works if Babbler is the only mod installed.
+- Disabling it by default in favor of Phonetic mode until I can figure out why that is happening.
+- It should still work if no other mods are installed, so I'm leaving the option in.
+
 **0.9.0**
 - Added Synthesis mode, which uses text to speech. This is now the default, because it's great.
 - Added Droning mode, which is inspired by the speech in "Undertale". It's phonetic but only using one repeating syllable.
