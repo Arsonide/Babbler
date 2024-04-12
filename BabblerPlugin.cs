@@ -10,7 +10,10 @@ using Babbler.Implementation.Synthesis;
 
 namespace Babbler;
 
-[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+// There is an issue with Microsoft Speech Synthesis that causes it to crash the whole game if our plugin doesn't load first, before other plugins.
+// Some unique interaction between BepInEx / Harmony and Microsoft Speech Synthesis that is deep in memory management.
+// The only resolution I know of to fix this is appending AAAA here which causes us to load first, because Harmony patches in alphabetical order.
+[BepInPlugin($"AAAA_{MyPluginInfo.PLUGIN_GUID}", MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class BabblerPlugin : PluginController<BabblerPlugin>
 {
     private bool _hasInitializedImmediate;

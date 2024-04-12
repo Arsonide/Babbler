@@ -1,6 +1,7 @@
 ﻿using BepInEx.Configuration;
 using BepInEx.Logging;
 using Babbler.Implementation.Common;
+using Il2CppSystem.IO;
 
 namespace Babbler.Implementation.Config;
 
@@ -29,6 +30,8 @@ public static partial class BabblerConfig
     
     public static void Initialize(ConfigFile config)
     {
+        ProcessOldConfigFile(config);
+        
         Enabled = config.Bind("1. General", "Enabled", true,
                               new ConfigDescription("Another method of enabling and disabling Babbler."));
 
@@ -78,6 +81,21 @@ public static partial class BabblerConfig
         ProcessUpgrades();
         
         Utilities.Log("BabblerConfig has initialized!", LogLevel.Debug);
+    }
+
+    private static void ProcessOldConfigFile(ConfigFile newFile)
+    {
+        string newPath = newFile.ConfigFilePath;
+        string oldPath = newPath.Replace("AAAA_", string.Empty);
+        
+        if (!File.Exists(oldPath))
+        {
+            return;
+        }
+        
+        Utilities.Log("Babbler found old config file path, renaming config file!");
+        File.Move(oldPath, newPath);
+        newFile.Reload();
     }
     
     private static void ProcessUpgrades()
