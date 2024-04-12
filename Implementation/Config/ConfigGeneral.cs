@@ -7,7 +7,7 @@ namespace Babbler.Implementation.Config;
 
 public static partial class BabblerConfig
 {
-    private const string ExpectedVersion = "74d012a7e2564fa9badbc23749a9b16c";
+    private const string ExpectedVersion = "2a9e6998e71643779d6cde762a4df89c";
     
     public static ConfigEntry<string> Version;
 
@@ -35,7 +35,7 @@ public static partial class BabblerConfig
         Enabled = config.Bind("1. General", "Enabled", true,
                               new ConfigDescription("Another method of enabling and disabling Babbler."));
 
-        Mode = config.Bind("1. General", "Mode", SpeechMode.Phonetic,
+        Mode = config.Bind("1. General", "Mode", SpeechMode.Synthesis,
                            new ConfigDescription("Determines whether citizens will talk with text to speech synthesis, phonetic sounds, or monosyllabic droning."));
         
         Version = config.Bind("1. General", "Version", string.Empty,
