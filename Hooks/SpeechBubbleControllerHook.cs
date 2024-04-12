@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Hosts;
+using UnityEngine;
 
 namespace Babbler.Hooks;
 
@@ -30,7 +31,10 @@ public class SpeechBubbleControllerHook
         }
         
         SpeechController controller = __instance?.speechController;
+        InteractableController interactable = controller?.interactable?.controller;
         Actor actor = controller?.actor;
+
+        bool isPhoneBubble = controller?.phoneLine != null || (interactable != null && interactable.isPhone);
 
         // Search around for a human because they don't seem to be assigned consistently?
         Human directHuman = actor as Human;
@@ -38,6 +42,12 @@ public class SpeechBubbleControllerHook
         
         Human speakingHuman = directHuman ?? aiHuman;
         Human telephoneHuman = GetOtherPhoneHuman();
+        
+        // The operator is not a person that actually exists, so every 8 hours we pick a random citizen to serve as the operator.
+        if (isPhoneBubble && telephoneHuman == null)
+        {
+            telephoneHuman = GetOperatorHuman();
+        }
         
         Human anyHuman = speakingHuman ?? telephoneHuman;
 
@@ -131,5 +141,22 @@ public class SpeechBubbleControllerHook
         }
 
         return null;
+    }
+
+    private static Human GetOperatorHuman()
+    {
+        int cityHash = CityData.Instance.seed.GetHashCode();
+
+        // Operator shift changes once every 8 hours, or 28800 seconds.
+        int currentOperatorShift = Mathf.RoundToInt(SessionData.Instance.gameTime / 28800f);
+        
+        // Now cantor pair those things to get a deterministic hash of them representing the current work shift.
+        int sum = cityHash + currentOperatorShift;
+        int cantor = (sum * (sum + 1) / 2) + currentOperatorShift;
+
+        int citizenIndex = Mathf.Abs(cantor) % CityData.Instance.citizenDirectory.Count;
+        Citizen citizen = CityData.Instance.citizenDirectory._items[citizenIndex];
+
+        return citizen;
     }
 }
