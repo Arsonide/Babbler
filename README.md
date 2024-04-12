@@ -4,8 +4,6 @@
 
 This mod aims to make Shadows of Doubt more immersive by having NPCs you encounter speak audibly, whether you are talking to them directly, over the phone, or just hearing them nearby. There are three modes of speech: Synthesis where they speak understandably using text to speech, Phonetic, where they speak in phonetic gibberish similar to the game "Animal Crossing", and Droning where they speak in repetitive gibberish similar to the game "Undertale". The default is Synthesis, because I believe it sounds better, but all three modes work, are set up with decent defaults so they are easy to activate, and are highly configurable. I will outline how to activate and configure them in sections below.
 
-> At the time of this writing, Synthesis only works if Babbler is your only mod, so Phonetic is temporarily the default mode.
-
 ## A Note On Gender Identity
 
 In my effort to create an inclusive and immersive experience, I've implemented comprehensive gender identity options in this mod. While the default settings align with the unmodified settings of Shadows of Doubt, extensive configurability is provided, allowing players to tailor these aspects to their preferences. My goal is to represent everyone respectfully, ensuring a diverse and authentic experience for all. As always I welcome any player feedback.
@@ -39,9 +37,9 @@ Follow these steps:
 
 If you read anything in this document, read this section.
 
-In r2modman you should see "Config editor" on the left, in the "Other" section. If you click on that and then open up BepInEx\config\Babbler.cfg and click "Edit config", you will have many options available to you to configure Babbler to your liking. Just click "Save" when you are done.
+In r2modman you should see "Config editor" on the left, in the "Other" section. If you click on that and then open up BepInEx\config\AAAA_Babbler.cfg and click "Edit config", you will have many options available to you to configure Babbler to your liking. Just click "Save" when you are done.
 
-> If you do not see Babbler.cfg in your options, click "Start modded" to launch the game, then close both the game and r2modman. When you launch r2modman again, the config file will be there.
+> If you do not see AAAA_Babbler.cfg in your options, click "Start modded" to launch the game, then close both the game and r2modman. When you launch r2modman again, the config file will be there.
 
 > Note that the mod caches a lot of things when it starts, so it's a good idea to modify these settings before you launch the game, not while the game is running.
 
@@ -77,6 +75,8 @@ You will find a ton of other settings in the configuration panel to tweak how NP
 - **Volume - Phone Shout Multiplier**: When speaking in all caps, how much to multiply the normal phone volume.
 ---
 #### 4. Synthesis
+- **Synthesis - Min Speed**: Lowest possible speed for speech. Zero being the standard speed.
+- **Synthesis - Max Speed**: Highest possible speed for speech. Zero being the standard speed.
 - **Synthesis - Min Pitch Male**: Lowest possible pitch (relative percent) for male voices.
 - **Synthesis - Max Pitch Male**: Highest possible pitch (relative percent) for male voices.
 - **Synthesis - Min Pitch Female**: Lowest possible pitch (relative percent) for female voices.
