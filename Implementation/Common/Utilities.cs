@@ -88,4 +88,12 @@ public static class Utilities
         minimum.Value = min;
         maximum.Value = max;
     }
+    
+    public static void EnforceMinMax(ref ConfigEntry<int> minimum, ref ConfigEntry<int> maximum)
+    {
+        int min = Mathf.Min(minimum.Value, maximum.Value);
+        int max = Mathf.Max(minimum.Value, maximum.Value);
+        minimum.Value = min;
+        maximum.Value = max;
+    }
 }

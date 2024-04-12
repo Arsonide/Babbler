@@ -94,6 +94,7 @@ public class SynthesisSpeaker : BaseSpeaker
         // While we have a human, use this as an opportunity to choose the SpeechSynthesis voice.
         string voice = SynthesisVoiceRegistry.GetVoice(speechPerson, out VoiceCharacteristics characteristics);
         _synthesizer.SelectVoice(voice);
+        _synthesizer.Rate = Mathf.RoundToInt(Mathf.Lerp(BabblerConfig.SynthesisMinSpeed.Value, BabblerConfig.SynthesisMaxSpeed.Value, characteristics.Rate));
 
         switch (characteristics.Category)
         {
