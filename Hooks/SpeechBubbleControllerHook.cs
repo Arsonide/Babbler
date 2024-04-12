@@ -154,8 +154,8 @@ public class SpeechBubbleControllerHook
     {
         int cityHash = CityData.Instance.seed.GetHashCode();
 
-        // Operator shift changes once every 8 hours, or 28800 seconds.
-        int currentOperatorShift = Mathf.RoundToInt(SessionData.Instance.gameTime / 28800f);
+        // Operator shift changes once every 8 hours, and gameTime is in hours.
+        int currentOperatorShift = Mathf.RoundToInt(SessionData.Instance.gameTime / 8f);
         
         // Now cantor pair those things to get a deterministic hash of them representing the current work shift.
         int sum = cityHash + currentOperatorShift;
