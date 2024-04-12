@@ -30,34 +30,8 @@ public class SpeechBubbleControllerHook
         {
             return;
         }
-        
-        SpeechController controller = __instance?.speechController;
-        InteractableController interactable = controller?.interactable?.controller;
-        Actor actor = controller?.actor;
 
-        bool isPhoneBubble = controller?.phoneLine != null || (interactable != null && interactable.isPhone);
-
-        // Search around for a human because they don't seem to be assigned consistently?
-        Human directHuman = actor as Human;
-        Human aiHuman = actor?.ai?.human;
-        
-        Human speakingHuman = directHuman ?? aiHuman;
-        Human telephoneHuman = GetOtherPhoneHuman();
-        
-        // The operator is not a person that actually exists, so every 8 hours we pick a random citizen to serve as the operator.
-        if (isPhoneBubble && telephoneHuman == null)
-        {
-            telephoneHuman = GetOperatorHuman();
-        }
-        
-        Human anyHuman = speakingHuman ?? telephoneHuman;
-
-        if (anyHuman == null)
-        {
-            Utilities.Log($"Babbler was unable to find a citizen for voice dialog: \"{__instance.actualString}\". Defaulting to a random citizen for now, but this should never happen!", LogLevel.Error);
-            anyHuman = GetRandomHuman();
-        }
-        
+        BubbleHumanSearch(__instance, out Human speakingHuman, out Human telephoneHuman, out Human anyHuman);
         SpeechContext speechContext = GetSpeechContext(speechInput, speakingHuman, telephoneHuman, newSpeechController);
         SpeakerHostPool.Play(__instance.actualString, speechContext, anyHuman);
     }
@@ -123,6 +97,38 @@ public class SpeechBubbleControllerHook
         return true;
     }
 
+#region Human Helpers
+
+    private static void BubbleHumanSearch(SpeechBubbleController bubbleController, out Human speakingHuman, out Human telephoneHuman, out Human anyHuman)
+    {
+        SpeechController controller = bubbleController?.speechController;
+        InteractableController interactable = controller?.interactable?.controller;
+        Actor actor = controller?.actor;
+        
+        bool isPhoneBubble = controller?.phoneLine != null || (interactable != null && interactable.isPhone);
+
+        // Search around for a human because they don't seem to be assigned consistently?
+        Human directHuman = actor as Human;
+        Human aiHuman = actor?.ai?.human;
+        
+        speakingHuman = directHuman ?? aiHuman;
+        telephoneHuman = GetOtherPhoneHuman();
+        
+        // The operator is not a person that actually exists, so every 8 hours we pick a random citizen to serve as the operator.
+        if (isPhoneBubble && telephoneHuman == null)
+        {
+            telephoneHuman = GetOperatorHuman();
+        }
+        
+        anyHuman = speakingHuman ?? telephoneHuman;
+
+        if (anyHuman == null)
+        {
+            Utilities.Log($"Babbler was unable to find a citizen for voice dialog: \"{bubbleController.actualString}\". Defaulting to a random citizen for now, but this should never happen!", LogLevel.Error);
+            anyHuman = GetRandomHuman();
+        }
+    }
+    
     private static Human GetOtherPhoneHuman()
     {
         TelephoneController.PhoneCall call = Player.Instance?.activeCall;
@@ -174,4 +180,6 @@ public class SpeechBubbleControllerHook
 
         return citizen;
     }
+    
+#endregion
 }
