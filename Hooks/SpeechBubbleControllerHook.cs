@@ -9,6 +9,8 @@ namespace Babbler.Hooks;
 [HarmonyPatch(typeof(SpeechBubbleController), "Setup")]
 public class SpeechBubbleControllerHook
 {
+    private static Human LastPhoneHuman;
+    
     [HarmonyPostfix]
     public static void Postfix(SpeechBubbleController __instance, SpeechController.QueueElement newSpeech, SpeechController newSpeechController)
     {
@@ -113,11 +115,30 @@ public class SpeechBubbleControllerHook
         
         speakingHuman = directHuman ?? aiHuman;
         telephoneHuman = GetOtherPhoneHuman();
-        
-        // The operator is not a person that actually exists, so every 8 hours we pick a random citizen to serve as the operator.
-        if (isPhoneBubble && telephoneHuman == null)
+       
+        if (isPhoneBubble)
         {
-            telephoneHuman = GetOperatorHuman();
+            // This can happen in two instances, talking to an operator during an active call, or talking to a fake human (a mission giver) and then releasing the phone, so you are nearby but not holding it.
+            if (telephoneHuman == null)
+            {
+                TelephoneController.PhoneCall call = Player.Instance?.activeCall;
+
+                if (call != null)
+                {
+                    // If we're on a call, then it's the operator. The operator is not a person that actually exists, so every 8 hours we pick a random citizen to serve as the operator.
+                    telephoneHuman = GetOperatorHuman();
+                    LastPhoneHuman = telephoneHuman;
+                }
+                else
+                {
+                    // If we're not on a call, then we released the phone (so we no longer have access to references we need to get the person on the other end. We use a cache in this instance.
+                    telephoneHuman = LastPhoneHuman;
+                }
+            }
+            else
+            {
+                LastPhoneHuman = telephoneHuman;
+            }
         }
         
         anyHuman = speakingHuman ?? telephoneHuman;
