@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BepInEx.Logging;
+using HarmonyLib;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Hosts;
 using UnityEngine;
@@ -51,6 +52,12 @@ public class SpeechBubbleControllerHook
         
         Human anyHuman = speakingHuman ?? telephoneHuman;
 
+        if (anyHuman == null)
+        {
+            Utilities.Log($"Babbler was unable to find a citizen for voice dialog: \"{__instance.actualString}\". Defaulting to a random citizen for now, but this should never happen!", LogLevel.Error);
+            anyHuman = GetRandomHuman();
+        }
+        
         SpeechContext speechContext = GetSpeechContext(speechInput, speakingHuman, telephoneHuman, newSpeechController);
         SpeakerHostPool.Play(__instance.actualString, speechContext, anyHuman);
     }
@@ -155,6 +162,14 @@ public class SpeechBubbleControllerHook
         int cantor = (sum * (sum + 1) / 2) + currentOperatorShift;
 
         int citizenIndex = Mathf.Abs(cantor) % CityData.Instance.citizenDirectory.Count;
+        Citizen citizen = CityData.Instance.citizenDirectory._items[citizenIndex];
+
+        return citizen;
+    }
+
+    private static Human GetRandomHuman()
+    {
+        int citizenIndex = Utilities.GetRandomInteger(0, CityData.Instance.citizenDirectory.Count);
         Citizen citizen = CityData.Instance.citizenDirectory._items[citizenIndex];
 
         return citizen;

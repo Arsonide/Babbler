@@ -63,6 +63,11 @@ public static class Utilities
         return minimum + (GlobalRandom.NextSingle() * (maximum - minimum));
     }
     
+    public static int GetRandomInteger(int minimum, int maximum)
+    {
+        return GlobalRandom.Next(minimum, maximum);
+    }
+    
     public static int GetDeterministicInteger(int hash, int prime, int min, int max)
     {
         int range = max - min;
