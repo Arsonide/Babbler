@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMOD;
 using Babbler.Implementation.Common;
+using BepInEx.Logging;
 
 namespace Babbler.Implementation.Speakers;
 
@@ -45,7 +46,17 @@ public abstract class BaseSpeaker
 
     public virtual void UpdateSpeaker()
     {
-        Vector3 position = SpeechSource.position;
+        Vector3 position = Vector3.zero;
+
+        if (SpeechSource != null)
+        {
+            position = SpeechSource.position;
+        }
+        else
+        {
+            Utilities.Log("Babbler speaker had a null SpeechSource, which should not happen!", LogLevel.Debug);
+        }
+        
         bool dirty = false;
         
         for (int i = ActiveChannels.Count - 1; i >= 0; --i)
