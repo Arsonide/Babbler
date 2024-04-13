@@ -21,6 +21,12 @@ public class SpeechBubbleControllerHook
             return;
         }
 
+        // Ignore player dialogue, thoughts, and cutscene messages.
+        if (__instance.isPlayer || CutSceneController.Instance.cutSceneActive)
+        {
+            return;
+        }
+        
         // This is used for things like [Sneeze] or [Sigh]. Don't babble for emotes.
         if (speechInput.StartsWith("[") && speechInput.EndsWith("]"))
         {
@@ -34,6 +40,14 @@ public class SpeechBubbleControllerHook
         }
 
         BubbleHumanSearch(__instance, out Human speakingHuman, out Human telephoneHuman, out Human anyHuman);
+
+        // Something bad happened, just early out.
+        if (anyHuman == null)
+        {
+            Utilities.Log($"Babbler unable to find a human to associate with message \"{speechInput}\"!", LogLevel.Debug);
+            return;
+        }
+        
         SpeechContext speechContext = GetSpeechContext(speechInput, speakingHuman, telephoneHuman, newSpeechController);
         SpeakerHostPool.Play(__instance.actualString, speechContext, anyHuman);
     }
@@ -142,12 +156,6 @@ public class SpeechBubbleControllerHook
         }
         
         anyHuman = speakingHuman ?? telephoneHuman;
-
-        if (anyHuman == null)
-        {
-            Utilities.Log($"Babbler was unable to find a citizen for voice dialog: \"{bubbleController.actualString}\". Defaulting to a random citizen for now, but this should never happen!", LogLevel.Error);
-            anyHuman = GetRandomHuman();
-        }
     }
     
     private static Human GetOtherPhoneHuman()
@@ -194,13 +202,5 @@ public class SpeechBubbleControllerHook
         return citizen;
     }
 
-    private static Human GetRandomHuman()
-    {
-        int citizenIndex = Utilities.GetRandomInteger(0, CityData.Instance.citizenDirectory.Count);
-        Citizen citizen = CityData.Instance.citizenDirectory._items[citizenIndex];
-
-        return citizen;
-    }
-    
 #endregion
 }
