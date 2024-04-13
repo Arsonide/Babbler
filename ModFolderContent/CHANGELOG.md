@@ -1,4 +1,9 @@
 # CHANGELOG
+**0.9.3**
+- Fix Babbler behaving strangely during the intro "Dead of Night" scenes and cutscenes.
+- Babbler now ignores player dialogue and player internal monologues.
+- Patched spot where Babbler could rarely orphan a dialog speaker, which would cause it to spam errors.
+
 **0.9.2**
 - Force Babbler to load first, fixing crashes when Synthesis mode is active. This will cause the config file to be named "AAAA_Babbler" now.
 - Babbler will attempt to rename your old config file to "AAAA_Babbler" to preserve any settings you set up in older versions.
