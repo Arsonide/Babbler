@@ -43,6 +43,8 @@ In r2modman you should see "Config editor" on the left, in the "Other" section. 
 
 > Note that the mod caches a lot of things when it starts, so it's a good idea to modify these settings before you launch the game, not while the game is running.
 
+> Also note that the config starts with "AAAA". The reason for this is that it forces Babbler to initialize before other mods, which it needs to do.
+
 There are three modes in Babbler:
 * **Synthesis**: Uses text to speech to audibly produce intelligible speech.
 * **Phonetic**: Plays phonemes in sequence, and sounds a bit like Animal Crossing speech.

@@ -1,7 +1,8 @@
 # CHANGELOG
 **0.9.2**
 - Force Babbler to load first, fixing crashes when Synthesis mode is active. This will cause the config file to be named "AAAA_Babbler" now.
-- Made Synthesis the default option again, and reset config files back to defaults.
+- Babbler will attempt to rename your old config file to "AAAA_Babbler" to preserve any settings you set up in older versions.
+- Made Synthesis the default option again, now that it no longer crashes the game with other mods installed.
 - Added configuration options to Synthesis for minimum and maximum speech speeds, which are persistent from citizen to citizen.
 - The "operator" on the phone, like when you call for numbers or enforcers now has a persistent voice. Their voice changes once every eight hours.
 - If you walk away from the phone while talking to a person giving you a job, they now continue speaking with the right voice.

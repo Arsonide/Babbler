@@ -7,7 +7,7 @@ namespace Babbler.Implementation.Config;
 
 public static partial class BabblerConfig
 {
-    private const string ExpectedVersion = "2a9e6998e71643779d6cde762a4df89c";
+    private const string ExpectedVersion = "74d012a7e2564fa9badbc23749a9b16c";
     
     public static ConfigEntry<string> Version;
 
