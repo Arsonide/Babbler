@@ -1,4 +1,7 @@
 # CHANGELOG
+**0.9.4**
+- Updated to version 1.1.8 of SOD.Common.
+
 **0.9.3**
 - Fix Babbler behaving strangely during the intro "Dead of Night" scenes and cutscenes.
 - Babbler now ignores player dialogue and player internal monologues.
