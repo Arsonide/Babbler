@@ -1,6 +1,12 @@
 # CHANGELOG
+**0.9.5**
+- Added options to Synthesis mode to create a whitelist or blacklist of speech synthesis voices. This allows you to block or allow certain voices.
+- Added more aggressive detection of "emote text" that we don't want to speak, for example: (Heavy Breathing).
+- Improved a config upgrade process that was throwing errors for some users.
+- Updated SOD.Common to version 2.0.0.
+
 **0.9.4**
-- Updated to version 1.1.8 of SOD.Common.
+- Updated SOD.Common to version 1.1.8.
 
 **0.9.3**
 - Fix Babbler behaving strangely during the intro "Dead of Night" scenes and cutscenes.
@@ -34,4 +40,4 @@
 
 **0.8.0**
 - Initial release
-  - Citizens now babble when they talk, whether it's straight to you, near you, or over the phone.
+- Citizens now babble when they talk, whether it's straight to you, near you, or over the phone.
