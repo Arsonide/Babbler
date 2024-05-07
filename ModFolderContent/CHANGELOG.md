@@ -1,12 +1,11 @@
 # CHANGELOG
 **0.9.5**
-- Fixed a bug with Synthesis that was causing 8 out of 11 of the default Windows voices to not be detected. If you use Synthesis and have all of the default Windows voice packs installed, you will see a huge bump in voice variety. Note that this fix will cause the persistent voices of citizens to change as if you installed new voices.
-- Added options to Synthesis mode to create a whitelist or blacklist of speech synthesis voices. This allows you to block or allow certain voices. Instructions for how to use these new options are down in the configuration section of the README.
+- Fixed a bug with Synthesis that was causing 8 out of 11 of the default Windows voices to not be detected. If you use Synthesis and have all of the default Windows voice packs installed, you will see a huge bump in voice variety.
+- Added options to Synthesis mode to create a whitelist or blacklist of speech synthesis voices. This allows you to block or allow certain voices if you want. Instructions for how to use these new options are down in the configuration section of the README.
 - Fix individual citizens changing their voice characteristics if you close and open the game again. Voices stay persistent now.
 - Added more aggressive detection of "emote text" that we don't want to speak, for example: (Heavy Breathing).
 - Fixed a memory leak caused by Synthesis speakers not properly "pooling".
-- Fixed the distortion effect on phone calls not working.
-- Improved a config upgrade process that was throwing errors for some users.
+- Improved and hardened a config upgrade process that was throwing errors for some users.
 - Updated SOD.Common to version 2.0.0.
 
 **0.9.4**
