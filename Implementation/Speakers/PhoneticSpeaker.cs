@@ -21,6 +21,8 @@ public class PhoneticSpeaker : BaseSpeaker
     private Coroutine _phoneticCoroutine;
     private PhoneticVoice _currentVoice;
 
+    protected int CurrentHash;
+
     protected float CurrentDelayVarianceFactor;
     protected float CurrentPitchVarianceFactor;
     
@@ -39,7 +41,9 @@ public class PhoneticSpeaker : BaseSpeaker
     {
         base.StartSpeaker(speechInput, speechContext, speechPerson);
 
-        CacheSpeechVarianceFactors(speechPerson);
+        CurrentHash = Utilities.GetDeterministicStringHash(speechPerson.seed);
+        
+        CacheSpeechVarianceFactors();
         ProcessSpeechInput(speechPerson, ref speechInput);
         PopulatePhoneticSounds(speechInput);
         _phoneticCoroutine = UniverseLib.RuntimeHelper.StartCoroutine(PhoneticRoutine());
@@ -128,22 +132,20 @@ public class PhoneticSpeaker : BaseSpeaker
         return frequency / _currentVoice.Frequency;
     }
 
-    protected virtual void CacheSpeechVarianceFactors(Human speechPerson)
+    protected virtual void CacheSpeechVarianceFactors()
     {
-        int hash = speechPerson.seed.GetHashCode();
-
-        if (Utilities.GetDeterministicFloat(hash, PRIME_DELAY_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChanceDelayVariance.Value)
+        if (Utilities.GetDeterministicFloat(CurrentHash, PRIME_DELAY_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChanceDelayVariance.Value)
         {
-            CurrentDelayVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_DELAY_FACTOR, 0f, 1f);
+            CurrentDelayVarianceFactor = Utilities.GetDeterministicFloat(CurrentHash, PRIME_DELAY_FACTOR, 0f, 1f);
         }
         else
         {
             CurrentDelayVarianceFactor = -1f;
         }
         
-        if (Utilities.GetDeterministicFloat(hash, PRIME_PITCH_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChancePitchVariance.Value)
+        if (Utilities.GetDeterministicFloat(CurrentHash, PRIME_PITCH_CHANCE, 0f, 1f) <= BabblerConfig.PhoneticChancePitchVariance.Value)
         {
-            CurrentPitchVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_PITCH_FACTOR, 0f, 1f);
+            CurrentPitchVarianceFactor = Utilities.GetDeterministicFloat(CurrentHash, PRIME_PITCH_FACTOR, 0f, 1f);
         }
         else
         {

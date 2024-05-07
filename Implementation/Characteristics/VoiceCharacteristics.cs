@@ -13,20 +13,22 @@ public struct VoiceCharacteristics
     public VoiceCategory Category;
     public float Pitch;
     public float Rate;
+    public int Hash;
 
-    private VoiceCharacteristics(VoiceCategory category, float pitch, float rate)
+    private VoiceCharacteristics(VoiceCategory category, float pitch, float rate, int hash)
     {
         Category = category;
         Pitch = pitch;
         Rate = rate;
+        Hash = hash;
     }
     
     public static VoiceCharacteristics Create(Human human, bool maleVoiceAvailable, bool femaleVoiceAvailable, bool nonBinaryVoiceAvailable)
     {
-        int hashCode = human.seed.GetHashCode();
+        int hashCode = Utilities.GetDeterministicStringHash(human.seed);
         float diverseGenderScale = GetDiverseGenderScale(human, hashCode);
         VoiceCategory category = GetProfileInformation(diverseGenderScale, hashCode, maleVoiceAvailable, femaleVoiceAvailable, nonBinaryVoiceAvailable, out float pitchScalar, out float rateScalar);
-        return new VoiceCharacteristics(category, pitchScalar, rateScalar);
+        return new VoiceCharacteristics(category, pitchScalar, rateScalar, hashCode);
     }
 
     private static float GetDiverseGenderScale(Human human, int hashCode)

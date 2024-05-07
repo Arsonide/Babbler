@@ -209,7 +209,7 @@ public class SpeechBubbleControllerHook
 
     private static Human GetOperatorHuman()
     {
-        int cityHash = CityData.Instance.seed.GetHashCode();
+        int cityHash = Utilities.GetDeterministicStringHash(CityData.Instance.seed);
 
         // Operator shift changes once every 8 hours, and gameTime is in hours.
         int currentOperatorShift = Mathf.RoundToInt(SessionData.Instance.gameTime / 8f);

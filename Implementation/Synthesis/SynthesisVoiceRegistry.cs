@@ -137,7 +137,7 @@ public static class SynthesisVoiceRegistry
         }
         
         // Trying to avoid instantiating a System.Random, so we do some math.
-        return voices[Utilities.GetDeterministicInteger(human.seed.GetHashCode(), PRIME_VOICE, 0, voices.Count)];
+        return voices[Utilities.GetDeterministicInteger(characteristics.Hash, PRIME_VOICE, 0, voices.Count)];
     }
 
     private static void SetupVoiceFilterInput()

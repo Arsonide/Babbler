@@ -10,7 +10,7 @@ namespace Babbler.Implementation.Common;
 
 public static class Utilities
 {
-    public const bool DEBUG_BUILD = false;
+    public const bool DEBUG_BUILD = true;
 
     public static readonly StringBuilder GlobalStringBuilder = new StringBuilder();
     public static readonly Random GlobalRandom = new Random();
@@ -90,5 +90,31 @@ public static class Utilities
         int max = Mathf.Max(minimum.Value, maximum.Value);
         minimum.Value = min;
         maximum.Value = max;
+    }
+    
+    public static int GetDeterministicStringHash(string s)
+    {
+        // Fun fact, string.GetHashCode is deterministic within a game launch, but not ACROSS game launches. "Bob".GetHashCode will be different in one launch from another.
+        // So we need to make this hashing method to be able to hash strings deterministically across program launches, or people's voices will change.
+        // Source: https://andrewlock.net/why-is-string-gethashcode-different-each-time-i-run-my-program-in-net-core/
+        unchecked
+        {
+            int hash1 = (5381 << 16) + 5381;
+            int hash2 = hash1;
+
+            for (int i = 0; i < s.Length; i += 2)
+            {
+                hash1 = ((hash1 << 5) + hash1) ^ s[i];
+                
+                if (i == s.Length - 1)
+                {
+                    break;
+                }
+
+                hash2 = ((hash2 << 5) + hash2) ^ s[i + 1];
+            }
+
+            return hash1 + (hash2 * 1566083941);
+        }
     }
 }

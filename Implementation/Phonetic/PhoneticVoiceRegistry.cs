@@ -43,6 +43,6 @@ public static class PhoneticVoiceRegistry
         characteristics = VoiceCharacteristics.Create(human, true, true, true);
 
         // Trying to avoid instantiating a System.Random, so we do some math.
-        return Voices[Utilities.GetDeterministicInteger(human.seed.GetHashCode(), PRIME_VOICE, 0, Voices.Count)];
+        return Voices[Utilities.GetDeterministicInteger(characteristics.Hash, PRIME_VOICE, 0, Voices.Count)];
     }
 }

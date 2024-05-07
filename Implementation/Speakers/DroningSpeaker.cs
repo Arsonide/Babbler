@@ -25,25 +25,23 @@ public class DroningSpeaker : PhoneticSpeaker
     
     private char PickPhoneme(Human human)
     {
-        return BabblerConfig.DroningValidPhonemes.Value[Utilities.GetDeterministicInteger(human.seed.GetHashCode(), PRIME_PHONEME, 0, BabblerConfig.DroningValidPhonemes.Value.Length)];
+        return BabblerConfig.DroningValidPhonemes.Value[Utilities.GetDeterministicInteger(CurrentHash, PRIME_PHONEME, 0, BabblerConfig.DroningValidPhonemes.Value.Length)];
     }
     
-    protected override void CacheSpeechVarianceFactors(Human speechPerson)
+    protected override void CacheSpeechVarianceFactors()
     {
-        int hash = speechPerson.seed.GetHashCode();
-
-        if (Utilities.GetDeterministicFloat(hash, PRIME_DELAY_CHANCE, 0f, 1f) <= BabblerConfig.DroningChanceDelayVariance.Value)
+        if (Utilities.GetDeterministicFloat(CurrentHash, PRIME_DELAY_CHANCE, 0f, 1f) <= BabblerConfig.DroningChanceDelayVariance.Value)
         {
-            CurrentDelayVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_DELAY_FACTOR, 0f, 1f);
+            CurrentDelayVarianceFactor = Utilities.GetDeterministicFloat(CurrentHash, PRIME_DELAY_FACTOR, 0f, 1f);
         }
         else
         {
             CurrentDelayVarianceFactor = -1f;
         }
         
-        if (Utilities.GetDeterministicFloat(hash, PRIME_PITCH_CHANCE, 0f, 1f) <= BabblerConfig.DroningChancePitchVariance.Value)
+        if (Utilities.GetDeterministicFloat(CurrentHash, PRIME_PITCH_CHANCE, 0f, 1f) <= BabblerConfig.DroningChancePitchVariance.Value)
         {
-            CurrentPitchVarianceFactor = Utilities.GetDeterministicFloat(hash, PRIME_PITCH_FACTOR, 0f, 1f);
+            CurrentPitchVarianceFactor = Utilities.GetDeterministicFloat(CurrentHash, PRIME_PITCH_FACTOR, 0f, 1f);
         }
         else
         {
