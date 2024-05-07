@@ -1,4 +1,5 @@
-﻿using BepInEx.Configuration;
+﻿using System;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using Babbler.Implementation.Common;
 using Il2CppSystem.IO;
@@ -82,22 +83,34 @@ public static partial class BabblerConfig
         
         Utilities.Log("BabblerConfig has initialized!", LogLevel.Debug);
     }
-
+    
     private static void ProcessOldConfigFile(ConfigFile newFile)
     {
         string newPath = newFile.ConfigFilePath;
         string oldPath = newPath.Replace("AAAA_", string.Empty);
-        
-        if (!File.Exists(oldPath))
+
+        try
         {
-            return;
+            if (!File.Exists(oldPath))
+            {
+                return;
+            }
+            
+            if (File.Exists(newPath))
+            {
+                File.Delete(newPath);
+            }
+            
+            Utilities.Log("Babbler found old config file path, renaming config file!");
+            File.Move(oldPath, newPath);
+            newFile.Reload();
         }
-        
-        Utilities.Log("Babbler found old config file path, renaming config file!");
-        File.Move(oldPath, newPath);
-        newFile.Reload();
+        catch (Exception e)
+        {
+            Utilities.Log($"Error processing old config file: {e.Message}", LogLevel.Error);
+        }
     }
-    
+
     private static void ProcessUpgrades()
     {
         if (Version.Value == ExpectedVersion)
