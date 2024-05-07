@@ -69,7 +69,20 @@ public static class FMODRegistry
         phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
 
         PhoneGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneDSP);
-        PhoneShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneDSP);
+        
+        TryCreateDSP(DSP_TYPE.MULTIBAND_EQ, out DSP phoneShoutDSP);
+
+        phoneShoutDSP.setParameterInt((int)DSP_MULTIBAND_EQ.A_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.HIGHPASS_48DB);
+        phoneShoutDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 300f);
+
+        phoneShoutDSP.setParameterInt((int)DSP_MULTIBAND_EQ.B_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.PEAKING);
+        phoneShoutDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_FREQUENCY, 1700f);
+        phoneShoutDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_Q, 1f);
+
+        phoneShoutDSP.setParameterInt((int)DSP_MULTIBAND_EQ.C_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.LOWPASS_48DB);
+        phoneShoutDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
+        
+        PhoneShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneShoutDSP);
     }
 
     public static ChannelGroup GetChannelGroup(SpeechContext speechContext)

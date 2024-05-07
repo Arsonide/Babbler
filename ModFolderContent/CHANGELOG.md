@@ -5,6 +5,7 @@
 - Fix individual citizens changing their voice characteristics if you close and open the game again. Voices stay persistent now.
 - Added more aggressive detection of "emote text" that we don't want to speak, for example: (Heavy Breathing).
 - Fixed a memory leak caused by Synthesis speakers not properly "pooling".
+- Fixed the distortion effect on phone calls not working.
 - Improved a config upgrade process that was throwing errors for some users.
 - Updated SOD.Common to version 2.0.0.
 

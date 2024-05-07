@@ -10,7 +10,7 @@ namespace Babbler.Implementation.Common;
 
 public static class Utilities
 {
-    public const bool DEBUG_BUILD = true;
+    public const bool DEBUG_BUILD = false;
 
     public static readonly StringBuilder GlobalStringBuilder = new StringBuilder();
     public static readonly Random GlobalRandom = new Random();
