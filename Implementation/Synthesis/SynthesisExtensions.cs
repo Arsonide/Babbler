@@ -87,15 +87,16 @@ public static class SynthesisExtensions
 
     public static void AddVoices(this SpeechSynthesizer synthesizer, List<InstalledVoice> voices)
     {
-        Type type = typeof(SpeechSynthesizer);
-        object voiceSynthesizer = type.GetProperty("VoiceSynthesizer", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(synthesizer);
+        Type speechSynthesizerType = synthesizer.GetType();
+        object voiceSynthesizer = speechSynthesizerType.GetProperty("VoiceSynthesizer", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(synthesizer);
 
         if (voiceSynthesizer == null)
         {
             return;
         }
 
-        IList installedVoices = type.GetField("_installedVoices", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(voiceSynthesizer) as IList;
+        Type voiceSynthesizerType = voiceSynthesizer.GetType();
+        IList installedVoices = voiceSynthesizerType.GetField("_installedVoices", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(voiceSynthesizer) as IList;
 
         if (installedVoices == null)
         {

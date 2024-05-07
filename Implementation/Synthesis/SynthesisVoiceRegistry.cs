@@ -63,7 +63,6 @@ public static class SynthesisVoiceRegistry
             
             VoiceInfo voiceInfo = voice.VoiceInfo;
             string voiceName = voiceInfo.Name;
-            Utilities.Log("=================== BABBLER INITIALIZED: " + voiceName + " ===================   ", LogLevel.Error);
             VoiceGender voiceGender = voiceInfo.Gender;
 
             AllVoices.Add(voiceName);
