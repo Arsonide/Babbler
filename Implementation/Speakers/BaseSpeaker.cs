@@ -71,6 +71,11 @@ public abstract class BaseSpeaker
             else
             {
                 ActiveChannels.RemoveAt(i);
+                
+                if (ActiveChannels.Count <= 0)
+                {
+                    OnLastChannelFinished();
+                }
             }
         }
 
@@ -131,5 +136,10 @@ public abstract class BaseSpeaker
         };
 
         channel.set3DAttributes(ref pos, ref vel);
+    }
+
+    protected virtual void OnLastChannelFinished()
+    {
+        
     }
 }

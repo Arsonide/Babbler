@@ -102,6 +102,8 @@ public class SynthesisSpeaker : BaseSpeaker
         channel.setPitch(SpeechPitch);
         SetChannelPosition(SpeechSource.position, channel);
         FMODRegistry.TryUpdate();
+        
+        ActiveChannels.Add(channel);
     }
     
     protected override float CacheSpeechPitch(Human speechPerson)
@@ -121,6 +123,14 @@ public class SynthesisSpeaker : BaseSpeaker
             default:
                 return Mathf.Lerp(BabblerConfig.SynthesisMinPitchNonBinary.Value, BabblerConfig.SynthesisMaxPitchNonBinary.Value, characteristics.Pitch);
         }
+    }
+
+    protected override void OnLastChannelFinished()
+    {
+        base.OnLastChannelFinished();
+        _memoryStream.Seek(0, SeekOrigin.Begin);
+        _memoryStream.SetLength(0);
+        OnFinishedSpeaking?.Invoke();
     }
 }
 
