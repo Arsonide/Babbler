@@ -20,6 +20,7 @@ public static class SynthesisVoiceRegistry
     private static List<string> FemaleVoices = new List<string>();
     private static List<string> NonBinaryVoices = new List<string>();
     private static List<string> AllVoices = new List<string>();
+    private static List<string> VoiceFilterInput = new List<string>();
 
     private static bool HasMaleVoices;
     private static bool HasFemaleVoices;
@@ -35,7 +36,8 @@ public static class SynthesisVoiceRegistry
         FemaleVoices.Clear();
         NonBinaryVoices.Clear();
         AllVoices.Clear();
-        
+
+        SetupVoiceFilterInput();
         SpeechSynthesizer synthesizer = new SpeechSynthesizer();
 
         try
@@ -54,8 +56,14 @@ public static class SynthesisVoiceRegistry
 
         foreach (InstalledVoice voice in synthesizer.GetInstalledVoices())
         {
+            if (!PassesVoiceFilterInput(voice))
+            {
+                continue;
+            }
+            
             VoiceInfo voiceInfo = voice.VoiceInfo;
             string voiceName = voiceInfo.Name;
+            Utilities.Log("=================== BABBLER INITIALIZED: " + voiceName + " ===================   ", LogLevel.Error);
             VoiceGender voiceGender = voiceInfo.Gender;
 
             AllVoices.Add(voiceName);
@@ -131,6 +139,42 @@ public static class SynthesisVoiceRegistry
         
         // Trying to avoid instantiating a System.Random, so we do some math.
         return voices[Utilities.GetDeterministicInteger(human.seed.GetHashCode(), PRIME_VOICE, 0, voices.Count)];
+    }
+
+    private static void SetupVoiceFilterInput()
+    {
+        VoiceFilterInput.Clear();
+        string input = BabblerConfig.SynthesisVoiceFilterInput.Value.ToLowerInvariant();
+        VoiceFilterInput.AddRange(input.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+    }
+
+    private static bool PassesVoiceFilterInput(InstalledVoice voice)
+    {
+        switch(BabblerConfig.SynthesisVoiceFilter.Value)
+        {
+            case SynthesisVoiceFilterType.Blacklist:
+                foreach(string filter in VoiceFilterInput)
+                {
+                    if (voice.VoiceInfo.Name.ToLowerInvariant().Contains(filter))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            case SynthesisVoiceFilterType.Whitelist:
+                foreach(string filter in VoiceFilterInput)
+                {
+                    if (voice.VoiceInfo.Name.ToLowerInvariant().Contains(filter))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            default:
+                return true;
+        }
     }
 }
 
