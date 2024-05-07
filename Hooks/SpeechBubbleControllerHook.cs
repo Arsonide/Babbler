@@ -28,7 +28,7 @@ public class SpeechBubbleControllerHook
         }
         
         // This is used for things like [Sneeze] or [Sigh]. Don't babble for emotes.
-        if (speechInput.StartsWith("[") && speechInput.EndsWith("]"))
+        if (IsEmoteSpeech(speechInput))
         {
             return;
         }
@@ -68,6 +68,28 @@ public class SpeechBubbleControllerHook
         }
 
         return shouting ? SpeechContext.OverheardShout : SpeechContext.OverheardSpeech;
+    }
+
+    private static bool IsEmoteSpeech(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return true;
+        }
+        
+        switch (input[0])
+        {
+            case '[':
+                return input.EndsWith("]");
+            case '(':
+                return input.EndsWith(")");
+            case '{':
+                return input.EndsWith("}");
+            case '<':
+                return input.EndsWith(">");
+            default:
+                return false;
+        }
     }
     
     private static bool HasCharacterRepeated(string input, int times)
