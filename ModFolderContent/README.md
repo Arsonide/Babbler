@@ -77,6 +77,8 @@ You will find a ton of other settings in the configuration panel to tweak how NP
 - **Volume - Phone Shout Multiplier**: When speaking in all caps, how much to multiply the normal phone volume.
 ---
 #### 4. Synthesis
+- **Synthesis - Voice Filter Type**: Determines which installed voices on Windows Babbler will use. Set to "Everything" for all installed voices, "Blacklist" to block some, or "Whitelist" to only allow some.
+- **Synthesis - Voice Filter**: If filter type is set to blacklist or whitelist, this is where you put the names you want to filter for in, separated by semicolons. The names are case-insensitive and flexible, so "david" matches "Microsoft David", etc.
 - **Synthesis - Min Speed**: Lowest possible speed for speech. Zero being the standard speed.
 - **Synthesis - Max Speed**: Highest possible speed for speech. Zero being the standard speed.
 - **Synthesis - Min Pitch Male**: Lowest possible pitch (relative percent) for male voices.

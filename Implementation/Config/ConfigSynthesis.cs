@@ -1,10 +1,14 @@
 ﻿using BepInEx.Configuration;
 using Babbler.Implementation.Common;
+using Babbler.Implementation.Synthesis;
 
 namespace Babbler.Implementation.Config;
 
 public static partial class BabblerConfig
 {
+    public static ConfigEntry<SynthesisVoiceFilterType> SynthesisVoiceFilter;
+    public static ConfigEntry<string> SynthesisVoiceFilterInput;
+
     public static ConfigEntry<int> SynthesisMinSpeed;
     public static ConfigEntry<int> SynthesisMaxSpeed;
     
@@ -19,12 +23,18 @@ public static partial class BabblerConfig
     
     private static void InitializeSynthesis(ConfigFile config)
     {
+        SynthesisVoiceFilter = config.Bind("4. Synthesis", "Voice Filter Type", SynthesisVoiceFilterType.Everything,
+                                           new ConfigDescription("Determines which installed voices on Windows Babbler will use. Set to \"Everything\" for all installed voices, \"Blacklist\" to block some, or \"Whitelist\" to only allow some."));
+
+        SynthesisVoiceFilterInput = config.Bind("4. Synthesis", "Voice Filter", string.Empty,
+                                                new ConfigDescription("If filter type is set to blacklist or whitelist, this is where you put the names you want to filter for in, separated by semicolons. The names are case-insensitive and flexible, so \"david\" matches \"Microsoft David\", etc."));
+
         SynthesisMinSpeed = config.Bind("4. Synthesis", "Min Speed", -2,
                                         new ConfigDescription("Lowest possible speed for speech. Zero being the standard speed.",
                                                               new AcceptableValueRange<int>(-10, 10)));
-
+        
         SynthesisMaxSpeed = config.Bind("4. Synthesis", "Max Speed", 3,
-                                        new ConfigDescription("Highest possible speed for speech. Zero being the standard speed.",
+                                        new ConfigDescription("Highest possible speed for speech. Zero being the standard speed.", 
                                                               new AcceptableValueRange<int>(-10, 10)));
         
         SynthesisMinPitchMale = config.Bind("4. Synthesis", "Min Pitch Male", 0.75f,
@@ -53,6 +63,8 @@ public static partial class BabblerConfig
 
     public static void ResetSynthesis()
     {
+        SynthesisVoiceFilter.Value = (SynthesisVoiceFilterType)SynthesisVoiceFilter.DefaultValue;
+        SynthesisVoiceFilterInput.Value = (string)SynthesisVoiceFilterInput.DefaultValue;
         SynthesisMinSpeed.Value = (int)SynthesisMinSpeed.DefaultValue;
         SynthesisMaxSpeed.Value = (int)SynthesisMaxSpeed.DefaultValue;
         SynthesisMinPitchMale.Value = (float)SynthesisMinPitchMale.DefaultValue;
