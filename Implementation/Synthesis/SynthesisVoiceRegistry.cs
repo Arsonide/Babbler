@@ -1,5 +1,6 @@
 ﻿#pragma warning disable CA1416
 
+using System;
 using System.Collections.Generic;
 using System.Speech.Synthesis;
 using BepInEx.Logging;
@@ -11,6 +12,8 @@ namespace Babbler.Implementation.Synthesis;
 
 public static class SynthesisVoiceRegistry
 {
+    public static List<InstalledVoice> OneCoreVoices = null;
+    
     private const int PRIME_VOICE = 37;
     
     private static List<string> MaleVoices = new List<string>();
@@ -34,6 +37,20 @@ public static class SynthesisVoiceRegistry
         AllVoices.Clear();
         
         SpeechSynthesizer synthesizer = new SpeechSynthesizer();
+
+        try
+        {
+            OneCoreVoices = synthesizer.GetOneCoreVoices();
+
+            if (OneCoreVoices != null)
+            {
+                synthesizer.AddVoices(OneCoreVoices);
+            }
+        }
+        catch (Exception e)
+        {
+            Utilities.Log($"Exception encountered while SynthesisVoiceRegistry tried to get OneCore voices: {e.Message}", LogLevel.Debug);
+        }
 
         foreach (InstalledVoice voice in synthesizer.GetInstalledVoices())
         {

@@ -1,5 +1,6 @@
 ﻿#pragma warning disable CA1416
 
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Speech.AudioFormat;
@@ -10,6 +11,7 @@ using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
 using Babbler.Implementation.Synthesis;
+using BepInEx.Logging;
 
 namespace Babbler.Implementation.Speakers;
 
@@ -23,6 +25,19 @@ public class SynthesisSpeaker : BaseSpeaker
         base.InitializeSpeaker();
 
         _synthesizer = new SpeechSynthesizer();
+
+        try
+        {
+            if (SynthesisVoiceRegistry.OneCoreVoices != null)
+            {
+                _synthesizer.AddVoices(SynthesisVoiceRegistry.OneCoreVoices);
+            }
+        }
+        catch (Exception e)
+        {
+            Utilities.Log($"Exception encountered while SynthesisSpeaker tried to add OneCore voices: {e.Message}", LogLevel.Debug);
+        }
+
         _memoryStream = new MemoryStream();
         
         _synthesizer.SetOutputToAudioStream(_memoryStream, new SpeechAudioFormatInfo(44100, AudioBitsPerSample.Sixteen, AudioChannel.Mono));
