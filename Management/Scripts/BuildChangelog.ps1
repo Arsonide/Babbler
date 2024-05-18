@@ -41,4 +41,4 @@ else
     $changelog += "### Initial Release`n**$($version.version)**`n$($version.changes)"
 }
 
-Set-Content $json.changelogPath -Value $changelog -NoNewLine
+Set-Content [Environment]::ExpandEnvironmentVariables($json.changelogPath) -Value $changelog -NoNewLine

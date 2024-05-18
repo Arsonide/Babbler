@@ -13,16 +13,17 @@ Set-Location -Path $location
 # Retrieve data from the json
 $latestVersion = $json.versions | Sort-Object version -Descending | Select-Object -First 1
 $zipName = "$($json.creatorName)-$($json.modName)-$($latestVersion.version).zip"
-$zipPath = Join-Path -Path $json.releasePath -ChildPath $zipName
+$releasePath = [Environment]::ExpandEnvironmentVariables($json.releasePath)
+$zipPath = Join-Path -Path $releasePath -ChildPath $zipName
 
 # Ensure the release directory exists, create if not
-if (-not (Test-Path -Path $json.releasePath))
+if (-not (Test-Path -Path $releasePath))
 {
-    New-Item -ItemType Directory -Path $json.releasePath
+    New-Item -ItemType Directory -Path $releasePath
 }
 
 # Ensure the gitignore exists, create if not
-$ignorePath = Join-Path -Path $json.releasePath -ChildPath '.gitignore'
+$ignorePath = Join-Path -Path $releasePath -ChildPath '.gitignore'
 
 if (-not (Test-Path -Path $ignorePath))
 {
@@ -34,9 +35,9 @@ $temp = Join-Path -Path $env:TEMP -ChildPath ([Guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Path $temp
 
 # Copy all necessary files to the temporary directory
-$contents = Join-Path -Path $json.contentPath -ChildPath "*"
+$contents = Join-Path -Path [Environment]::ExpandEnvironmentVariables($json.contentPath) -ChildPath "*"
 Copy-Item -Path $contents -Destination $temp -Recurse
-Copy-Item -Path $json.dllPath -Destination $temp
+Copy-Item -Path [Environment]::ExpandEnvironmentVariables($json.dllPath) -Destination $temp
 
 # Compress and clean up
 Compress-Archive -Path "$temp\*" -DestinationPath $zipPath -Force

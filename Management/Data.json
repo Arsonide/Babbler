@@ -61,6 +61,8 @@
   "dllPath": "../bin/Debug/net6.0/Babbler.dll",
   "changelogPath": "./Content/CHANGELOG.md",
   "gitReadmePath": "../README.md",
+  "interopPath": "%AppData%/r2modmanPlus-local/ShadowsofDoubt/profiles/Default/BepInEx/interop",
+  "libraryPath": "../lib",
 
   "operations": [
     {

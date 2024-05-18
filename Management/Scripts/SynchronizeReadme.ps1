@@ -11,9 +11,9 @@ param
 Set-Location -Path $location
 
 # Copy the README from our content directory to our git README
-$sourcePath = Join-Path -Path $json.contentPath -ChildPath "README.md"
+$sourcePath = Join-Path -Path [Environment]::ExpandEnvironmentVariables($json.contentPath) -ChildPath "README.md"
 
 if (Test-Path -Path $sourcePath)
 {
-    Copy-Item -Path $sourcePath -Destination $json.gitReadmePath -Force
+    Copy-Item -Path $sourcePath -Destination [Environment]::ExpandEnvironmentVariables($json.gitReadmePath) -Force
 }

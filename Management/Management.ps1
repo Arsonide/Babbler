@@ -1,12 +1,16 @@
 # Display menu
 Write-Host "Select the mod management operations you want to execute (e.g. '1234'):"
 Write-Host
-Write-Host "1. Increment Version Numbers"
-Write-Host "2. Synchronize README Files"
-Write-Host "3. Build Changelog"
-Write-Host "4. Package Release Zip"
+Write-Host "Management Operations:"
+Write-Host "    - 1. Increment Version Numbers"
+Write-Host "    - 2. Synchronize README Files"
+Write-Host "    - 3. Build Changelog"
+Write-Host "    - 4. Package Release Zip"
 Write-Host
-Write-Host "0. Execute Everything"
+Write-Host "Development Operations:"
+Write-Host "    - 9. Synchronize Libraries"
+Write-Host
+Write-Host "0. Execute All Management Operations"
 Write-Host
 
 # Read user input
@@ -19,6 +23,7 @@ $scriptPaths =
     "2" = ".\Scripts\SynchronizeReadme.ps1"
     "3" = ".\Scripts\BuildChangelog.ps1"
     "4" = ".\Scripts\PackageRelease.ps1"
+    "9" = ".\Scripts\SynchronizeLibraries.ps1"
 }
 
 # Default to everything if we choose nothing
@@ -42,12 +47,12 @@ $location = Get-Location
 try
 {
     # Execute scripts in a specific order regardless of user selections
-    foreach ($key in "1", "2", "3", "4")
+    foreach ($key in "1", "2", "3", "4", "9")
     {
         if ($input.Contains($key))
         {
             & $scriptPaths[$key] -json $json -location $location
-            Clear-Host
+            #Clear-Host
         }
     }
     
