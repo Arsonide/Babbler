@@ -64,7 +64,7 @@
 
   "operations": [
     {
-      "file": "../ModFolderContent/manifest.json",
+      "file": "./Content/manifest.json",
       "search": "\"version_number\"\\s*:\\s*\"([^\"]+)\"",
       "replace": "\"version_number\": \"{version}\""
     },
