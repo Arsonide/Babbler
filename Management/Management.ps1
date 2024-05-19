@@ -59,7 +59,7 @@ try
         if ($input.Contains($key))
         {
             & $scriptPaths[$key] -json $json -location $location
-            #Clear-Host
+            Clear-Host
         }
     }
     
