@@ -17,7 +17,7 @@ $changelog = "# CHANGELOG`n`n"
 # Sort versions by their version number in ascending order
 $sortedVersions = $json.versions | Sort-Object version
 
-if ($sortedVersions.Count -ne 1)
+if ($json.versions.Count -ne 1)
 {
      # Handle multiple versions, starting with the latest
     $latestVersion = $sortedVersions[-1]
