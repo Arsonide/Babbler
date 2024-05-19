@@ -57,10 +57,12 @@
 
 
   "contentPath": "./Content",
-  "releasePath": "./Releases",
-  "dllPath": "../bin/Debug/net6.0/Babbler.dll",
+  "manifestPath": "./Content/manifest.json",
   "changelogPath": "./Content/CHANGELOG.md",
   "gitReadmePath": "../README.md",
+  "projectPath": "../Babbler.csproj",
+  "releasePath": "./Releases",
+  "dllPath": "../bin/Debug/net6.0/Babbler.dll",
   "interopPath": "%AppData%/r2modmanPlus-local/ShadowsofDoubt/profiles/Default/BepInEx/interop",
   "libraryPath": "../lib",
 

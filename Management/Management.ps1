@@ -8,8 +8,10 @@ Write-Host "    - 3. Build Changelog"
 Write-Host "    - 4. Package Release Zip"
 Write-Host
 Write-Host "Development Operations:"
-Write-Host "    - 9. Synchronize Libraries"
+Write-Host "    - 7. Synchronize Libraries"
+Write-Host "    - 8. Update SOD Common"
 Write-Host
+Write-Host "9. Execute All Development Operations"
 Write-Host "0. Execute All Management Operations"
 Write-Host
 
@@ -23,7 +25,8 @@ $scriptPaths =
     "2" = ".\Scripts\SynchronizeReadme.ps1"
     "3" = ".\Scripts\BuildChangelog.ps1"
     "4" = ".\Scripts\PackageRelease.ps1"
-    "9" = ".\Scripts\SynchronizeLibraries.ps1"
+    "7" = ".\Scripts\SynchronizeLibraries.ps1"
+    "8" = ".\Scripts\UpdateSODCommon.ps1"
 }
 
 # Default to everything if we choose nothing
@@ -37,6 +40,10 @@ if ($input.Contains("0"))
 {
     $input = "1234"
 }
+elseif ($input.Contains("9"))
+{
+    $input = "78"
+}
 
 # Load JSON data
 $json = Get-Content '.\Data.json' -Raw | ConvertFrom-Json
@@ -47,7 +54,7 @@ $location = Get-Location
 try
 {
     # Execute scripts in a specific order regardless of user selections
-    foreach ($key in "1", "2", "3", "4", "9")
+    foreach ($key in "1", "2", "3", "4", "7", "8")
     {
         if ($input.Contains($key))
         {
