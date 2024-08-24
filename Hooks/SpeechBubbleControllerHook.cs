@@ -47,9 +47,20 @@ public class SpeechBubbleControllerHook
             Utilities.Log($"Babbler unable to find a human to associate with message \"{speechInput}\"!", LogLevel.Debug);
             return;
         }
-        
+
         SpeechContext speechContext = GetSpeechContext(speechInput, speakingHuman, telephoneHuman, newSpeechController);
-        SpeakerHostPool.Play(__instance.actualString, speechContext, anyHuman);
+
+        // When shouting we raise the volume, but TTS interprets all caps as acronyms a lot, lowering the case makes it more natural sounding.
+        switch (speechContext)
+        {
+            case SpeechContext.ConversationalShout:
+            case SpeechContext.OverheardShout:
+            case SpeechContext.PhoneShout:
+                speechInput = speechInput.ToLowerInvariant();
+                break;
+        }
+
+        SpeakerHostPool.Play(speechInput, speechContext, anyHuman);
     }
 
     private static SpeechContext GetSpeechContext(string speechInput, Human speakingHuman, Human telephoneHuman, SpeechController speechController)
