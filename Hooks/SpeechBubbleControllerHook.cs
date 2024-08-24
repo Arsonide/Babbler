@@ -34,7 +34,7 @@ public class SpeechBubbleControllerHook
         }
 
         // This should filter out things like "Zzz" and "Brrr".
-        if (HasCharacterRepeated(speechInput, 3))
+        if (HasCharacterRepeated(speechInput, 3, true))
         {
             return;
         }
@@ -92,7 +92,7 @@ public class SpeechBubbleControllerHook
         }
     }
     
-    private static bool HasCharacterRepeated(string input, int times)
+    private static bool HasCharacterRepeated(string input, int times, bool lettersOnly)
     {
         if (string.IsNullOrEmpty(input) || times <= 0)
         {
@@ -106,8 +106,11 @@ public class SpeechBubbleControllerHook
         {
             if (inputLower[i] == inputLower[i - 1])
             {
-                count++;
-                
+                if (!lettersOnly || char.IsLetter(inputLower[i]))
+                {
+                    count++;
+                }
+
                 if (count >= times)
                 {
                     return true;
