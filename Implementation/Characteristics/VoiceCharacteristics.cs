@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
 
@@ -11,13 +12,15 @@ public struct VoiceCharacteristics
     private const int PRIME_RATE = 89;
 
     public VoiceCategory Category;
+    public float GenderScale;
     public float Pitch;
     public float Rate;
     public int Hash;
 
-    private VoiceCharacteristics(VoiceCategory category, float pitch, float rate, int hash)
+    private VoiceCharacteristics(VoiceCategory category, float genderScale, float pitch, float rate, int hash)
     {
         Category = category;
+        GenderScale = genderScale;
         Pitch = pitch;
         Rate = rate;
         Hash = hash;
@@ -28,7 +31,7 @@ public struct VoiceCharacteristics
         int hashCode = Utilities.GetDeterministicStringHash(human.seed);
         float diverseGenderScale = GetDiverseGenderScale(human, hashCode);
         VoiceCategory category = GetProfileInformation(diverseGenderScale, hashCode, maleVoiceAvailable, femaleVoiceAvailable, nonBinaryVoiceAvailable, out float pitchScalar, out float rateScalar);
-        return new VoiceCharacteristics(category, pitchScalar, rateScalar, hashCode);
+        return new VoiceCharacteristics(category, diverseGenderScale, pitchScalar, rateScalar, hashCode);
     }
 
     private static float GetDiverseGenderScale(Human human, int hashCode)
@@ -61,5 +64,60 @@ public struct VoiceCharacteristics
 
         pitchScalar = Utilities.GetDeterministicFloat(hashCode, PRIME_PITCH, 0f, 1f);
         return VoiceCategory.Any;
+    }
+
+    public T SelectGenderedListElement<T>(List<T>[] priorityArray, List<T> allList, List<T> maleList, List<T> femaleList, List<T> nonBinaryList, int prime)
+    {
+        switch (Category)
+        {
+            case VoiceCategory.Male:
+                priorityArray[0] = maleList;
+                priorityArray[1] = nonBinaryList;
+                priorityArray[2] = femaleList;
+                priorityArray[3] = allList;
+                break;
+            case VoiceCategory.Female:
+                priorityArray[0] = femaleList;
+                priorityArray[1] = nonBinaryList;
+                priorityArray[2] = maleList;
+                priorityArray[3] = allList;
+                break;
+            case VoiceCategory.NonBinary:
+                bool masculine = GenderScale > 0.5f;
+                priorityArray[0] = nonBinaryList;
+
+                if (masculine)
+                {
+                    priorityArray[1] = maleList;
+                    priorityArray[2] = femaleList;
+                }
+                else
+                {
+                    priorityArray[1] = femaleList;
+                    priorityArray[2] = maleList;
+                }
+
+                priorityArray[3] = allList;
+                break;
+            default:
+                priorityArray[0] = allList;
+                priorityArray[1] = allList;
+                priorityArray[2] = allList;
+                priorityArray[3] = allList;
+                break;
+        }
+        
+        foreach(IList<T> list in priorityArray)
+        {
+            if (list.Count <= 0)
+            {
+                continue;
+            }
+
+            // Trying to avoid instantiating a System.Random, so we do some math.
+            return list[Utilities.GetDeterministicInteger(Hash, prime, 0, list.Count)];
+        }
+
+        return default(T);
     }
 }

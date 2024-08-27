@@ -21,6 +21,10 @@ public static partial class BabblerConfig
     public static ConfigEntry<float> OverheardVolume;
     public static ConfigEntry<float> PhoneVolume;
 
+    public static ConfigEntry<float> ConversationalEmoteVolume;
+    public static ConfigEntry<float> OverheardEmoteVolume;
+    public static ConfigEntry<float> PhoneEmoteVolume;
+    
     public static ConfigEntry<float> ConversationalShoutMultiplier;
     public static ConfigEntry<float> OverheardShoutMultiplier;
     public static ConfigEntry<float> PhoneShoutMultiplier;
@@ -66,6 +70,15 @@ public static partial class BabblerConfig
         PhoneVolume = config.Bind("3. Volume", "Phone Volume", 0.5f,
                                   new ConfigDescription("How loud voices will be when you are talking with a person over the phone."));
         
+        ConversationalEmoteVolume = config.Bind("3. Volume", "Conversational Emotes Volume", 0.7f,
+                                           new ConfigDescription("How loud emote sound effects will be when you are speaking directly to a person."));
+        
+        OverheardEmoteVolume = config.Bind("3. Volume", "Overheard Emotes Volume", 0.5f,
+                                      new ConfigDescription("How loud emote sound effects that you overhear nearby will be when you are not talking directly to them."));
+
+        PhoneEmoteVolume = config.Bind("3. Volume", "Phone Emotes Volume", 0.6f,
+                                  new ConfigDescription("How loud emote sound effects will be when you are talking with a person over the phone."));
+        
         ConversationalShoutMultiplier = config.Bind("3. Volume", "Conversational Shout Multiplier", 2.9f,
                                                     new ConfigDescription("When speaking in all caps, how much to multiply the normal conversational volume."));
         
@@ -78,6 +91,7 @@ public static partial class BabblerConfig
         InitializeSynthesis(config);
         InitializePhonetic(config);
         InitializeDroning(config);
+        InitializeEmotes(config);
 
         ProcessUpgrades();
         
@@ -131,6 +145,9 @@ public static partial class BabblerConfig
         ConversationalVolume.Value = (float)ConversationalVolume.DefaultValue;
         OverheardVolume.Value = (float)OverheardVolume.DefaultValue;
         PhoneVolume.Value = (float)PhoneVolume.DefaultValue;
+        ConversationalEmoteVolume.Value = (float)ConversationalEmoteVolume.DefaultValue;
+        OverheardEmoteVolume.Value = (float)OverheardEmoteVolume.DefaultValue;
+        PhoneEmoteVolume.Value = (float)PhoneEmoteVolume.DefaultValue;
         ConversationalShoutMultiplier.Value = (float)ConversationalShoutMultiplier.DefaultValue;
         OverheardShoutMultiplier.Value = (float)OverheardShoutMultiplier.DefaultValue;
         PhoneShoutMultiplier.Value = (float)PhoneShoutMultiplier.DefaultValue;
@@ -141,5 +158,6 @@ public static partial class BabblerConfig
         ResetSynthesis();
         ResetPhonetic();
         ResetDroning();
+        ResetEmotes();
     }
 }

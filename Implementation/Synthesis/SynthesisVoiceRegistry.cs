@@ -22,6 +22,8 @@ public static class SynthesisVoiceRegistry
     private static List<string> AllVoices = new List<string>();
     private static List<string> VoiceFilterInput = new List<string>();
 
+    private static readonly List<string>[] VoicePriorities = new List<string>[4];
+    
     private static bool HasMaleVoices;
     private static bool HasFemaleVoices;
     private static bool HasNonBinaryVoices;
@@ -118,26 +120,7 @@ public static class SynthesisVoiceRegistry
     public static string GetVoice(Human human, out VoiceCharacteristics characteristics)
     {
         characteristics = VoiceCharacteristics.Create(human, HasMaleVoices, HasFemaleVoices, HasNonBinaryVoices);
-        List<string> voices;
-
-        switch (characteristics.Category)
-        {
-            case VoiceCategory.Male:
-                voices = MaleVoices;
-                break;
-            case VoiceCategory.Female:
-                voices = FemaleVoices;
-                break;
-            case VoiceCategory.NonBinary:
-                voices = NonBinaryVoices;
-                break;
-            default:
-                voices = AllVoices;
-                break;
-        }
-        
-        // Trying to avoid instantiating a System.Random, so we do some math.
-        return voices[Utilities.GetDeterministicInteger(characteristics.Hash, PRIME_VOICE, 0, voices.Count)];
+        return characteristics.SelectGenderedListElement(VoicePriorities, AllVoices, MaleVoices, FemaleVoices, NonBinaryVoices, PRIME_VOICE);
     }
 
     private static void SetupVoiceFilterInput()

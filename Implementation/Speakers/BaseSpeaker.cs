@@ -11,7 +11,7 @@ public abstract class BaseSpeaker
 {
     public Action OnFinishedSpeaking;
     
-    protected SpeechContext SpeechContext { get; private set; }
+    protected SoundContext SoundContext { get; private set; }
     protected Human SpeechPerson { get; private set; }
     protected Transform SpeechSource { get; private set; }
     protected float SpeechPitch { get; private set; }
@@ -33,15 +33,15 @@ public abstract class BaseSpeaker
         ActiveChannels.Clear();
     }
 
-    public virtual void StartSpeaker(string speechInput, SpeechContext speechContext, Human speechPerson)
+    public virtual void StartSpeaker(string speechInput, SoundContext soundContext, Human speechPerson)
     {
         StopSpeaker();
 
-        SpeechContext = speechContext;
+        SoundContext = soundContext;
         SpeechPerson = speechPerson;
 
-        SpeechSource = CacheSpeechSource(speechContext, speechPerson);
-        SpeechPitch = CacheSpeechPitch(speechPerson);
+        SpeechSource = CacheSpeechSource(soundContext, speechPerson);
+        SpeechPitch = CacheSpeechPitch(speechPerson, speechInput);
     }
 
     public virtual void UpdateSpeaker()
@@ -85,19 +85,19 @@ public abstract class BaseSpeaker
         }
     }
 
-    protected virtual float CacheSpeechPitch(Human speechPerson)
+    protected virtual float CacheSpeechPitch(Human speechPerson, string speechInput)
     {
         return 1f;
     }
 
-    private Transform CacheSpeechSource(SpeechContext speechContext, Human speechPerson)
+    private Transform CacheSpeechSource(SoundContext soundContext, Human speechPerson)
     {
         Transform result;
 
-        switch (speechContext)
+        switch (soundContext)
         {
-            case SpeechContext.PhoneSpeech:
-            case SpeechContext.PhoneShout:
+            case SoundContext.PhoneSpeech:
+            case SoundContext.PhoneShout:
                 // These all appear to be valid at different times so search for everything.
                 GameObject receiver = Player.Instance.interactingWith?.controller?.phoneReciever ??
                                       Player.Instance.phoneInteractable?.controller?.phoneReciever ??

@@ -17,6 +17,10 @@ public static class FMODRegistry
     private static ChannelGroup OverheardShoutGroup;
     private static ChannelGroup PhoneShoutGroup;
     
+    private static ChannelGroup ConversationalEmoteGroup;
+    private static ChannelGroup OverheardEmoteGroup;
+    private static ChannelGroup PhoneEmoteGroup;
+    
     public static void Initialize()
     {
         System = FMODUnity.RuntimeManager.CoreSystem;
@@ -32,24 +36,30 @@ public static class FMODRegistry
     {
         TryCreateChannelGroup("BabblerConversationalGroup", out ConversationalGroup);
         TryCreateChannelGroup("BabblerConversationalShoutGroup", out ConversationalShoutGroup);
+        TryCreateChannelGroup("BabblerConversationalEmoteGroup", out ConversationalEmoteGroup);
         ConversationalGroup.setVolume(BabblerConfig.ConversationalVolume.Value);
         ConversationalShoutGroup.setVolume(BabblerConfig.ConversationalVolume.Value * BabblerConfig.ConversationalShoutMultiplier.Value);
+        ConversationalEmoteGroup.setVolume(BabblerConfig.ConversationalEmoteVolume.Value);
     }
 
     private static void SetupOverheardGroup()
     {
         TryCreateChannelGroup("BabblerOverheardGroup", out OverheardGroup);
         TryCreateChannelGroup("BabblerOverheardShoutGroup", out OverheardShoutGroup);
+        TryCreateChannelGroup("BabblerOverheardEmoteGroup", out OverheardEmoteGroup);
         OverheardGroup.setVolume(BabblerConfig.OverheardVolume.Value);
         OverheardShoutGroup.setVolume(BabblerConfig.OverheardVolume.Value * BabblerConfig.OverheardShoutMultiplier.Value);
+        OverheardEmoteGroup.setVolume(BabblerConfig.OverheardEmoteVolume.Value);
     }
 
     private static void SetupPhoneGroup()
     {
         TryCreateChannelGroup("BabblerPhoneGroup", out PhoneGroup);
         TryCreateChannelGroup("BabblerPhoneShoutGroup", out PhoneShoutGroup);
+        TryCreateChannelGroup("BabblerPhoneEmoteGroup", out PhoneEmoteGroup);
         PhoneGroup.setVolume(BabblerConfig.PhoneVolume.Value);
         PhoneShoutGroup.setVolume(BabblerConfig.PhoneVolume.Value * BabblerConfig.PhoneShoutMultiplier.Value);
+        PhoneEmoteGroup.setVolume(BabblerConfig.PhoneEmoteVolume.Value);
 
         if (!BabblerConfig.DistortPhoneSpeech.Value)
         {
@@ -83,24 +93,44 @@ public static class FMODRegistry
         phoneShoutDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
         
         PhoneShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneShoutDSP);
+        
+        TryCreateDSP(DSP_TYPE.MULTIBAND_EQ, out DSP phoneEmoteDSP);
+
+        phoneEmoteDSP.setParameterInt((int)DSP_MULTIBAND_EQ.A_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.HIGHPASS_48DB);
+        phoneEmoteDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 300f);
+
+        phoneEmoteDSP.setParameterInt((int)DSP_MULTIBAND_EQ.B_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.PEAKING);
+        phoneEmoteDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_FREQUENCY, 1700f);
+        phoneEmoteDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_Q, 1f);
+
+        phoneEmoteDSP.setParameterInt((int)DSP_MULTIBAND_EQ.C_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.LOWPASS_48DB);
+        phoneEmoteDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
+
+        PhoneEmoteGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneEmoteDSP);
     }
 
-    public static ChannelGroup GetChannelGroup(SpeechContext speechContext)
+    public static ChannelGroup GetChannelGroup(SoundContext soundContext)
     {
-        switch (speechContext)
+        switch (soundContext)
         {
-            case SpeechContext.ConversationalSpeech:
+            case SoundContext.ConversationalSpeech:
                 return ConversationalGroup;
-            case SpeechContext.OverheardSpeech:
+            case SoundContext.OverheardSpeech:
                 return OverheardGroup;
-            case SpeechContext.PhoneSpeech:
+            case SoundContext.PhoneSpeech:
                 return PhoneGroup;
-            case SpeechContext.ConversationalShout:
+            case SoundContext.ConversationalShout:
                 return ConversationalShoutGroup;
-            case SpeechContext.OverheardShout:
+            case SoundContext.OverheardShout:
                 return OverheardShoutGroup;
-            case SpeechContext.PhoneShout:
+            case SoundContext.PhoneShout:
                 return PhoneShoutGroup;
+            case SoundContext.ConversationalEmote:
+                return ConversationalEmoteGroup;
+            case SoundContext.OverheardEmote:
+                return OverheardEmoteGroup;
+            case SoundContext.PhoneEmote:
+                return PhoneEmoteGroup;
             default:
                 return OverheardGroup;
         }

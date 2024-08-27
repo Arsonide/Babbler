@@ -5,6 +5,7 @@ using SOD.Common.BepInEx;
 using Babbler.Implementation.Phonetic;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
+using Babbler.Implementation.Emotes;
 using Babbler.Implementation.Hosts;
 using Babbler.Implementation.Synthesis;
 
@@ -60,6 +61,8 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         _hasInitializedImmediate = true;
         Utilities.Log("Plugin is running immediate initialization.", LogLevel.Debug);
         
+        SpeakerHostPool.InitializePools();
+        
         // This must initialize the moment the game starts to "kickstart" Microsoft Speech Synthesis with a silent sound.
         // Without playing this sound immediately, the game will crash. I do not know why.
         if (BabblerConfig.Mode.Value == SpeechMode.Synthesis)
@@ -88,6 +91,8 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
                 PhoneticVoiceRegistry.Initialize();
                 break;
         }
+        
+        EmoteSoundRegistry.Initialize();
     }
 
     private void UninitializeImmediate()
@@ -98,7 +103,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         }
         
         Utilities.Log("Plugin is running immediate uninitialization.", LogLevel.Debug);
-        SpeakerHostPool.CleanupSpeakerHosts();
+        SpeakerHostPool.UninitializePools();
     }
 
     private void UninitializeDeferred()
@@ -117,5 +122,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
                 PhoneticVoiceRegistry.Uninitialize();
                 break;
         }
+        
+        EmoteSoundRegistry.Uninitialize();
     }
 }

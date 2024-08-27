@@ -37,9 +37,9 @@ public class PhoneticSpeaker : BaseSpeaker
         }
     }
 
-    public override void StartSpeaker(string speechInput, SpeechContext speechContext, Human speechPerson)
+    public override void StartSpeaker(string speechInput, SoundContext soundContext, Human speechPerson)
     {
-        base.StartSpeaker(speechInput, speechContext, speechPerson);
+        base.StartSpeaker(speechInput, soundContext, speechPerson);
 
         CurrentHash = Utilities.GetDeterministicStringHash(speechPerson.seed);
         
@@ -53,7 +53,7 @@ public class PhoneticSpeaker : BaseSpeaker
     {
         foreach (PhoneticSound phoneme in _phoneticsToSpeak)
         {
-            if (!FMODRegistry.TryPlaySound(phoneme.Sound, FMODRegistry.GetChannelGroup(SpeechContext), out Channel channel))
+            if (!FMODRegistry.TryPlaySound(phoneme.Sound, FMODRegistry.GetChannelGroup(SoundContext), out Channel channel))
             {
                 continue;
             }
@@ -103,7 +103,7 @@ public class PhoneticSpeaker : BaseSpeaker
         }
     }
 
-    protected override float CacheSpeechPitch(Human speechPerson)
+    protected override float CacheSpeechPitch(Human speechPerson, string speechInput)
     {
         // While we have a human, use this as an opportunity to choose the SpeechSynthesis voice.
         _currentVoice = PhoneticVoiceRegistry.GetVoice(speechPerson, out VoiceCharacteristics characteristics);

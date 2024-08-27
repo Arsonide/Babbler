@@ -1,30 +1,51 @@
 ﻿using UnityEngine;
 using Babbler.Implementation.Common;
-using Babbler.Implementation.Config;
 using Babbler.Implementation.Speakers;
 
 namespace Babbler.Implementation.Hosts;
 
 public class SpeakerHost : MonoBehaviour
 {
+    public SpeakerHostPool Pool;
     public BaseSpeaker Speaker;
+    
+    private bool _initialized;
 
-    private void Awake()
+    private void OnDestroy()
     {
-        switch (BabblerConfig.Mode.Value)
+        Uninitialize();
+    }
+    
+    public void Initialize()
+    {
+        if (_initialized)
         {
-            case SpeechMode.Synthesis:
-                Speaker = new SynthesisSpeaker();
-                break;
-            case SpeechMode.Phonetic:
-                Speaker = new PhoneticSpeaker();
-                break;
-            case SpeechMode.Droning:
-                Speaker = new DroningSpeaker();
-                break;
-            default:
-                Speaker = new PhoneticSpeaker();
-                break;
+            return;
+        }
+
+        _initialized = true;
+
+        if (Pool.SpeakerType == SpeakerType.Speech)
+        {
+            switch (Pool.SpeechMode)
+            {
+                case SpeechMode.Synthesis:
+                    Speaker = new SynthesisSpeaker();
+                    break;
+                case SpeechMode.Phonetic:
+                    Speaker = new PhoneticSpeaker();
+                    break;
+                case SpeechMode.Droning:
+                    Speaker = new DroningSpeaker();
+                    break;
+                default:
+                    Speaker = new PhoneticSpeaker();
+                    break;
+            }
+        }
+        else
+        {
+            Speaker = new EmoteSpeaker();
         }
         
         Speaker.OnFinishedSpeaking -= OnFinishedSpeaking;
@@ -33,20 +54,32 @@ public class SpeakerHost : MonoBehaviour
         Speaker.InitializeSpeaker();
     }
 
-    private void OnDestroy()
+    private void Uninitialize()
     {
+        if (!_initialized)
+        {
+            return;
+        }
+        
         Speaker.OnFinishedSpeaking -= OnFinishedSpeaking;
         Speaker.UninitializeSpeaker();
+        _initialized = false;
     }
-    
+
     private void OnEnable()
     {
-        Speaker.StopSpeaker();
+        if (Speaker != null)
+        {
+            Speaker.StopSpeaker();
+        }
     }
 
     private void OnDisable()
     {
-        Speaker.StopSpeaker();
+        if (Speaker != null)
+        {
+            Speaker.StopSpeaker();
+        }
     }
 
     private void Update()
@@ -56,6 +89,6 @@ public class SpeakerHost : MonoBehaviour
     
     private void OnFinishedSpeaking()
     {
-        SpeakerHostPool.ReleaseSpeakerHost(this);
+        Pool.ReleaseSpeakerHost(this);
     }
 }

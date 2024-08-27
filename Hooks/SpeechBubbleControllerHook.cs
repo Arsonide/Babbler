@@ -1,6 +1,8 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
 using Babbler.Implementation.Common;
+using Babbler.Implementation.Config;
+using Babbler.Implementation.Emotes;
 using Babbler.Implementation.Hosts;
 using UnityEngine;
 
@@ -26,12 +28,6 @@ public class SpeechBubbleControllerHook
         {
             return;
         }
-        
-        // This is used for things like [Sneeze] or [Sigh]. Don't babble for emotes.
-        if (IsEmoteSpeech(speechInput))
-        {
-            return;
-        }
 
         // This should filter out things like "Zzz" and "Brrr".
         if (HasCharacterRepeated(speechInput, 3, true))
@@ -48,37 +44,87 @@ public class SpeechBubbleControllerHook
             return;
         }
 
-        SpeechContext speechContext = GetSpeechContext(speechInput, speakingHuman, telephoneHuman, newSpeechController);
+        // This is used for things like [Sneeze] or [Sigh].
+        bool emoteSpeech = IsEmoteSpeech(speechInput);
+
+        if (emoteSpeech && !BabblerConfig.EmotesEnabled.Value)
+        {
+            return;
+        }
+        
+        SoundContext soundContext = GetSoundContext(speechInput, emoteSpeech, speakingHuman, telephoneHuman, newSpeechController);
 
         // When shouting we raise the volume, but TTS interprets all caps as acronyms a lot, lowering the case makes it more natural sounding.
-        switch (speechContext)
+        switch (soundContext)
         {
-            case SpeechContext.ConversationalShout:
-            case SpeechContext.OverheardShout:
-            case SpeechContext.PhoneShout:
+            case SoundContext.ConversationalShout:
+            case SoundContext.OverheardShout:
+            case SoundContext.PhoneShout:
                 speechInput = speechInput.ToLowerInvariant();
                 break;
         }
 
-        SpeakerHostPool.Play(speechInput, speechContext, anyHuman);
+        if (emoteSpeech)
+        {
+            speechInput = StripEmoteSpeech(speechInput).ToLowerInvariant();
+
+            if (EmoteSoundRegistry.HasEmote(speechInput))
+            {
+                SpeakerHostPool.Emotes.Play(speechInput, soundContext, anyHuman);
+            }
+        }
+        else
+        {
+            SpeakerHostPool.Speech.Play(speechInput, soundContext, anyHuman);
+        }
     }
 
-    private static SpeechContext GetSpeechContext(string speechInput, Human speakingHuman, Human telephoneHuman, SpeechController speechController)
+    private static SoundContext GetSoundContext(string speechInput, bool isEmote, Human speakingHuman, Human telephoneHuman, SpeechController speechController)
     {
         bool shouting = IsAllCaps(speechInput);
         
         // We need to verify speaking human is null otherwise any time we are on a phone call ALL voices in the background are classified as phone voices.
         if (speakingHuman == null && telephoneHuman != null)
         {
-            return shouting ? SpeechContext.PhoneShout : SpeechContext.PhoneSpeech;
+            if (isEmote)
+            {
+                return SoundContext.PhoneEmote;
+            }
+
+            if (shouting)
+            {
+                return SoundContext.PhoneShout;
+            }
+
+            return SoundContext.PhoneSpeech;
         }
 
         if (speechController.actor != Player.Instance && InteractionController.Instance.dialogMode && InteractionController.Instance.talkingTo == speechController.interactable)
         {
-            return shouting ? SpeechContext.ConversationalShout : SpeechContext.ConversationalSpeech;
+            if (isEmote)
+            {
+                return SoundContext.ConversationalEmote;
+            }
+
+            if (shouting)
+            {
+                return SoundContext.ConversationalShout;
+            }
+
+            return SoundContext.ConversationalSpeech;
         }
 
-        return shouting ? SpeechContext.OverheardShout : SpeechContext.OverheardSpeech;
+        if (isEmote)
+        {
+            return SoundContext.OverheardEmote;
+        }
+
+        if (shouting)
+        {
+            return SoundContext.OverheardShout;
+        }
+
+        return SoundContext.OverheardSpeech;
     }
 
     private static bool IsEmoteSpeech(string input)
@@ -101,6 +147,17 @@ public class SpeechBubbleControllerHook
             default:
                 return false;
         }
+    }
+    
+    private static string StripEmoteSpeech(string speechInput)
+    {
+        // First and last characters will be braces or brackets of some kind, so substring it.
+        if (string.IsNullOrEmpty(speechInput) || speechInput.Length <= 2)
+        {
+            return string.Empty;
+        }
+        
+        return speechInput.Substring(1, speechInput.Length - 2);
     }
     
     private static bool HasCharacterRepeated(string input, int times, bool lettersOnly)

@@ -59,9 +59,9 @@ public class SynthesisSpeaker : BaseSpeaker
         _synthesizer.SpeakAsyncCancelAll();
     }
 
-    public override void StartSpeaker(string speechInput, SpeechContext speechContext, Human speechPerson)
+    public override void StartSpeaker(string speechInput, SoundContext soundContext, Human speechPerson)
     {
-        base.StartSpeaker(speechInput, speechContext, speechPerson);
+        base.StartSpeaker(speechInput, soundContext, speechPerson);
 
         _synthesizer.SpeakCompleted -= OnSpeakCompleted;
         _synthesizer.SpeakCompleted += OnSpeakCompleted;
@@ -94,7 +94,7 @@ public class SynthesisSpeaker : BaseSpeaker
             return;
         }
 
-        if (!FMODRegistry.TryPlaySound(sound, FMODRegistry.GetChannelGroup(SpeechContext), out Channel channel))
+        if (!FMODRegistry.TryPlaySound(sound, FMODRegistry.GetChannelGroup(SoundContext), out Channel channel))
         {
             return;
         }
@@ -106,7 +106,7 @@ public class SynthesisSpeaker : BaseSpeaker
         ActiveChannels.Add(channel);
     }
     
-    protected override float CacheSpeechPitch(Human speechPerson)
+    protected override float CacheSpeechPitch(Human speechPerson, string speechInput)
     {
         // While we have a human, use this as an opportunity to choose the SpeechSynthesis voice.
         string voice = SynthesisVoiceRegistry.GetVoice(speechPerson, out VoiceCharacteristics characteristics);

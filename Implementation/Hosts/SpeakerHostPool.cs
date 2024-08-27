@@ -2,21 +2,48 @@
 using UnityEngine;
 using BepInEx.Logging;
 using Babbler.Implementation.Common;
+using Babbler.Implementation.Config;
 
 namespace Babbler.Implementation.Hosts;
 
-public static class SpeakerHostPool
+public class SpeakerHostPool
 {
-    private static List<SpeakerHost> AvailableHosts = new List<SpeakerHost>();
-    private static List<SpeakerHost> AllHosts = new List<SpeakerHost>();
-    
-    public static void Play(string speechInput, SpeechContext speechContext, Human speechPerson)
+    public static SpeakerHostPool Speech;
+    public static SpeakerHostPool Emotes;
+
+    public static void InitializePools()
     {
-        SpeakerHost speakerHost = GetSpeakerHost();
-        speakerHost.Speaker.StartSpeaker(speechInput, speechContext, speechPerson);
+        Speech = new SpeakerHostPool(SpeakerType.Speech, BabblerConfig.Mode.Value);
+        
+        // The speech mode doesn't matter here because it isn't speech.
+        Emotes = new SpeakerHostPool(SpeakerType.Emote, SpeechMode.Phonetic);
+    }
+
+    public static void UninitializePools()
+    {
+        Speech.CleanupSpeakerHosts();
+        Emotes.CleanupSpeakerHosts();
+    }
+
+    public SpeakerType SpeakerType { get; private set; }
+    public SpeechMode SpeechMode { get; private set; }
+
+    private List<SpeakerHost> AvailableHosts = new List<SpeakerHost>();
+    private List<SpeakerHost> AllHosts = new List<SpeakerHost>();
+    
+    private SpeakerHostPool(SpeakerType speakerType, SpeechMode speechMode)
+    {
+        SpeakerType = speakerType;
+        SpeechMode = speechMode;
     }
     
-    private static SpeakerHost GetSpeakerHost()
+    public void Play(string speechInput, SoundContext soundContext, Human speechPerson)
+    {
+        SpeakerHost speakerHost = GetSpeakerHost();
+        speakerHost.Speaker.StartSpeaker(speechInput, soundContext, speechPerson);
+    }
+    
+    private SpeakerHost GetSpeakerHost()
     {
         SpeakerHost speakerHost;
         int lastIndex = AvailableHosts.Count - 1;
@@ -34,19 +61,24 @@ public static class SpeakerHostPool
             speakerHost = go.AddComponent<SpeakerHost>();
             Object.DontDestroyOnLoad(go);
             AllHosts.Add(speakerHost);
-            Utilities.Log($"Created speaker host, current count is {AllHosts.Count}.", LogLevel.Debug);
+
+            // BepInEx complains if we pass the pool in with Initialize...
+            speakerHost.Pool = this;
+            speakerHost.Initialize();
+            
+            Log($"Created speaker host, current count is {AllHosts.Count}.");
         }
         
         return speakerHost;
     }
 
-    public static void ReleaseSpeakerHost(SpeakerHost speakerHost)
+    public void ReleaseSpeakerHost(SpeakerHost speakerHost)
     {
         speakerHost.gameObject.SetActive(false);
         AvailableHosts.Add(speakerHost);
     }
 
-    public static void CleanupSpeakerHosts()
+    private void CleanupSpeakerHosts()
     {
         for (int i = AllHosts.Count - 1; i >= 0; --i)
         {
@@ -61,6 +93,23 @@ public static class SpeakerHostPool
             Object.DestroyImmediate(speakerHost.gameObject);
         }
         
-        Utilities.Log("Cleaned up all speaker hosts.", LogLevel.Debug);
+        Log("Cleaned up all speaker hosts.");
+    }
+
+    private void Log(string log)
+    {
+        if (!Utilities.DEBUG_BUILD)
+        {
+            return;
+        }
+        
+        string type = "Emote";
+        
+        if (SpeakerType != SpeakerType.Emote)
+        {
+            type = SpeechMode.ToString();
+        }
+        
+        Utilities.Log($"SpeakerHostPool ({type}): {log}", LogLevel.Debug);
     }
 }

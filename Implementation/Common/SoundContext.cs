@@ -1,6 +1,6 @@
 ﻿namespace Babbler.Implementation.Common;
 
-public enum SpeechContext
+public enum SoundContext
 {
     ConversationalSpeech,
     OverheardSpeech,
@@ -8,4 +8,7 @@ public enum SpeechContext
     ConversationalShout,
     OverheardShout,
     PhoneShout,
+    ConversationalEmote,
+    OverheardEmote,
+    PhoneEmote,
 }
