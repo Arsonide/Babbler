@@ -6,6 +6,8 @@ namespace Babbler.Implementation.Config;
 public static partial class BabblerConfig
 {
     public static ConfigEntry<bool> EmotesEnabled;
+    public static ConfigEntry<string> EmotesTheme;
+
     public static ConfigEntry<bool> EmotesUsePitchShifts;
 
     public static ConfigEntry<float> EmotesMinStagger;
@@ -25,6 +27,9 @@ public static partial class BabblerConfig
         EmotesEnabled = config.Bind("7. Emotes", "Enabled", true,
                                      new ConfigDescription("Whether emote sound effects (like sneezing, sighing, or coughing) are enabled."));
 
+        EmotesTheme = config.Bind("7. Emotes", "Theme", "Realistic",
+                                    new ConfigDescription("Which theme to load and play for emote sound effects. Babbler comes with \"Realistic\" and \"Abstract\" but you can add more in the Emotes directory."));
+        
         EmotesUsePitchShifts = config.Bind("7. Emotes", "Use Pitch Shifts", false,
                                      new ConfigDescription("Whether or not to shift the pitch of emote sound effects to try and match an NPC's voice."));
         
@@ -61,6 +66,7 @@ public static partial class BabblerConfig
     public static void ResetEmotes()
     {
         EmotesEnabled.Value = (bool)EmotesEnabled.DefaultValue;
+        EmotesTheme.Value = (string)EmotesTheme.DefaultValue;
         EmotesUsePitchShifts.Value = (bool)EmotesUsePitchShifts.DefaultValue;
         EmotesMinStagger.Value = (float)EmotesMinStagger.DefaultValue;
         EmotesMaxStagger.Value = (float)EmotesMaxStagger.DefaultValue;

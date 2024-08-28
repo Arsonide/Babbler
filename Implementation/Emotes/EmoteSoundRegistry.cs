@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
+using Babbler.Implementation.Config;
 using BepInEx.Logging;
 
 namespace Babbler.Implementation.Emotes;
@@ -15,16 +16,22 @@ public static class EmoteSoundRegistry
     public static void Initialize()
     {
         Groups.Clear();
-        
-        string directory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(), "Emotes");
 
-        foreach (string subdirectory in Directory.GetDirectories(directory))
+        if (BabblerConfig.EmotesEnabled.Value)
         {
-            EmoteSoundFamily family = new EmoteSoundFamily();
-            family.Initialize(subdirectory);
-            Groups.Add(family.Key, family);
+            string directory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(), "Emotes", BabblerConfig.EmotesTheme.Value);
+
+            if (Directory.Exists(directory))
+            {
+                foreach (string subdirectory in Directory.GetDirectories(directory))
+                {
+                    EmoteSoundFamily family = new EmoteSoundFamily();
+                    family.Initialize(subdirectory);
+                    Groups.Add(family.Key, family);
+                }
+            }
         }
-        
+
         Utilities.Log($"EmoteSoundRegistry has initialized! Sounds: {Groups.Count}", LogLevel.Debug);
     }
 
