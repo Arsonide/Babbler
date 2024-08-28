@@ -10,6 +10,8 @@ namespace Babbler.Implementation.Speakers;
 
 public class EmoteSpeaker : BaseSpeaker
 {
+    private static float _emotesAllowedTimestamp = -1f;
+    
     private EmoteSound _emoteToPlay;
     private Coroutine _emotePlayCoroutine;
     
@@ -39,12 +41,22 @@ public class EmoteSpeaker : BaseSpeaker
 
     private IEnumerator EmotePlayRoutine()
     {
+        while (Time.realtimeSinceStartup < _emotesAllowedTimestamp)
+        {
+            yield return null;
+        }
+        
         if (!FMODRegistry.TryPlaySound(_emoteToPlay.Sound, FMODRegistry.GetChannelGroup(SoundContext), out Channel channel))
         {
             OnFinishedSpeaking?.Invoke();
             yield break;
         }
 
+        float minStagger = BabblerConfig.EmotesMinStagger.Value;
+        float maxStagger = BabblerConfig.EmotesMaxStagger.Value;
+        float staggerDuration = (Utilities.GlobalRandom.NextSingle() * (maxStagger - minStagger) + minStagger);
+        _emotesAllowedTimestamp = Time.realtimeSinceStartup + staggerDuration;
+        
         channel.setPitch(BabblerConfig.EmotesUsePitchShifts.Value ? SpeechPitch : 1f);
         SetChannelPosition(SpeechSource.position, channel);
         FMODRegistry.TryUpdate();
