@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Babbler</AssemblyName>
     <Description>Plugin that makes citizens audibly speak in Shadows of Doubt.</Description>
-    <Version>0.9.5</Version>
+    <Version>0.9.6</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
@@ -13,21 +13,21 @@
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>Babbler</RootNamespace>
-    <PackageVersion>0.9.5</PackageVersion>
+    <PackageVersion>0.9.6</PackageVersion>
     <Title>Babbler</Title>
     <Authors>Arsonide</Authors>
     <Copyright>Arsonide</Copyright>
     <PackageProjectUrl>https://github.com/Arsonide/Babbler</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Arsonide/Babbler/blob/main/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Arsonide/Babbler</RepositoryUrl>
-    <AssemblyVersion>0.9.5</AssemblyVersion>
-    <FileVersion>0.9.5</FileVersion>
+    <AssemblyVersion>0.9.6</AssemblyVersion>
+    <FileVersion>0.9.6</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-    <PackageReference Include="SOD.Common" Version="2.0.2" />
+    <PackageReference Include="SOD.Common" Version="2.0.4" />
     <PackageReference Include="System.Speech" Version="8.0.0" />
   </ItemGroup>
 

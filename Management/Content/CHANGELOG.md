@@ -1,6 +1,17 @@
 # CHANGELOG
 
 ### Latest Release
+**0.9.6**
+- Added emote sound effects, that play when Babbler encounters emote speech like [Sigh] or [Clears Throat]. These come with over 40 sounds and two configurable themes: Realistic and Abstract. You can also add your own themes, instructions are in the readme. They can also be disabled entirely.
+- Added a JSON file that can do string replacements on certain dialog lines to make them sound better. For example, changing brrr to burr for TTS engines to pronounce better. Instructions for adding your own replacements are in the readme.
+- Configuring Babbler has become complicated, so I've added a Template option in the general settings. Assigning this value will reset all of your settings to one of several presets, like Text To Speech, Animal Crossing, Undertale, or Banjo Kazooie, without you needing to change all the options yourself.
+- Fixed issue with ellipsis (...) causing dialog to not play.
+- When shouting all caps, Babbler now converts the dialog to lower case. It will still play louder, but this will help stop TTS engines from interpreting words like WHO as acronyms.
+- Dialog was quieter than I remember it, so I've tweaked the default volumes a bit.
+- Dependencies have been updated. There will be another patch in a few weeks when 1.0 releases, that recompiles Babbler against the release version of Shadows of Doubt.
+
+---------
+
 **0.9.5**
 - Fixed a bug with Synthesis that was causing 8 out of 11 of the default Windows voices to not be detected. If you use Synthesis and have all of the default Windows voice packs installed, you will see a huge bump in voice variety.
 - Added options to Synthesis mode to create a whitelist or blacklist of speech synthesis voices. This allows you to block or allow certain voices if you want. Instructions for how to use these new options are down in the configuration section of the README.

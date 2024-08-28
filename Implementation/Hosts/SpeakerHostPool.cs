@@ -98,6 +98,8 @@ public class SpeakerHostPool
 
     private void Log(string log)
     {
+#pragma warning disable CS0162
+
         if (!Utilities.DEBUG_BUILD)
         {
             return;
@@ -111,5 +113,7 @@ public class SpeakerHostPool
         }
         
         Utilities.Log($"SpeakerHostPool ({type}): {log}", LogLevel.Debug);
+        
+#pragma warning restore CS0162
     }
 }

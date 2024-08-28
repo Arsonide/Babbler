@@ -139,7 +139,26 @@ In the folder for each voice, you will find wav files for each phoneme. Again, t
 If "something" is "symbol", then it will be used in very specific circumstances depending on what is after the underscore, normally for spaces and punctuation marks. See the voices that ship with the mod for examples.
 
 Just like adding voices for Synthesis Mode, changing the number of available Phonetic voices will cause the NPCs in existing games to change their voices to accommodate the newly available voices.
- 
+
+### Adding Emote Sounds and Themes
+Let's start by navigating to the emote directory, which should look something like **%AppData%\r2modmanPlus-local\ShadowsOfDoubt\profiles\\<profile_name\>\BepInEx\plugins\Arsonide-Babbler\Emotes**. In that directory you will find subdirectories for each theme. By default, Babbler comes with two themes: Realistic, and Abstract. You can add more themes by adding more folders here. The name of the folder is the name of the theme. To activate a theme in Babbler, just type its name into the **Theme** option in the configuration settings, under the **Emotes** category.
+
+For now, let's open the "Realistic" theme by going into that folder, to learn how to add more types of emotes and more sounds for them. Once you are in a theme folder, you are greeted with ... more folders! In this directory, the names of the folders ***must*** match the emote dialog in game. For example, a directory name of "Sneeze" will match the dialog "[Sneeze]". So by naming these directories, you can add entirely new emotes if you want. Go ahead and open Sneeze now so we can see what an emote looks like inside, and how to add sound variations for one.
+
+Finally, we are to the actual WAV files that play in-game. You can add more here if you want, but notice they follow a very specific naming pattern with three sections separated by underscores. Let's look at one specific sound: "sneeze_female_347.wav":
+- **sneeze**: The first section is purely a label, it does nothing and is for organizational purposes.
+- **female**: The second section is either "male" or "female" to play for civilians of those genders. Putting anything else here will classify the sound as non-binary.
+- **347**: The third and final section is supposed to be the natural pitch (in hertz) of this sound. When emote pitch shifting is enabled, Babbler will use this value to try and pitch shift the sound closer to the pitch of a civilian's voice. However, I have found that this does not work very well, so it's off by default. Thus, unless you're enabling pitch shifting and experimenting with it, this can be any number you like. If you are using pitch shifting, make sure it matches the natural pitch of this sound.
+
+Every sound in the emote's folder is considered when playing emotes for a civilian. If there is more than one that matches their gender, they will pick one at random. So you can add multiple variations of the same sound. Non-Binary citizens will first look for non-binary samples, then fall back to whichever gender matches their gender scale more closely if none are found.
+
+### Adding String Replacements
+There's certain dialog that just sounds weird. Babbler tries to filter this dialog most of the time, but there's another option now: we can replace them with dialog that sounds better. For example, the line "Brrr..." sounds better in Synthesis mode when pronounced "Burr..."
+
+In your Babbler directory, which can be found at **%AppData%\r2modmanPlus-local\ShadowsOfDoubt\profiles\\<profile_name\>\BepInEx\plugins\Arsonide-Babbler**, you will find "Replacements.json". Simply open this file and add the line you want to replace and the replacement text. Just note that it must be properly formatted JSON, and how to format JSON is beyond the scope of this document.
+
+Replacements also do not operate on individual words, they operate on whole dialog lines. This is for performance reasons, we don't want to have to process every word at runtime. So we cannot just replace "Brrr", we have to get the whole line: "Brrr..."
+
 ## License
 
 All code in this project is distributed under the MIT License. Feel free to use, modify, and distribute as needed. That license can be found in **License.txt**. Attribution and licenses for all third party libraries and assets used in the creation of Babbler can be found in **Attribution.txt**.
