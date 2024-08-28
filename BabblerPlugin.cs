@@ -62,6 +62,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         Utilities.Log("Plugin is running immediate initialization.", LogLevel.Debug);
         
         SpeakerHostPool.InitializePools();
+        ReplacementRegistry.Initialize();
         
         // This must initialize the moment the game starts to "kickstart" Microsoft Speech Synthesis with a silent sound.
         // Without playing this sound immediately, the game will crash. I do not know why.

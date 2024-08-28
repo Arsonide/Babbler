@@ -29,6 +29,12 @@ public class SpeechBubbleControllerHook
             return;
         }
 
+        // Before we process the line, check if we're replacing it.
+        if (ReplacementRegistry.TryGetReplacement(speechInput, out string replacement))
+        {
+            speechInput = replacement;
+        }
+        
         // This should filter out things like "Zzz" and "Brrr".
         if (HasCharacterRepeated(speechInput, 3, true))
         {
