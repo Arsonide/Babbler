@@ -65,8 +65,10 @@ public class EmoteSpeaker : BaseSpeaker, IDelayableSpeaker
         float maxStagger = BabblerConfig.EmotesMaxStagger.Value;
         float staggerDuration = (Utilities.GlobalRandom.NextSingle() * (maxStagger - minStagger) + minStagger);
         _emotesAllowedTimestamp = Time.realtimeSinceStartup + staggerDuration;
+
+        bool pitchShiftsAllowed = BabblerConfig.EmotesUsePitchShifts.Value && _emoteToPlay.CanPitchShift;
+        channel.setPitch(pitchShiftsAllowed ? SpeechPitch : 1f);
         
-        channel.setPitch(BabblerConfig.EmotesUsePitchShifts.Value ? SpeechPitch : 1f);
         SetChannelPosition(SpeechSource.position, channel);
         FMODRegistry.TryUpdate();
 

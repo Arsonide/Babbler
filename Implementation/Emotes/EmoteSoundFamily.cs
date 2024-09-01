@@ -94,6 +94,7 @@ public class EmoteSoundFamily
         string frequencyString = split[2].ToLowerInvariant();
         
         VoiceCategory category = VoiceCategory.NonBinary;
+        bool canPitchShift = true;
         
         switch (categoryString)
         {
@@ -108,6 +109,7 @@ public class EmoteSoundFamily
         if (!float.TryParse(frequencyString, out float frequency))
         {
             frequency = 178f;
+            canPitchShift = false;
         }
         
         sound.getLength(out uint length, TIMEUNIT.MS);
@@ -118,6 +120,7 @@ public class EmoteSoundFamily
             Key = key,
             Category = category,
             Frequency = frequency,
+            CanPitchShift = canPitchShift,
             FilePath = filePath,
             Sound = sound,
             Length = floatLength,
