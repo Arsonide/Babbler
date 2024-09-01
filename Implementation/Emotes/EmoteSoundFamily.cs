@@ -8,8 +8,6 @@ namespace Babbler.Implementation.Emotes;
 
 public class EmoteSoundFamily
 {
-    private const int PRIME_EMOTE = 1187;
-
     public string Key { get; private set; }
     
     private readonly List<EmoteSound> _allSounds = new List<EmoteSound>();
@@ -131,6 +129,6 @@ public class EmoteSoundFamily
 
     public EmoteSound GetRandomSound(VoiceCharacteristics characteristics)
     {
-        return characteristics.SelectGenderedListElement(EmotePriorities, _allSounds, _maleSounds, _femaleSounds, _nonBinarySounds, PRIME_EMOTE);
+        return characteristics.SelectRandomGenderedListElement(EmotePriorities, _allSounds, _maleSounds, _femaleSounds, _nonBinarySounds);
     }
 }

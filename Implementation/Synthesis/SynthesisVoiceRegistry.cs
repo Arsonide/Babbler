@@ -120,7 +120,7 @@ public static class SynthesisVoiceRegistry
     public static string GetVoice(Human human, out VoiceCharacteristics characteristics)
     {
         characteristics = VoiceCharacteristics.Create(human, HasMaleVoices, HasFemaleVoices, HasNonBinaryVoices);
-        return characteristics.SelectGenderedListElement(VoicePriorities, AllVoices, MaleVoices, FemaleVoices, NonBinaryVoices, PRIME_VOICE);
+        return characteristics.SelectDeterministicGenderedListElement(VoicePriorities, AllVoices, MaleVoices, FemaleVoices, NonBinaryVoices, PRIME_VOICE);
     }
 
     private static void SetupVoiceFilterInput()

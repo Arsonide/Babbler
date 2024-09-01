@@ -8,12 +8,13 @@ using Babbler.Implementation.Emotes;
 
 namespace Babbler.Implementation.Speakers;
 
-public class EmoteSpeaker : BaseSpeaker
+public class EmoteSpeaker : BaseSpeaker, IDelayableSpeaker
 {
     private static float _emotesAllowedTimestamp = -1f;
     
     private EmoteSound _emoteToPlay;
     private Coroutine _emotePlayCoroutine;
+    private float _delay;
     
     public override void StopSpeaker()
     {
@@ -24,6 +25,8 @@ public class EmoteSpeaker : BaseSpeaker
             UniverseLib.RuntimeHelper.StopCoroutine(_emotePlayCoroutine);
             _emotePlayCoroutine = null;
         }
+
+        _delay = 0f;
     }
 
     public override void StartSpeaker(string speechInput, SoundContext soundContext, Human speechPerson)
@@ -35,12 +38,18 @@ public class EmoteSpeaker : BaseSpeaker
             OnFinishedSpeaking?.Invoke();
             return;
         }
-        
+
         _emotePlayCoroutine = UniverseLib.RuntimeHelper.StartCoroutine(EmotePlayRoutine());
     }
 
     private IEnumerator EmotePlayRoutine()
     {
+        while (_delay > 0f)
+        {
+            yield return null;
+            _delay -= Time.deltaTime;
+        }
+        
         while (Time.realtimeSinceStartup < _emotesAllowedTimestamp)
         {
             yield return null;
@@ -102,5 +111,10 @@ public class EmoteSpeaker : BaseSpeaker
 
         float frequency = minimumFrequency + (characteristics.Pitch * (maximumFrequency - minimumFrequency));
         return frequency / _emoteToPlay.Frequency;
+    }
+
+    public void InitializeDelay(float delay)
+    {
+        _delay = delay;
     }
 }

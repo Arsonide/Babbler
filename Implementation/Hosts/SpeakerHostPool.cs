@@ -3,6 +3,7 @@ using UnityEngine;
 using BepInEx.Logging;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
+using Babbler.Implementation.Speakers;
 
 namespace Babbler.Implementation.Hosts;
 
@@ -37,9 +38,15 @@ public class SpeakerHostPool
         SpeechMode = speechMode;
     }
     
-    public void Play(string speechInput, SoundContext soundContext, Human speechPerson)
+    public void Play(string speechInput, SoundContext soundContext, Human speechPerson, float delay = 0f)
     {
         SpeakerHost speakerHost = GetSpeakerHost();
+        
+        if (delay > 0f && speakerHost.Speaker is IDelayableSpeaker delayableSpeaker)
+        {
+            delayableSpeaker.InitializeDelay(delay);
+        }
+        
         speakerHost.Speaker.StartSpeaker(speechInput, soundContext, speechPerson);
     }
     

@@ -66,7 +66,7 @@ public struct VoiceCharacteristics
         return VoiceCategory.Any;
     }
 
-    public T SelectGenderedListElement<T>(List<T>[] priorityArray, List<T> allList, List<T> maleList, List<T> femaleList, List<T> nonBinaryList, int prime)
+    private void SortPriorityArray<T>(List<T>[] priorityArray, List<T> allList, List<T> maleList, List<T> femaleList, List<T> nonBinaryList)
     {
         switch (Category)
         {
@@ -106,16 +106,33 @@ public struct VoiceCharacteristics
                 priorityArray[3] = allList;
                 break;
         }
+    }
+                                          
+    public T SelectDeterministicGenderedListElement<T>(List<T>[] priorityArray, List<T> allList, List<T> maleList, List<T> femaleList, List<T> nonBinaryList, int prime)
+    {
+        SortPriorityArray(priorityArray, allList, maleList, femaleList, nonBinaryList);
         
         foreach(IList<T> list in priorityArray)
         {
-            if (list.Count <= 0)
+            if (list.Count > 0)
             {
-                continue;
+                return list[Utilities.GetDeterministicInteger(Hash, prime, 0, list.Count)];
             }
+        }
 
-            // Trying to avoid instantiating a System.Random, so we do some math.
-            return list[Utilities.GetDeterministicInteger(Hash, prime, 0, list.Count)];
+        return default(T);
+    }
+    
+    public T SelectRandomGenderedListElement<T>(List<T>[] priorityArray, List<T> allList, List<T> maleList, List<T> femaleList, List<T> nonBinaryList)
+    {
+        SortPriorityArray(priorityArray, allList, maleList, femaleList, nonBinaryList);
+        
+        foreach(IList<T> list in priorityArray)
+        {
+            if (list.Count > 0)
+            {
+                return list[Utilities.GlobalRandom.Next(0, list.Count)];
+            }
         }
 
         return default(T);

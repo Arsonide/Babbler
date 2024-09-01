@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using UnityEngine;
+using BepInEx.Logging;
 using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
-using BepInEx.Logging;
 
 namespace Babbler.Implementation.Emotes;
 
@@ -58,5 +59,22 @@ public static class EmoteSoundRegistry
         
         characteristics = VoiceCharacteristics.Create(human, group.HasMaleEmotes, group.HasFemaleEmotes, group.HasNonBinaryEmotes);
         return group.GetRandomSound(characteristics);
+    }
+
+    public static bool ShouldPlayUncouthEmote(Human human, float minThreshold, float maxThreshold)
+    {
+        float conscientiousness = human.conscientiousness;
+        float drunkenness = human.drunk;
+
+        if (human.isHome)
+        {
+            conscientiousness /= 2f;
+        }
+        
+        // We want whatever is lower, your conscientiousness or the inverse of your drunkenness, and then we want to invert that.
+        float uncouthness = 1f - Mathf.Min(conscientiousness, 1f - drunkenness);
+        float threshold = Mathf.Lerp(minThreshold, maxThreshold, uncouthness);
+        
+        return Utilities.GlobalRandom.NextSingle() <= threshold;
     }
 }

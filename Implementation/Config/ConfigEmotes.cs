@@ -1,5 +1,5 @@
-﻿using Babbler.Implementation.Common;
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
+using Babbler.Implementation.Common;
 
 namespace Babbler.Implementation.Config;
 
@@ -7,12 +7,12 @@ public static partial class BabblerConfig
 {
     public static ConfigEntry<bool> EmotesEnabled;
     public static ConfigEntry<string> EmotesTheme;
+    
+    public static ConfigEntry<float> EmotesMinStagger;
+    public static ConfigEntry<float> EmotesMaxStagger;
 
     public static ConfigEntry<bool> EmotesUsePitchShifts;
 
-    public static ConfigEntry<float> EmotesMinStagger;
-    public static ConfigEntry<float> EmotesMaxStagger;
-    
     public static ConfigEntry<float> EmotesMinFrequencyMale;
     public static ConfigEntry<float> EmotesMaxFrequencyMale;
     
@@ -29,15 +29,15 @@ public static partial class BabblerConfig
 
         EmotesTheme = config.Bind("7. Emotes", "Theme", "Realistic",
                                     new ConfigDescription("Which theme to load and play for emote sound effects. Babbler comes with \"Realistic\" and \"Abstract\" but you can add more in the Emotes directory."));
-        
-        EmotesUsePitchShifts = config.Bind("7. Emotes", "Use Pitch Shifts", false,
-                                     new ConfigDescription("Whether or not to shift the pitch of emote sound effects to try and match an NPC's voice."));
-        
+
         EmotesMinStagger = config.Bind("7. Emotes", "Min Stagger", 0.2f,
                                        new ConfigDescription("NPCs often emote at the same time, this is the minimum seconds to stagger their emote sounds a bit."));
         
         EmotesMaxStagger = config.Bind("7. Emotes", "Max Stagger", 0.6f,
                                        new ConfigDescription("NPCs often emote at the same time, this is the maximum seconds to stagger their emote sounds a bit."));
+
+        EmotesUsePitchShifts = config.Bind("7. Emotes", "Use Pitch Shifts", false,
+                                           new ConfigDescription("Whether or not to shift the pitch of emote sound effects to try and match an NPC's voice."));
         
         EmotesMinFrequencyMale = config.Bind("7. Emotes", "Min Frequency Male", 100f,
                                               new ConfigDescription("Lowest possible frequency (in hertz) for male emote sound effects."));
@@ -67,9 +67,9 @@ public static partial class BabblerConfig
     {
         EmotesEnabled.Value = (bool)EmotesEnabled.DefaultValue;
         EmotesTheme.Value = (string)EmotesTheme.DefaultValue;
-        EmotesUsePitchShifts.Value = (bool)EmotesUsePitchShifts.DefaultValue;
         EmotesMinStagger.Value = (float)EmotesMinStagger.DefaultValue;
         EmotesMaxStagger.Value = (float)EmotesMaxStagger.DefaultValue;
+        EmotesUsePitchShifts.Value = (bool)EmotesUsePitchShifts.DefaultValue;
         EmotesMinFrequencyMale.Value = (float)EmotesMinFrequencyMale.DefaultValue;
         EmotesMaxFrequencyMale.Value = (float)EmotesMaxFrequencyMale.DefaultValue;
         EmotesMinFrequencyFemale.Value = (float)EmotesMinFrequencyFemale.DefaultValue;

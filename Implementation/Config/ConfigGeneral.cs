@@ -97,6 +97,7 @@ public static partial class BabblerConfig
         InitializePhonetic(config);
         InitializeDroning(config);
         InitializeEmotes(config);
+        InitializeIncidentals(config);
 
         ProcessUpgrades();
         ProcessTemplates();
@@ -166,6 +167,7 @@ public static partial class BabblerConfig
         ResetPhonetic();
         ResetDroning();
         ResetEmotes();
+        ResetIncidentals();
     }
 
     private static void ProcessTemplates()
