@@ -7,6 +7,7 @@ public static partial class BabblerConfig
 {
     public static ConfigEntry<bool> IncidentalsEnabled;
     public static ConfigEntry<float> IncidentalsRange;
+    public static ConfigEntry<float> IncidentalsMinDrunkForHiccups;
     public static ConfigEntry<float> IncidentalsMinBurpChance;
     public static ConfigEntry<float> IncidentalsMaxBurpChance;
     public static ConfigEntry<float> IncidentalsMinFartChance;
@@ -21,6 +22,10 @@ public static partial class BabblerConfig
         
         IncidentalsRange = config.Bind("8. Incidentals", "Range", 25f,
                                             new ConfigDescription("How far away you can hear incidental emotes sound effects, in meters."));
+        
+        IncidentalsMinDrunkForHiccups = config.Bind("8. Incidentals", "Min Drunk For Hiccups", 0.25f,
+                                                    new ConfigDescription("The lowest amount an NPC can be drunk before they start hiccuping.",
+                                                                          new AcceptableValueRange<float>(0f, 1f)));
         
         IncidentalsMinBurpChance = config.Bind("8. Incidentals", "Min Burp Chance", 0f,
                                                  new ConfigDescription("The minimum chance for NPCs to burp when they finish eating. Set min and max to zero to disable burps specifically.",
@@ -37,13 +42,13 @@ public static partial class BabblerConfig
         IncidentalsMaxFartChance = config.Bind("8. Incidentals", "Max Fart Chance", 0.4f,
                                                new ConfigDescription("The maximum chance for NPCs to fart when performing bathroom functions. Set min and max to zero to disable burps specifically.",
                                                                      new AcceptableValueRange<float>(0f, 1f)));
-        
+
         IncidentalsMinHiccupChance = config.Bind("8. Incidentals", "Min Hiccup Chance", 0f,
-                                                 new ConfigDescription("The minimum chance for NPCs to hiccup as they walk drunk - smaller because it is evaluated every footstep. Set min and max to zero to disable hiccups specifically.",
+                                                 new ConfigDescription("The minimum chance for NPCs to hiccup as they walk drunk - smaller because it is evaluated more often. Set min and max to zero to disable hiccups specifically.",
                                                                        new AcceptableValueRange<float>(0f, 1f)));
 
-        IncidentalsMaxHiccupChance = config.Bind("8. Incidentals", "Max Hiccup Chance", 0.4f,
-                                                 new ConfigDescription("The maximum chance for NPCs to hiccup as they walk drunk - smaller because it is evaluated every footstep. Set min and max to zero to disable hiccups specifically.",
+        IncidentalsMaxHiccupChance = config.Bind("8. Incidentals", "Max Hiccup Chance", 0.25f,
+                                                 new ConfigDescription("The maximum chance for NPCs to hiccup as they walk drunk - smaller because it is evaluated more often. Set min and max to zero to disable hiccups specifically.",
                                                                        new AcceptableValueRange<float>(0f, 1f)));
         
         Utilities.EnforceMinMax(ref IncidentalsMinBurpChance, ref IncidentalsMaxBurpChance);
@@ -53,6 +58,9 @@ public static partial class BabblerConfig
 
     public static void ResetIncidentals()
     {
+        IncidentalsEnabled.Value = (bool)IncidentalsEnabled.DefaultValue;
+        IncidentalsRange.Value = (float)IncidentalsRange.DefaultValue;
+        IncidentalsMinDrunkForHiccups.Value = (float)IncidentalsMinDrunkForHiccups.DefaultValue;
         IncidentalsMinBurpChance.Value = (float)IncidentalsMinBurpChance.DefaultValue;
         IncidentalsMaxBurpChance.Value = (float)IncidentalsMaxBurpChance.DefaultValue;
         IncidentalsMinFartChance.Value = (float)IncidentalsMinFartChance.DefaultValue;

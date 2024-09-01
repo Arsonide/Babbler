@@ -20,12 +20,12 @@ public class SetArmsBoolStateHook
             return true;
         }
 
-        if (!__instance.cit.currentCityTile.isInPlayerVicinity)
+        if (!BabblerConfig.IncidentalsEnabled.Value)
         {
             return true;
         }
         
-        if (!BabblerConfig.IncidentalsEnabled.Value)
+        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(__instance.cit, BabblerConfig.IncidentalsRange.Value))
         {
             return true;
         }
@@ -35,11 +35,6 @@ public class SetArmsBoolStateHook
             return true;
         }
 
-        if (Vector3.Distance(__instance.cit.aimTransform.position, Player.Instance.aimTransform.position) > BabblerConfig.IncidentalsRange.Value)
-        {
-            return true;
-        }
-        
         SpeakerHostPool.Emotes.Play("burp", SoundContext.OverheardEmote, __instance.cit, Utilities.GlobalRandom.Next(0, 6));
         return true;
     }

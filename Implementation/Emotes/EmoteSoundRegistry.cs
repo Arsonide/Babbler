@@ -61,6 +61,64 @@ public static class EmoteSoundRegistry
         return group.GetRandomSound(characteristics);
     }
 
+    private static bool IsPlayerNear(Human human, float nearRange)
+    {
+        if (!human.currentCityTile.isInPlayerVicinity)
+        {
+            return false;
+        }
+        
+        return Vector3.Distance(human.aimTransform.position, Player.Instance.aimTransform.position) < nearRange;
+    }
+    
+    public static bool IsEmoteRelevantBroadphase(Human human, float nearRange)
+    {
+        if (!BabblerConfig.EmotesEnabled.Value)
+        {
+            return false;
+        }
+
+        if (human.currentCityTile == null || human.isPlayer || human.isDead)
+        {
+            return false;
+        }
+        
+        if (human.visible)
+        {
+            return IsPlayerNear(human, nearRange);
+        }
+
+        if (human.isOnStreet && Player.Instance.isOnStreet)
+        {
+            return IsPlayerNear(human, nearRange);
+        }
+
+        if (human.currentCityTile.cityCoord != Player.Instance.currentCityTile.cityCoord)
+        {
+            return false;
+        }
+
+        NewAddress humanAddress = human?.currentGameLocation?.thisAsAddress;
+        NewAddress playerAddress = Player.Instance?.currentGameLocation?.thisAsAddress;
+
+        if (humanAddress == null || playerAddress == null)
+        {
+            return false;
+        }
+        
+        if (humanAddress.isLobby && playerAddress.isLobby)
+        {
+            return IsPlayerNear(human, nearRange);
+        }
+
+        if (humanAddress.id == playerAddress.id)
+        {
+            return IsPlayerNear(human, nearRange);
+        }
+
+        return false;
+    }
+    
     public static bool ShouldPlayUncouthEmote(Human human, float minThreshold, float maxThreshold)
     {
         float conscientiousness = human.conscientiousness;

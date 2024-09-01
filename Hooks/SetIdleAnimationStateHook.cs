@@ -18,22 +18,17 @@ public class SetIdleAnimationStateHook
             return;
         }
 
-        if (!__instance.cit.currentCityTile.isInPlayerVicinity)
-        {
-            return;
-        }
-        
         if (!BabblerConfig.IncidentalsEnabled.Value)
         {
             return;
         }
 
-        if (!EmoteSoundRegistry.ShouldPlayUncouthEmote(__instance.cit, BabblerConfig.IncidentalsMinFartChance.Value, BabblerConfig.IncidentalsMaxFartChance.Value))
+        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(__instance.cit, BabblerConfig.IncidentalsRange.Value))
         {
             return;
         }
         
-        if (Vector3.Distance(__instance.cit.aimTransform.position, Player.Instance.aimTransform.position) > BabblerConfig.IncidentalsRange.Value)
+        if (!EmoteSoundRegistry.ShouldPlayUncouthEmote(__instance.cit, BabblerConfig.IncidentalsMinFartChance.Value, BabblerConfig.IncidentalsMaxFartChance.Value))
         {
             return;
         }
