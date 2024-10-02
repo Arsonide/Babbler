@@ -19,18 +19,6 @@ public static partial class BabblerConfig
 
     public static ConfigEntry<bool> DistortPhoneSpeech;
 
-    public static ConfigEntry<float> ConversationalVolume;
-    public static ConfigEntry<float> OverheardVolume;
-    public static ConfigEntry<float> PhoneVolume;
-
-    public static ConfigEntry<float> ConversationalEmoteVolume;
-    public static ConfigEntry<float> OverheardEmoteVolume;
-    public static ConfigEntry<float> PhoneEmoteVolume;
-    
-    public static ConfigEntry<float> ConversationalShoutMultiplier;
-    public static ConfigEntry<float> OverheardShoutMultiplier;
-    public static ConfigEntry<float> PhoneShoutMultiplier;
-
     public static ConfigEntry<float> FemaleThreshold;
     public static ConfigEntry<float> MaleThreshold;
     public static ConfigEntry<float> GenderDiversity;
@@ -66,33 +54,7 @@ public static partial class BabblerConfig
                                       new ConfigDescription("Adds a random element to voice gender selection, increase for more diverse voices.",
                                                             new AcceptableValueRange<float>(0f, 1f)));
         
-        ConversationalVolume = config.Bind("3. Volume", "Conversational Volume", 0.7f,
-                                           new ConfigDescription("How loud voices will be when you are speaking directly to a person."));
-        
-        OverheardVolume = config.Bind("3. Volume", "Overheard Volume", 0.3f,
-                                      new ConfigDescription("How loud voices that you overhear nearby will be when you are not talking directly to them."));
-
-        PhoneVolume = config.Bind("3. Volume", "Phone Volume", 0.5f,
-                                  new ConfigDescription("How loud voices will be when you are talking with a person over the phone."));
-        
-        ConversationalEmoteVolume = config.Bind("3. Volume", "Conversational Emotes Volume", 0.7f,
-                                           new ConfigDescription("How loud emote sound effects will be when you are speaking directly to a person."));
-        
-        OverheardEmoteVolume = config.Bind("3. Volume", "Overheard Emotes Volume", 0.5f,
-                                      new ConfigDescription("How loud emote sound effects that you overhear nearby will be when you are not talking directly to them."));
-
-        PhoneEmoteVolume = config.Bind("3. Volume", "Phone Emotes Volume", 0.6f,
-                                  new ConfigDescription("How loud emote sound effects will be when you are talking with a person over the phone."));
-        
-        ConversationalShoutMultiplier = config.Bind("3. Volume", "Conversational Shout Multiplier", 2.9f,
-                                                    new ConfigDescription("When speaking in all caps, how much to multiply the normal conversational volume."));
-        
-        OverheardShoutMultiplier = config.Bind("3. Volume", "Overheard Shout Multiplier", 6.6f,
-                                               new ConfigDescription("When speaking in all caps, how much to multiply the normal overheard volume."));
-        
-        PhoneShoutMultiplier = config.Bind("3. Volume", "Phone Shout Multiplier", 4f,
-                                           new ConfigDescription("When speaking in all caps, how much to multiply the normal phone volume."));
-        
+        InitializeVolume(config);
         InitializeSynthesis(config);
         InitializePhonetic(config);
         InitializeDroning(config);
@@ -150,19 +112,11 @@ public static partial class BabblerConfig
         Mode.Value = (SpeechMode)Mode.DefaultValue;
         Template.Value = (ConfigTemplate)Template.DefaultValue;
         DistortPhoneSpeech.Value = (bool)DistortPhoneSpeech.DefaultValue;
-        ConversationalVolume.Value = (float)ConversationalVolume.DefaultValue;
-        OverheardVolume.Value = (float)OverheardVolume.DefaultValue;
-        PhoneVolume.Value = (float)PhoneVolume.DefaultValue;
-        ConversationalEmoteVolume.Value = (float)ConversationalEmoteVolume.DefaultValue;
-        OverheardEmoteVolume.Value = (float)OverheardEmoteVolume.DefaultValue;
-        PhoneEmoteVolume.Value = (float)PhoneEmoteVolume.DefaultValue;
-        ConversationalShoutMultiplier.Value = (float)ConversationalShoutMultiplier.DefaultValue;
-        OverheardShoutMultiplier.Value = (float)OverheardShoutMultiplier.DefaultValue;
-        PhoneShoutMultiplier.Value = (float)PhoneShoutMultiplier.DefaultValue;
         FemaleThreshold.Value = (float)FemaleThreshold.DefaultValue;
         MaleThreshold.Value = (float)MaleThreshold.DefaultValue;
         GenderDiversity.Value = (float)GenderDiversity.DefaultValue;
-        
+
+        ResetVolume();
         ResetSynthesis();
         ResetPhonetic();
         ResetDroning();

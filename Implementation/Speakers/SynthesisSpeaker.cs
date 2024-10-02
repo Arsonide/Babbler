@@ -10,6 +10,7 @@ using FMOD;
 using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
+using Babbler.Implementation.Occlusion;
 using Babbler.Implementation.Synthesis;
 using BepInEx.Logging;
 
@@ -101,6 +102,7 @@ public class SynthesisSpeaker : BaseSpeaker
         
         channel.setPitch(SpeechPitch);
         SetChannelPosition(SpeechSource.position, channel);
+        SetChannelVolume(OcclusionState.NoOcclusion, channel);
         FMODRegistry.TryUpdate();
         
         ActiveChannels.Add(channel);

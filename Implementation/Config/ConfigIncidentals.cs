@@ -56,7 +56,7 @@ public static partial class BabblerConfig
         Utilities.EnforceMinMax(ref IncidentalsMinHiccupChance, ref IncidentalsMaxHiccupChance);
     }
 
-    public static void ResetIncidentals()
+    private static void ResetIncidentals()
     {
         IncidentalsEnabled.Value = (bool)IncidentalsEnabled.DefaultValue;
         IncidentalsRange.Value = (float)IncidentalsRange.DefaultValue;

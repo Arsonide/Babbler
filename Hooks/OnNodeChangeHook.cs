@@ -4,6 +4,7 @@ using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
 using Babbler.Implementation.Emotes;
 using Babbler.Implementation.Hosts;
+using Babbler.Implementation.Occlusion;
 
 namespace Babbler.Hooks;
 
@@ -13,17 +14,22 @@ public class OnNodeChangeHook
     [HarmonyPostfix]
     public static void Postfix(Human __instance)
     {
+        if (__instance.isPlayer)
+        {
+            OcclusionChecker.CachePlayerBounds();
+        }
+        
         if (!BabblerConfig.IncidentalsEnabled.Value)
         {
             return;
         }
         
-        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(__instance, BabblerConfig.IncidentalsRange.Value))
+        if (__instance.drunk < BabblerConfig.IncidentalsMinDrunkForHiccups.Value)
         {
             return;
         }
-
-        if (__instance.drunk < BabblerConfig.IncidentalsMinDrunkForHiccups.Value)
+        
+        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(__instance))
         {
             return;
         }

@@ -63,7 +63,7 @@ public static partial class BabblerConfig
         Utilities.EnforceMinMax(ref EmotesMinFrequencyNonBinary, ref EmotesMaxFrequencyNonBinary);
     }
 
-    public static void ResetEmotes()
+    private static void ResetEmotes()
     {
         EmotesEnabled.Value = (bool)EmotesEnabled.DefaultValue;
         EmotesTheme.Value = (string)EmotesTheme.DefaultValue;

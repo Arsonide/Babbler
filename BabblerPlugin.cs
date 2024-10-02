@@ -7,6 +7,7 @@ using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
 using Babbler.Implementation.Emotes;
 using Babbler.Implementation.Hosts;
+using Babbler.Implementation.Occlusion.Vents;
 using Babbler.Implementation.Synthesis;
 
 namespace Babbler;
@@ -38,7 +39,9 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
         Harmony.PatchAll();
         Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is patched!");
-        ClassInjector.RegisterTypeInIl2Cpp<SpeakerHost>();       
+        ClassInjector.RegisterTypeInIl2Cpp<SpeakerHost>();
+        ClassInjector.RegisterTypeInIl2Cpp<VentTagPeekable>();
+        ClassInjector.RegisterTypeInIl2Cpp<VentTagInteractable>();
         Utilities.Log($"Plugin {MyPluginInfo.PLUGIN_GUID} has added custom types!");
         
         InitializeImmediate();
@@ -94,6 +97,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         }
         
         EmoteSoundRegistry.Initialize();
+        VentRegistry.Initialize();
     }
 
     private void UninitializeImmediate()
@@ -125,5 +129,6 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         }
         
         EmoteSoundRegistry.Uninitialize();
+        VentRegistry.Uninitialize();
     }
 }

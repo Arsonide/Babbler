@@ -23,7 +23,7 @@ public class SetIdleAnimationStateHook
             return;
         }
 
-        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(__instance.cit, BabblerConfig.IncidentalsRange.Value))
+        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(__instance.cit))
         {
             return;
         }

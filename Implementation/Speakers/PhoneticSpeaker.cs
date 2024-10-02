@@ -7,6 +7,7 @@ using Babbler.Implementation.Phonetic;
 using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
+using Babbler.Implementation.Occlusion;
 
 namespace Babbler.Implementation.Speakers;
 
@@ -60,6 +61,7 @@ public class PhoneticSpeaker : BaseSpeaker
 
             channel.setPitch(GetPhonemePitch());
             SetChannelPosition(SpeechSource.position, channel);
+            SetChannelVolume(OcclusionState.NoOcclusion, channel);
             FMODRegistry.TryUpdate();
 
             ActiveChannels.Add(channel);

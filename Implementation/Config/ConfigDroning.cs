@@ -79,7 +79,7 @@ public static partial class BabblerConfig
         Utilities.EnforceMinMax(ref DroningMinFrequencyNonBinary, ref DroningMaxFrequencyNonBinary);
     }
 
-    public static void ResetDroning()
+    private static void ResetDroning()
     {
         DroningValidPhonemes.Value = (string)DroningValidPhonemes.DefaultValue;
         DroningSpeechDelay.Value = (float)DroningSpeechDelay.DefaultValue;

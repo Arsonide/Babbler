@@ -74,7 +74,7 @@ public static partial class BabblerConfig
         Utilities.EnforceMinMax(ref PhoneticMinFrequencyNonBinary, ref PhoneticMaxFrequencyNonBinary);
     }
 
-    public static void ResetPhonetic()
+    private static void ResetPhonetic()
     {
         PhoneticSpeechDelay.Value = (float)PhoneticSpeechDelay.DefaultValue;
         PhoneticChanceDelayVariance.Value = (float)PhoneticChanceDelayVariance.DefaultValue;

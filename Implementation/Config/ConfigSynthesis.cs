@@ -61,7 +61,7 @@ public static partial class BabblerConfig
         Utilities.EnforceMinMax(ref SynthesisMinPitchNonBinary, ref SynthesisMaxPitchNonBinary);
     }
 
-    public static void ResetSynthesis()
+    private static void ResetSynthesis()
     {
         SynthesisVoiceFilter.Value = (SynthesisVoiceFilterType)SynthesisVoiceFilter.DefaultValue;
         SynthesisVoiceFilterInput.Value = (string)SynthesisVoiceFilterInput.DefaultValue;

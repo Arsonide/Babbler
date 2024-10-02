@@ -5,6 +5,7 @@ using Babbler.Implementation.Characteristics;
 using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
 using Babbler.Implementation.Emotes;
+using Babbler.Implementation.Occlusion;
 
 namespace Babbler.Implementation.Speakers;
 
@@ -70,6 +71,7 @@ public class EmoteSpeaker : BaseSpeaker, IDelayableSpeaker
         channel.setPitch(pitchShiftsAllowed ? SpeechPitch : 1f);
         
         SetChannelPosition(SpeechSource.position, channel);
+        SetChannelVolume(OcclusionState.NoOcclusion, channel);
         FMODRegistry.TryUpdate();
 
         ActiveChannels.Add(channel);
@@ -78,8 +80,6 @@ public class EmoteSpeaker : BaseSpeaker, IDelayableSpeaker
 
         while (Time.realtimeSinceStartup < expiration)
         {
-            SetChannelPosition(SpeechSource.position, channel);
-            FMODRegistry.TryUpdate();
             yield return null;
         }
         
@@ -89,7 +89,10 @@ public class EmoteSpeaker : BaseSpeaker, IDelayableSpeaker
     protected override float CacheSpeechPitch(Human speechPerson, string speechInput)
     {
         // While we have a human, use this as an opportunity to choose the SpeechSynthesis voice.
-        _emoteToPlay = EmoteSoundRegistry.GetEmote(speechInput, speechPerson, out VoiceCharacteristics characteristics);
+        if (!EmoteSoundRegistry.TryGetEmote(speechInput, speechPerson, out VoiceCharacteristics characteristics, out _emoteToPlay))
+        {
+            return 1f;
+        }
         
         float minimumFrequency;
         float maximumFrequency;
@@ -110,7 +113,7 @@ public class EmoteSpeaker : BaseSpeaker, IDelayableSpeaker
                 maximumFrequency = BabblerConfig.EmotesMaxFrequencyNonBinary.Value;
                 break;
         }
-
+        
         float frequency = minimumFrequency + (characteristics.Pitch * (maximumFrequency - minimumFrequency));
         return frequency / _emoteToPlay.Frequency;
     }

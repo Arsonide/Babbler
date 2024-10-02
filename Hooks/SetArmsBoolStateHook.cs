@@ -25,7 +25,7 @@ public class SetArmsBoolStateHook
             return true;
         }
         
-        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(__instance.cit, BabblerConfig.IncidentalsRange.Value))
+        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(__instance.cit))
         {
             return true;
         }

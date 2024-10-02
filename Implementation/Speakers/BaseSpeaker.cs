@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMOD;
 using Babbler.Implementation.Common;
+using Babbler.Implementation.Occlusion;
 using BepInEx.Logging;
 
 namespace Babbler.Implementation.Speakers;
@@ -47,16 +48,25 @@ public abstract class BaseSpeaker
     public virtual void UpdateSpeaker()
     {
         Vector3 position = Vector3.zero;
+        
+        OcclusionResult occlusion = OcclusionChecker.CheckOcclusion(SpeechPerson, Player.Instance);
 
-        if (SpeechSource != null)
+        if (!occlusion.AlternativePosition)
         {
-            position = SpeechSource.position;
+            if (SpeechSource != null)
+            {
+                position = SpeechSource.position;
+            }
+            else
+            {
+                Utilities.Log("Babbler speaker had a null SpeechSource, which should not happen!", LogLevel.Debug);
+            }
         }
         else
         {
-            Utilities.Log("Babbler speaker had a null SpeechSource, which should not happen!", LogLevel.Debug);
+            position = occlusion.Position;
         }
-        
+
         bool dirty = false;
         
         for (int i = ActiveChannels.Count - 1; i >= 0; --i)
@@ -66,6 +76,7 @@ public abstract class BaseSpeaker
             if (channel.isPlaying(out bool isPlaying) == RESULT.OK && isPlaying)
             {
                 SetChannelPosition(position, channel);
+                SetChannelVolume(occlusion.State, channel);
                 dirty = true;
             }
             else
@@ -136,6 +147,11 @@ public abstract class BaseSpeaker
         };
 
         channel.set3DAttributes(ref pos, ref vel);
+    }
+    
+    protected void SetChannelVolume(OcclusionState occlusionState, Channel channel)
+    {
+        channel.setVolume(FMODRegistry.GetVolume(SoundContext, occlusionState));
     }
 
     protected virtual void OnLastChannelFinished()

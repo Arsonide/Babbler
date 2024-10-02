@@ -1,6 +1,9 @@
-﻿using FMOD;
+﻿using System;
+using System.Runtime.CompilerServices;
+using FMOD;
 using BepInEx.Logging;
 using Babbler.Implementation.Config;
+using Babbler.Implementation.Occlusion;
 
 namespace Babbler.Implementation.Common;
 
@@ -9,57 +12,20 @@ public static class FMODRegistry
     // All direct interactions with System are done through helper methods so we can log if there are errors.
     private static FMOD.System System;
     
-    private static ChannelGroup ConversationalGroup;
-    private static ChannelGroup OverheardGroup;
+    private static ChannelGroup NormalGroup;
     private static ChannelGroup PhoneGroup;
 
-    private static ChannelGroup ConversationalShoutGroup;
-    private static ChannelGroup OverheardShoutGroup;
-    private static ChannelGroup PhoneShoutGroup;
-    
-    private static ChannelGroup ConversationalEmoteGroup;
-    private static ChannelGroup OverheardEmoteGroup;
-    private static ChannelGroup PhoneEmoteGroup;
-    
     public static void Initialize()
     {
         System = FMODUnity.RuntimeManager.CoreSystem;
-        
-        SetupConversationalGroup();
-        SetupOverheardGroup();
-        SetupPhoneGroup();
-        
+        SetupGroups();
         Utilities.Log("FMODRegistry has initialized!", LogLevel.Debug);
     }
     
-    private static void SetupConversationalGroup()
+    private static void SetupGroups()
     {
-        TryCreateChannelGroup("BabblerConversationalGroup", out ConversationalGroup);
-        TryCreateChannelGroup("BabblerConversationalShoutGroup", out ConversationalShoutGroup);
-        TryCreateChannelGroup("BabblerConversationalEmoteGroup", out ConversationalEmoteGroup);
-        ConversationalGroup.setVolume(BabblerConfig.ConversationalVolume.Value);
-        ConversationalShoutGroup.setVolume(BabblerConfig.ConversationalVolume.Value * BabblerConfig.ConversationalShoutMultiplier.Value);
-        ConversationalEmoteGroup.setVolume(BabblerConfig.ConversationalEmoteVolume.Value);
-    }
-
-    private static void SetupOverheardGroup()
-    {
-        TryCreateChannelGroup("BabblerOverheardGroup", out OverheardGroup);
-        TryCreateChannelGroup("BabblerOverheardShoutGroup", out OverheardShoutGroup);
-        TryCreateChannelGroup("BabblerOverheardEmoteGroup", out OverheardEmoteGroup);
-        OverheardGroup.setVolume(BabblerConfig.OverheardVolume.Value);
-        OverheardShoutGroup.setVolume(BabblerConfig.OverheardVolume.Value * BabblerConfig.OverheardShoutMultiplier.Value);
-        OverheardEmoteGroup.setVolume(BabblerConfig.OverheardEmoteVolume.Value);
-    }
-
-    private static void SetupPhoneGroup()
-    {
+        TryCreateChannelGroup("BabblerNormalGroup", out NormalGroup);
         TryCreateChannelGroup("BabblerPhoneGroup", out PhoneGroup);
-        TryCreateChannelGroup("BabblerPhoneShoutGroup", out PhoneShoutGroup);
-        TryCreateChannelGroup("BabblerPhoneEmoteGroup", out PhoneEmoteGroup);
-        PhoneGroup.setVolume(BabblerConfig.PhoneVolume.Value);
-        PhoneShoutGroup.setVolume(BabblerConfig.PhoneVolume.Value * BabblerConfig.PhoneShoutMultiplier.Value);
-        PhoneEmoteGroup.setVolume(BabblerConfig.PhoneEmoteVolume.Value);
 
         if (!BabblerConfig.DistortPhoneSpeech.Value)
         {
@@ -79,34 +45,6 @@ public static class FMODRegistry
         phoneDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
 
         PhoneGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneDSP);
-        
-        TryCreateDSP(DSP_TYPE.MULTIBAND_EQ, out DSP phoneShoutDSP);
-
-        phoneShoutDSP.setParameterInt((int)DSP_MULTIBAND_EQ.A_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.HIGHPASS_48DB);
-        phoneShoutDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 300f);
-
-        phoneShoutDSP.setParameterInt((int)DSP_MULTIBAND_EQ.B_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.PEAKING);
-        phoneShoutDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_FREQUENCY, 1700f);
-        phoneShoutDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_Q, 1f);
-
-        phoneShoutDSP.setParameterInt((int)DSP_MULTIBAND_EQ.C_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.LOWPASS_48DB);
-        phoneShoutDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
-        
-        PhoneShoutGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneShoutDSP);
-        
-        TryCreateDSP(DSP_TYPE.MULTIBAND_EQ, out DSP phoneEmoteDSP);
-
-        phoneEmoteDSP.setParameterInt((int)DSP_MULTIBAND_EQ.A_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.HIGHPASS_48DB);
-        phoneEmoteDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, 300f);
-
-        phoneEmoteDSP.setParameterInt((int)DSP_MULTIBAND_EQ.B_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.PEAKING);
-        phoneEmoteDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_FREQUENCY, 1700f);
-        phoneEmoteDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.B_Q, 1f);
-
-        phoneEmoteDSP.setParameterInt((int)DSP_MULTIBAND_EQ.C_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.LOWPASS_48DB);
-        phoneEmoteDSP.setParameterFloat((int)DSP_MULTIBAND_EQ.C_FREQUENCY, 3400f);
-
-        PhoneEmoteGroup.addDSP(CHANNELCONTROL_DSP_INDEX.HEAD, phoneEmoteDSP);
     }
 
     public static ChannelGroup GetChannelGroup(SoundContext soundContext)
@@ -114,26 +52,74 @@ public static class FMODRegistry
         switch (soundContext)
         {
             case SoundContext.ConversationalSpeech:
-                return ConversationalGroup;
-            case SoundContext.OverheardSpeech:
-                return OverheardGroup;
-            case SoundContext.PhoneSpeech:
-                return PhoneGroup;
             case SoundContext.ConversationalShout:
-                return ConversationalShoutGroup;
-            case SoundContext.OverheardShout:
-                return OverheardShoutGroup;
-            case SoundContext.PhoneShout:
-                return PhoneShoutGroup;
             case SoundContext.ConversationalEmote:
-                return ConversationalEmoteGroup;
+            case SoundContext.OverheardSpeech:
+            case SoundContext.OverheardShout:
             case SoundContext.OverheardEmote:
-                return OverheardEmoteGroup;
+                return NormalGroup;
+            case SoundContext.PhoneSpeech:
+            case SoundContext.PhoneShout:
             case SoundContext.PhoneEmote:
-                return PhoneEmoteGroup;
-            default:
-                return OverheardGroup;
+                return PhoneGroup;
         }
+        
+        return NormalGroup;
+    }
+
+    public static float GetVolume(SoundContext soundContext, OcclusionState occlusionState)
+    {
+        return GetBaseVolume(soundContext) * GetOcclusionMultiplier(occlusionState);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static float GetBaseVolume(SoundContext soundContext)
+    {
+        switch (soundContext)
+        {
+            case SoundContext.ConversationalSpeech:
+                return BabblerConfig.ConversationalVolume.Value;
+            case SoundContext.ConversationalShout:
+                return BabblerConfig.ConversationalShoutVolume.Value;
+            case SoundContext.ConversationalEmote:
+                return BabblerConfig.ConversationalEmoteVolume.Value;
+            case SoundContext.OverheardSpeech:
+                return BabblerConfig.OverheardVolume.Value;
+            case SoundContext.OverheardShout:
+                return BabblerConfig.OverheardShoutVolume.Value;
+            case SoundContext.OverheardEmote:
+                return BabblerConfig.OverheardEmoteVolume.Value;
+            case SoundContext.PhoneSpeech:
+                return BabblerConfig.PhoneVolume.Value;
+            case SoundContext.PhoneShout:
+                return BabblerConfig.PhoneShoutVolume.Value;
+            case SoundContext.PhoneEmote:
+                return BabblerConfig.PhoneEmoteVolume.Value;
+        }
+        
+        return BabblerConfig.ConversationalVolume.Value;
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static float GetOcclusionMultiplier(OcclusionState occlusionState)
+    {
+        switch (occlusionState)
+        {
+            case OcclusionState.NoOcclusion:
+                return 1f;
+            case OcclusionState.MuffleOpenDoor:
+                return BabblerConfig.OpenDoorOcclusionMultiplier.Value;
+            case OcclusionState.MuffleClosedDoor:
+                return BabblerConfig.ClosedDoorOcclusionMultiplier.Value;
+            case OcclusionState.MuffleVent:
+                return BabblerConfig.VentOcclusionMultiplier.Value;
+            case OcclusionState.DistantOcclusion:
+                return BabblerConfig.DistantOcclusionMultiplier.Value;
+            case OcclusionState.FullOcclusion:
+                return 0f;
+        }
+        
+        return 0f;
     }
     
 #region System Interactions
