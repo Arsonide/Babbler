@@ -98,6 +98,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         
         EmoteSoundRegistry.Initialize();
         VentRegistry.Initialize();
+        TVWatcher.Initialize();
     }
 
     private void UninitializeImmediate()
@@ -130,5 +131,6 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
         
         EmoteSoundRegistry.Uninitialize();
         VentRegistry.Uninitialize();
+        TVWatcher.Uninitialize();
     }
 }

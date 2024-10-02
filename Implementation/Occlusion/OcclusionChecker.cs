@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Babbler.Implementation.Common;
 using Babbler.Implementation.Config;
 using Babbler.Implementation.Occlusion.Vents;
 using UnityEngine;
@@ -26,8 +27,8 @@ public static class OcclusionChecker
             return OcclusionResult.CreateFullOcclusion();
         }
 
-        bool speakerOutside = IsHumanOutside(speaker);
-        bool listenerOutside = IsHumanOutside(listener);
+        bool speakerOutside = Utilities.IsHumanOutside(speaker);
+        bool listenerOutside = Utilities.IsHumanOutside(listener);
         
         // Both outside, all we can do is check distance.
         if (speakerOutside && listenerOutside)
@@ -214,21 +215,6 @@ public static class OcclusionChecker
         return speaker.currentNodeCoord.x >= _occlusionBoundsMin.x && speaker.currentNodeCoord.x <= _occlusionBoundsMax.x &&
                speaker.currentNodeCoord.y >= _occlusionBoundsMin.y && speaker.currentNodeCoord.y <= _occlusionBoundsMax.y &&
                speaker.currentNodeCoord.z >= _occlusionBoundsMin.z && speaker.currentNodeCoord.z <= _occlusionBoundsMax.z;
-    }
-    
-#endregion
-    
-#region Utilities
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsHumanOutside(Human human)
-    {
-        if (human.inAirVent)
-        {
-            return false;
-        }
-        
-        return human.isOnStreet || human.currentNode.isOutside || human.currentRoom.IsOutside();
     }
     
 #endregion

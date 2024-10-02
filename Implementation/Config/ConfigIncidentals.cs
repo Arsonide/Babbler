@@ -16,7 +16,9 @@ public static partial class BabblerConfig
     public static ConfigEntry<float> IncidentalsMaxHiccupChance;
     public static ConfigEntry<float> IncidentalsMinWhistleChance;
     public static ConfigEntry<float> IncidentalsMaxWhistleChance;
-
+    public static ConfigEntry<float> IncidentalsMinTVChance;
+    public static ConfigEntry<float> IncidentalsMaxTVChance;
+    
     private static void InitializeIncidentals(ConfigFile config)
     {
         IncidentalsEnabled = config.Bind("8. Incidentals", "Enabled", true,
@@ -61,10 +63,19 @@ public static partial class BabblerConfig
                                                  new ConfigDescription("The maximum chance for NPCs to whistle while they shower. Set min and max to zero to disable whistling specifically.",
                                                                        new AcceptableValueRange<float>(0f, 1f)));
         
+        IncidentalsMinTVChance = config.Bind("8. Incidentals", "Min TV Chance", 0f,
+                                                  new ConfigDescription("The minimum chance for NPCs to make various noises while watching TV. Set min and max to zero to disable these noises specifically.",
+                                                                        new AcceptableValueRange<float>(0f, 1f)));
+
+        IncidentalsMaxTVChance = config.Bind("8. Incidentals", "Max TV Chance", 0.4f,
+                                                  new ConfigDescription("The maximum chance for NPCs to make various noises while watching TV. Set min and max to zero to disable these noises specifically.",
+                                                                        new AcceptableValueRange<float>(0f, 1f)));
+        
         Utilities.EnforceMinMax(ref IncidentalsMinBurpChance, ref IncidentalsMaxBurpChance);
         Utilities.EnforceMinMax(ref IncidentalsMinFartChance, ref IncidentalsMaxFartChance);
         Utilities.EnforceMinMax(ref IncidentalsMinHiccupChance, ref IncidentalsMaxHiccupChance);
         Utilities.EnforceMinMax(ref IncidentalsMinWhistleChance, ref IncidentalsMaxWhistleChance);
+        Utilities.EnforceMinMax(ref IncidentalsMinTVChance, ref IncidentalsMaxTVChance);
     }
 
     private static void ResetIncidentals()
@@ -80,5 +91,7 @@ public static partial class BabblerConfig
         IncidentalsMaxHiccupChance.Value = (float)IncidentalsMaxHiccupChance.DefaultValue;
         IncidentalsMinWhistleChance.Value = (float)IncidentalsMinWhistleChance.DefaultValue;
         IncidentalsMaxWhistleChance.Value = (float)IncidentalsMaxWhistleChance.DefaultValue;
+        IncidentalsMinTVChance.Value = (float)IncidentalsMinTVChance.DefaultValue;
+        IncidentalsMaxTVChance.Value = (float)IncidentalsMaxTVChance.DefaultValue;
     }
 }

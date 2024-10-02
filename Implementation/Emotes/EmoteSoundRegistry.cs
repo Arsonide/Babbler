@@ -99,4 +99,11 @@ public static class EmoteSoundRegistry
         
         return Utilities.GlobalRandom.NextSingle() <= threshold;
     }
+    
+    public static bool ShouldPlayExtravertedEmote(Human human, float minThreshold, float maxThreshold)
+    {
+        float threshold = Mathf.Lerp(minThreshold, maxThreshold, human.extraversion);
+        
+        return Utilities.GlobalRandom.NextSingle() <= threshold;
+    }
 }

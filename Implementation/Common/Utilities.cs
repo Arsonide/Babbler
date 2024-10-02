@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 using BepInEx.Configuration;
@@ -116,5 +117,16 @@ public static class Utilities
 
             return hash1 + (hash2 * 1566083941);
         }
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsHumanOutside(Human human)
+    {
+        if (human.inAirVent)
+        {
+            return false;
+        }
+        
+        return human.isOnStreet || human.currentNode.isOutside || human.currentRoom.IsOutside();
     }
 }
