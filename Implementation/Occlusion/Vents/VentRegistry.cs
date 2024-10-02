@@ -59,6 +59,8 @@ public static class VentRegistry
     {
         ClearRegistrations();
         _unregisteredTags.Clear();
+        _nearbyVentCoordinates.Clear();
+        _lastNearbyCheck = Vector3Int.zero;
     }
 
     public static void Tick()
@@ -92,8 +94,15 @@ public static class VentRegistry
     
     public static void CacheNearbyVentCoordinates(AirDuctGroup.AirDuctSection playerDuct)
     {
-        Vector3Int nodeCoord = playerDuct.node.nodeCoord;
+        NewNode node = playerDuct?.node;
 
+        if (node == null)
+        {
+            return;
+        }
+        
+        Vector3Int nodeCoord = node.nodeCoord;
+        
         if (nodeCoord == _lastNearbyCheck)
         {
             return;
@@ -103,7 +112,8 @@ public static class VentRegistry
         
         _explorer.Reset();
         _explorer.StartExploration(playerDuct);
-
+        _nearbyVentCoordinates.Clear();
+        
         for (int i = 0, iC = BabblerConfig.OcclusionVentRange.Value; i < iC; ++i)
         {
             List<Vector3Int> ventOpeningCoordinates = _explorer.TickExploration(playerDuct);
