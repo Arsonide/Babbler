@@ -13,33 +13,62 @@ public class SetIdleAnimationStateHook
     [HarmonyPostfix]
     public static void Postfix(CitizenAnimationController __instance, CitizenAnimationController.IdleAnimationState newState)
     {
-        if (newState != CitizenAnimationController.IdleAnimationState.sitting)
+        switch (newState)
         {
-            return;
+            case CitizenAnimationController.IdleAnimationState.sitting:
+                if (ShouldPlayBathroomIncidental(__instance.cit, newState))
+                {
+                    SpeakerHostPool.Emotes.Play("fart", SoundContext.OverheardEmote, __instance.cit);
+                }
+                
+                break;
+            case CitizenAnimationController.IdleAnimationState.showering:
+                if (ShouldPlayBathroomIncidental(__instance.cit, newState))
+                {
+                    SpeakerHostPool.Emotes.Play("whistling", SoundContext.OverheardEmote, __instance.cit);
+                }
+                
+                break;
         }
+    }
 
+    private static bool ShouldPlayBathroomIncidental(Human human, CitizenAnimationController.IdleAnimationState state)
+    {
         if (!BabblerConfig.IncidentalsEnabled.Value)
         {
-            return;
+            return false;
         }
 
-        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(__instance.cit))
+        if (!EmoteSoundRegistry.IsEmoteRelevantBroadphase(human))
         {
-            return;
-        }
-        
-        if (!EmoteSoundRegistry.ShouldPlayUncouthEmote(__instance.cit, BabblerConfig.IncidentalsMinFartChance.Value, BabblerConfig.IncidentalsMaxFartChance.Value))
-        {
-            return;
+            return false;
         }
 
-        string roomName = __instance.cit.currentRoom.roomType.presetName.ToLowerInvariant();
+        switch (state)
+        {
+            case CitizenAnimationController.IdleAnimationState.sitting:
+                if (!EmoteSoundRegistry.ShouldPlayUncouthEmote(human, BabblerConfig.IncidentalsMinFartChance.Value, BabblerConfig.IncidentalsMaxFartChance.Value))
+                {
+                    return false;
+                }
+
+                break;
+            case CitizenAnimationController.IdleAnimationState.showering:
+                if (!EmoteSoundRegistry.ShouldPlayExpressiveEmote(human, BabblerConfig.IncidentalsMinWhistleChance.Value, BabblerConfig.IncidentalsMaxWhistleChance.Value))
+                {
+                    return false;
+                }
+
+                break;
+        }
+
+        string roomName = human.currentRoom.roomType.presetName.ToLowerInvariant();
 
         if (!roomName.Contains("bathroom") && !roomName.Contains("shower"))
         {
-            return;
+            return false;
         }
-        
-        SpeakerHostPool.Emotes.Play("fart", SoundContext.OverheardEmote, __instance.cit);
+
+        return true;
     }
 }

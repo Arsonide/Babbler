@@ -91,4 +91,12 @@ public static class EmoteSoundRegistry
         
         return Utilities.GlobalRandom.NextSingle() <= threshold;
     }
+    
+    public static bool ShouldPlayExpressiveEmote(Human human, float minThreshold, float maxThreshold)
+    {
+        float expressiveness = (human.extraversion + human.creativity) / 2f;
+        float threshold = Mathf.Lerp(minThreshold, maxThreshold, expressiveness);
+        
+        return Utilities.GlobalRandom.NextSingle() <= threshold;
+    }
 }
