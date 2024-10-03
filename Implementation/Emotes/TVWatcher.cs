@@ -98,13 +98,21 @@ public static class TVWatcher
         {
             return;
         }
-        
+
         if (!EmoteSoundRegistry.ShouldPlayExtravertedEmote(occupant, BabblerConfig.IncidentalsMinTVChance.Value, BabblerConfig.IncidentalsMaxTVChance.Value))
         {
             return;
         }
-        
-        SpeakerHostPool.Emotes.Play("chuckle", SoundContext.OverheardEmote, occupant);
+
+        switch (Utilities.GlobalRandom.Next(0, 2))
+        {
+            case 0:
+                SpeakerHostPool.Emotes.Play("chuckle", SoundContext.OverheardEmote, occupant);
+                break;
+            case 1:
+                SpeakerHostPool.Emotes.Play("gasp", SoundContext.OverheardEmote, occupant);
+                break;
+        }
     }
 
     private static bool IsTelevisionOn(NewRoom room)
