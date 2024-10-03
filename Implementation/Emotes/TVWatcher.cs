@@ -84,6 +84,11 @@ public static class TVWatcher
             return;
         }
 
+        if (!EmoteSoundRegistry.CanPlayIncidentals(occupant, true))
+        {
+            return;
+        }
+        
         if (!IsTelevisionOn(occupant.currentRoom))
         {
             return;

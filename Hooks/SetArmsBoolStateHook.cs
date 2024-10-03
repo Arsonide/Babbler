@@ -20,7 +20,7 @@ public class SetArmsBoolStateHook
             return true;
         }
 
-        if (!BabblerConfig.IncidentalsEnabled.Value)
+        if (!EmoteSoundRegistry.CanPlayIncidentals(__instance.cit, true))
         {
             return true;
         }

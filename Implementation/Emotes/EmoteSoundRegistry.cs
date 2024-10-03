@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using BepInEx.Logging;
 using Babbler.Implementation.Characteristics;
@@ -64,6 +65,7 @@ public static class EmoteSoundRegistry
         return true;
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsEmoteRelevantBroadphase(Human human)
     {
         if (!BabblerConfig.EmotesEnabled.Value)
@@ -74,7 +76,24 @@ public static class EmoteSoundRegistry
         OcclusionResult occlusion = OcclusionChecker.CheckOcclusion(human, Player.Instance);
         return occlusion.State != OcclusionState.FullOcclusion;
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool CanPlayIncidentals(Human human, bool mouthVocalization)
+    {
+        if (!BabblerConfig.IncidentalsEnabled.Value)
+        {
+            return false;
+        }
+
+        if (mouthVocalization && human.isSpeaking)
+        {
+            return false;
+        }
+        
+        return !human.isPlayer && !human.isAsleep && !human.isDead && !human.isStunned;
+    }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ShouldPlayUncouthEmote(Human human, float minThreshold, float maxThreshold)
     {
         float conscientiousness = human.conscientiousness;
@@ -92,6 +111,7 @@ public static class EmoteSoundRegistry
         return Utilities.GlobalRandom.NextSingle() <= threshold;
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ShouldPlayExpressiveEmote(Human human, float minThreshold, float maxThreshold)
     {
         float expressiveness = (human.extraversion + human.creativity) / 2f;
@@ -100,6 +120,7 @@ public static class EmoteSoundRegistry
         return Utilities.GlobalRandom.NextSingle() <= threshold;
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ShouldPlayExtravertedEmote(Human human, float minThreshold, float maxThreshold)
     {
         float threshold = Mathf.Lerp(minThreshold, maxThreshold, human.extraversion);

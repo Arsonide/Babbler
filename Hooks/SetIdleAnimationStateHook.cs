@@ -34,7 +34,7 @@ public class SetIdleAnimationStateHook
 
     private static bool ShouldPlayBathroomIncidental(Human human, CitizenAnimationController.IdleAnimationState state)
     {
-        if (!BabblerConfig.IncidentalsEnabled.Value)
+        if (!EmoteSoundRegistry.CanPlayIncidentals(human, state == CitizenAnimationController.IdleAnimationState.showering))
         {
             return false;
         }
