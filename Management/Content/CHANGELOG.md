@@ -2,13 +2,21 @@
 
 ### Latest Release
 **0.9.6**
-- Added emote sound effects, that play when Babbler encounters emote speech like [Sigh] or [Clears Throat]. These come with over 40 sounds and two configurable themes: Realistic and Abstract. You can also add your own themes, instructions are in the readme. They can also be disabled entirely.
+- Added emote sound effects, that play when Babbler encounters emote speech like [Sigh] or [Clears Throat]. These come with over 80 sounds: burps, chuckles, throat clears, coughs, farts, gasps, heavy breathing, hiccups, sighs, sneezes, whistles, and yawns. They come in one theme for now: Realistic. You can also add your own themes, instructions are in the readme. They can also be disabled entirely.
+- Added a comprehensive audio occlusion system for Babbler speech and emote effects. This will adjust the volume and position of sounds coming through walls, doors, etc.
+- Added some incidental emote sound effects that are not associated with dialog, described below.
+- NPCs can now burp while eating, depending on their personality, whether they are home, and their drunkenness.
+- NPCs can now fart in the restroom, depending on their personality, whether they are home, and their drunkenness.
+- NPCs can now hiccup as they walk while drunk.
+- NPCs can now chuckle and gasp while watching TV, depending on their extraversion.
+- NPCs can now whistle in the shower, depending on their extraversion and creativity.
 - Added a JSON file that can do string replacements on certain dialog lines to make them sound better. For example, changing brrr to burr for TTS engines to pronounce better. Instructions for adding your own replacements are in the readme.
 - Configuring Babbler has become complicated, so I've added a Template option in the general settings. Assigning this value will reset all of your settings to one of several presets, like Text To Speech, Animal Crossing, Undertale, or Banjo Kazooie, without you needing to change all the options yourself.
 - Fixed issue with ellipsis (...) causing dialog to not play.
 - When shouting all caps, Babbler now converts the dialog to lower case. It will still play louder, but this will help stop TTS engines from interpreting words like WHO as acronyms.
 - Dialog was quieter than I remember it, so I've tweaked the default volumes a bit.
-- Dependencies have been updated. There will be another patch in a few weeks when 1.0 releases, that recompiles Babbler against the release version of Shadows of Doubt.
+- Dependencies have been updated.
+- Babbler has been recompiled against Shadows of Doubt 1.0.
 
 ---------
 
