@@ -51,23 +51,23 @@ public static partial class BabblerConfig
                                                  new ConfigDescription("The minimum chance for NPCs to hiccup as they walk drunk - smaller because it is evaluated more often. Set min and max to zero to disable hiccups specifically.",
                                                                        new AcceptableValueRange<float>(0f, 1f)));
 
-        IncidentalsMaxHiccupChance = config.Bind("8. Incidentals", "Max Hiccup Chance", 0.25f,
+        IncidentalsMaxHiccupChance = config.Bind("8. Incidentals", "Max Hiccup Chance", 0.2f,
                                                  new ConfigDescription("The maximum chance for NPCs to hiccup as they walk drunk - smaller because it is evaluated more often. Set min and max to zero to disable hiccups specifically.",
                                                                        new AcceptableValueRange<float>(0f, 1f)));
         
-        IncidentalsMinWhistleChance = config.Bind("8. Incidentals", "Min Whistle Chance", 0f,
+        IncidentalsMinWhistleChance = config.Bind("8. Incidentals", "Min Whistle Chance", 0.05f,
                                                  new ConfigDescription("The minimum chance for NPCs to whistle while they shower. Set min and max to zero to disable whistling specifically.",
                                                                        new AcceptableValueRange<float>(0f, 1f)));
 
-        IncidentalsMaxWhistleChance = config.Bind("8. Incidentals", "Max Whistle Chance", 0.4f,
+        IncidentalsMaxWhistleChance = config.Bind("8. Incidentals", "Max Whistle Chance", 0.5f,
                                                  new ConfigDescription("The maximum chance for NPCs to whistle while they shower. Set min and max to zero to disable whistling specifically.",
                                                                        new AcceptableValueRange<float>(0f, 1f)));
         
-        IncidentalsMinTVChance = config.Bind("8. Incidentals", "Min TV Chance", 0f,
+        IncidentalsMinTVChance = config.Bind("8. Incidentals", "Min TV Chance", 0.05f,
                                                   new ConfigDescription("The minimum chance for NPCs to make various noises while watching TV. Set min and max to zero to disable these noises specifically.",
                                                                         new AcceptableValueRange<float>(0f, 1f)));
 
-        IncidentalsMaxTVChance = config.Bind("8. Incidentals", "Max TV Chance", 0.4f,
+        IncidentalsMaxTVChance = config.Bind("8. Incidentals", "Max TV Chance", 0.5f,
                                                   new ConfigDescription("The maximum chance for NPCs to make various noises while watching TV. Set min and max to zero to disable these noises specifically.",
                                                                         new AcceptableValueRange<float>(0f, 1f)));
         
