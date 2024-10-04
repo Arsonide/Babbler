@@ -14,8 +14,17 @@ public static class OcclusionChecker
 
 #region Occlusion
     
-    public static OcclusionResult CheckOcclusion(Human speaker, Human listener)
+    public static OcclusionResult CheckOcclusion(Human speaker, Human listener, SoundContext context)
     {
+        // The phone is right in front of us, don't do occlusion checks to a person on the other side of the city.
+        switch (context)
+        {
+            case SoundContext.PhoneSpeech:
+            case SoundContext.PhoneShout:
+            case SoundContext.PhoneEmote:
+                return OcclusionResult.CreateNoOcclusion();
+        }
+        
         if (!BabblerConfig.OcclusionEnabled.Value)
         {
             return OcclusionResult.CreateNoOcclusion();

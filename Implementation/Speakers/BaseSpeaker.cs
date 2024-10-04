@@ -49,7 +49,7 @@ public abstract class BaseSpeaker
     {
         Vector3 position = Vector3.zero;
         
-        OcclusionResult occlusion = OcclusionChecker.CheckOcclusion(SpeechPerson, Player.Instance);
+        OcclusionResult occlusion = OcclusionChecker.CheckOcclusion(SpeechPerson, Player.Instance, SoundContext);
 
         if (!occlusion.AlternativePosition)
         {

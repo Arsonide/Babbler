@@ -73,7 +73,8 @@ public static class EmoteSoundRegistry
             return false;
         }
 
-        OcclusionResult occlusion = OcclusionChecker.CheckOcclusion(human, Player.Instance);
+        // This method is only used from hooks for incidentals, that would mean the player was not on the phone or speaking directly with them.
+        OcclusionResult occlusion = OcclusionChecker.CheckOcclusion(human, Player.Instance, SoundContext.OverheardEmote);
         return occlusion.State != OcclusionState.FullOcclusion;
     }
 
