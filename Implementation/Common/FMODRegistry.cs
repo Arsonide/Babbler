@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Babbler.Hooks;
 using FMOD;
 using BepInEx.Logging;
 using Babbler.Implementation.Config;
@@ -69,7 +70,8 @@ public static class FMODRegistry
 
     public static float GetVolume(SoundContext soundContext, OcclusionState occlusionState)
     {
-        return GetBaseVolume(soundContext) * GetOcclusionMultiplier(occlusionState);
+        float babblerVolume = GetBaseVolume(soundContext) * GetOcclusionMultiplier(occlusionState);
+        return VolumeCacheHook.MasterVolume * VolumeCacheHook.OtherVolume * babblerVolume;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -1,4 +1,5 @@
-﻿using Il2CppInterop.Runtime.Injection;
+﻿using Babbler.Hooks;
+using Il2CppInterop.Runtime.Injection;
 using BepInEx;
 using BepInEx.Logging;
 using SOD.Common.BepInEx;
@@ -96,6 +97,7 @@ public class BabblerPlugin : PluginController<BabblerPlugin>
                 break;
         }
         
+        VolumeCacheHook.Initialize();
         EmoteSoundRegistry.Initialize();
         VentRegistry.Initialize();
         TVWatcher.Initialize();

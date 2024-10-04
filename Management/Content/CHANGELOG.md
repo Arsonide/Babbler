@@ -14,6 +14,7 @@
 - Configuring Babbler has become complicated, so I've added a Template option in the general settings. Assigning this value will reset all of your settings to one of several presets, like Text To Speech, Animal Crossing, Undertale, or Banjo Kazooie, without you needing to change all the options yourself.
 - Fixed issue with ellipsis (...) causing dialog to not play.
 - When shouting all caps, Babbler now converts the dialog to lower case. It will still play louder, but this will help stop TTS engines from interpreting words like WHO as acronyms.
+- Babbler sounds are now affected by the Master SFX slider and the Other SFX slider in the options screen.
 - Dialog was quieter than I remember it, so I've tweaked the default volumes a bit.
 - Dependencies have been updated.
 - Babbler has been recompiled against Shadows of Doubt 1.0.
