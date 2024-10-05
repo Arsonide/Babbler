@@ -27,25 +27,25 @@ public static partial class BabblerConfig
 
     private static void InitializeVolume(ConfigFile config)
     {
-        ConversationalVolume = config.Bind("3. Volume", "Conversational Volume", 1.75f,
+        ConversationalVolume = config.Bind("3. Volume", "Conversational Volume", 1.8f,
                                            new ConfigDescription("How loud voices will be when you are speaking directly to a person."));
         
         ConversationalShoutVolume = config.Bind("3. Volume", "Conversational Shout Volume", 5f,
                                            new ConfigDescription("How loud shouts in all caps will be when you are speaking directly to a person."));
         
-        ConversationalEmoteVolume = config.Bind("3. Volume", "Conversational Emotes Volume", 1.75f,
+        ConversationalEmoteVolume = config.Bind("3. Volume", "Conversational Emotes Volume", 1.8f,
                                                 new ConfigDescription("How loud emote sound effects will be when you are speaking directly to a person."));
         
-        OverheardVolume = config.Bind("3. Volume", "Overheard Volume", 0.75f,
+        OverheardVolume = config.Bind("3. Volume", "Overheard Volume", 1.2f,
                                       new ConfigDescription("How loud voices that you overhear nearby will be when you are not talking directly to them."));
         
         OverheardShoutVolume = config.Bind("3. Volume", "Overheard Shout Volume", 5f,
                                       new ConfigDescription("How loud shouts in all caps that you overhear nearby will be when you are not talking directly to them."));
         
-        OverheardEmoteVolume = config.Bind("3. Volume", "Overheard Emotes Volume", 1.25f,
+        OverheardEmoteVolume = config.Bind("3. Volume", "Overheard Emotes Volume", 1.2f,
                                            new ConfigDescription("How loud emote sound effects that you overhear nearby will be when you are not talking directly to them."));
 
-        PhoneVolume = config.Bind("3. Volume", "Phone Volume", 1.25f,
+        PhoneVolume = config.Bind("3. Volume", "Phone Volume", 1.5f,
                                   new ConfigDescription("How loud voices will be when you are talking with a person over the phone."));
         
         PhoneShoutVolume = config.Bind("3. Volume", "Phone Shout Volume", 5f,
@@ -60,7 +60,7 @@ public static partial class BabblerConfig
         ClosedDoorOcclusionMultiplier = config.Bind("3. Volume", "Closed Door Occlusion Multiplier", 0.3f,
                                                   new ConfigDescription("When sounds go through a closed door, multiply their volume by this."));
         
-        VentOcclusionMultiplier = config.Bind("3. Volume", "Vent Occlusion Multiplier", 0.6f,
+        VentOcclusionMultiplier = config.Bind("3. Volume", "Vent Occlusion Multiplier", 0.5f,
                                                   new ConfigDescription("When sounds go through vent grating, multiply their volume by this."));
         
         DistantOcclusionMultiplier = config.Bind("3. Volume", "Distant Occlusion Multiplier", 0.1f,
