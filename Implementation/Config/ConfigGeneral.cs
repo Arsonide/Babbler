@@ -136,33 +136,65 @@ public static partial class BabblerConfig
         Reset();
 
         const string REALISTIC = "Realistic";
-        const string ABSTRACT = "Abstract";
+        // const string ABSTRACT = "Abstract";
         
         switch (templateCache)
         {
             case ConfigTemplate.TextToSpeech:
                 Mode.Value = SpeechMode.Synthesis;
-                EmotesTheme.Value = REALISTIC;
                 break;
             case ConfigTemplate.AnimalCrossing:
                 Mode.Value = SpeechMode.Phonetic;
-                EmotesTheme.Value = ABSTRACT;
                 break;
             case ConfigTemplate.Undertale:
                 Mode.Value = SpeechMode.Droning;
-                EmotesTheme.Value = ABSTRACT;
                 break;
             case ConfigTemplate.Minions:
                 Mode.Value = SpeechMode.Phonetic;
-                EmotesTheme.Value = ABSTRACT;
                 PhoneticChancePitchVariance.Value = 1f;
                 WidenPitchVarianceRange(1.5f, ref PhoneticMinPitchVariance, ref PhoneticMaxPitchVariance);
                 break;
             case ConfigTemplate.BanjoKazooie:
                 Mode.Value = SpeechMode.Droning;
-                EmotesTheme.Value = ABSTRACT;
                 DroningChancePitchVariance.Value = 1f;
                 WidenPitchVarianceRange(1.5f, ref DroningMinPitchVariance, ref DroningMaxPitchVariance);
+                break;
+        }
+
+        switch (Mode.Value)
+        {
+            case SpeechMode.Synthesis:
+                EmotesTheme.Value = REALISTIC;
+                
+                ConversationalVolume.Value = 1.8f;
+                ConversationalShoutVolume.Value = 5f;
+                ConversationalEmoteVolume.Value = 1.8f;
+                
+                OverheardVolume.Value = 1.2f;
+                OverheardShoutVolume.Value = 5f;
+                OverheardEmoteVolume.Value = 1.2f;
+
+                PhoneVolume.Value = 1.5f;
+                PhoneShoutVolume.Value = 5f;
+                PhoneEmoteVolume.Value = 1.5f;
+                
+                break;
+            case SpeechMode.Phonetic:
+            case SpeechMode.Droning:
+                EmotesTheme.Value = REALISTIC; // TODO - Make abstract when that theme exists.
+                
+                ConversationalVolume.Value = 1.19f;
+                ConversationalShoutVolume.Value = 3.31f;
+                ConversationalEmoteVolume.Value = 1.19f;
+                
+                OverheardVolume.Value = 0.79f;
+                OverheardShoutVolume.Value = 3.31f;
+                OverheardEmoteVolume.Value = 0.79f;
+
+                PhoneVolume.Value = 0.99f;
+                PhoneShoutVolume.Value = 3.31f;
+                PhoneEmoteVolume.Value = 0.99f;
+                
                 break;
         }
     }
