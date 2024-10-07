@@ -3,6 +3,7 @@
 ### Latest Release
 **0.9.6**
 - Added emote sound effects, that play when Babbler encounters emote speech like [Sigh] or [Clears Throat]. These come with over 80 sounds: burps, chuckles, throat clears, coughs, farts, gasps, heavy breathing, hiccups, sighs, sneezes, whistles, and yawns. They come in one theme for now: Realistic. You can also add your own themes, instructions are in the readme. They can also be disabled entirely.
+- Abstract emotes that sound more like Animal Crossing or Oxygen Not Included will be coming in a future patch for those templates.
 - Added a comprehensive audio occlusion system for Babbler speech and emote effects. This will adjust the volume and position of sounds coming through walls, doors, etc.
 - Added some incidental emote sound effects that are not associated with dialog, described below.
 - NPCs can now burp while eating, depending on their personality, whether they are home, and their drunkenness.

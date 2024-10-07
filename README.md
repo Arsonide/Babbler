@@ -46,21 +46,16 @@ In r2modman you should see "Config editor" on the left, in the "Other" section. 
 
 > Also note that the config starts with "AAAA". The reason for this is that it forces Babbler to initialize before other mods, which it needs to do.
 
-There are three modes in Babbler:
-* **Synthesis**: Uses text to speech to audibly produce intelligible speech.
-* **Phonetic**: Plays phonemes in sequence, and sounds a bit like Animal Crossing speech.
-* **Droning**: Plays one phoneme repetitively, and sounds a bit like Undertale speech.
-
-All three of these modes have extensive configuration options, but sensible defaults, meaning if you just want to get into the game, you only need to change one setting: **Mode**. You will find **Mode** in the **General** section of the configuration panel in r2modman. Just set it to one of these three options and save your configuration. All of the other settings have been set up for you.
-
-You can also configure Babbler to sound like specific games by assigning **Template** in the **General** section. This exists to simplify configuration, and when it is assigned, the next time Babbler launches it will discard any other existing settings and configure many settings in Babbler for you, to sound like specific games. **Template** must be assigned to one of the following values to do this for you:
-- **TextToSpeech**: This is the default Babbler ships with.
+Babbler has a setting that exists to simplify configuration - by modifying one setting you can have Babbler mimic a wide range of games and multimedia speech patterns. You do this by assigning **Template** in the **General** section. When it is assigned, the next time Babbler launches it will discard any other existing settings and configure many settings in Babbler for you. **Template** must be assigned to one of the following values to do this for you:
+- **TextToSpeech**: This is the default Babbler ships with. NPCs will speak with text to speech engines you have installed.
 - **AnimalCrossing**: This configures Babbler to have gibberish speech formed out of phonemes, like Animal Crossing.
 - **Undertale**: This configures Babbler to have gibberish speech formed out of repetitive phonemes, like Undertale.
 - **Minions**: This is phonemes like Animal Crossing, but they have wider tonal shifts, making them sound more "musical", like Minions from Despicable Me.
 - **BanjoKazooie**: This is droning like Undertale, but they have wider tonal shifts, making them sound more "musical", like in Banjo Kazooie.
 
 > In case you missed it, assigning Template will DISCARD ANY OTHER CONFIGURATION OPTIONS the next time you launch the game. It's like loading a profile. After it loads that profile, it will reset back to "None", allowing you to further configure Babbler if you want to dive into the advanced settings below.
+
+When you are done modifying the **Template** value remember to save by clicking "Save" on the top right. You'll also need to do this if you modify any other settings (which are listed below).
 
 ### Configuration (Advanced)
 
@@ -71,7 +66,10 @@ You will find a ton of other settings in the configuration panel to tweak how NP
 ---
 #### 1. General
 - **General - Enabled**: Another method of enabling and disabling Babbler.
-- **General - Mode**: Determines whether citizens will talk with text to speech synthesis, phonetic sounds, or monosyllabic droning.
+- **General - Mode**: Selects the mode Babbler uses to speak, each one has its own configuration settings (listed below) with sensible defaults.
+    * **Synthesis**: Uses text to speech to audibly produce intelligible speech.
+    * **Phonetic**: Plays phonemes in sequence, and sounds a bit like Animal Crossing speech.
+    * **Droning**: Plays one phoneme repetitively, and sounds a bit like Undertale speech.
 - **General - Template**: If this anything other than None, the next time you launch the game, settings will be reset and many adjusted to match that template.
 - **General - Version**: Babbler uses this to reset your configuration between major versions. Don't modify it or it will reset your configuration!
 - **General - Distort Phone Speech**: When enabled, a band pass is applied to phones to make them sound a little tinnier, like phones.
