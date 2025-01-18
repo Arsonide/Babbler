@@ -9,6 +9,9 @@ public static partial class BabblerConfig
     public static ConfigEntry<SynthesisVoiceFilterType> SynthesisVoiceFilter;
     public static ConfigEntry<string> SynthesisVoiceFilterInput;
 
+    public static ConfigEntry<string> SynthesisVoiceLocaleFilter;
+    public static ConfigEntry<bool> SynthesisDebugVoiceName;
+
     public static ConfigEntry<int> SynthesisMinSpeed;
     public static ConfigEntry<int> SynthesisMaxSpeed;
     
@@ -28,6 +31,12 @@ public static partial class BabblerConfig
 
         SynthesisVoiceFilterInput = config.Bind("4. Synthesis", "Voice Filter", string.Empty,
                                                 new ConfigDescription("If filter type is set to blacklist or whitelist, this is where you put the names you want to filter for in, separated by semicolons. The names are case-insensitive and flexible, so \"david\" matches \"Microsoft David\", etc."));
+
+        SynthesisVoiceLocaleFilter = config.Bind("4. Synthesis", "Voice Language Filter", "en",
+                                                  new ConfigDescription("A semicolon-separated list of voice locales to use."));
+
+        SynthesisDebugVoiceName = config.Bind("4. Synthesis", "Debug Voice Name", false,
+                                              new ConfigDescription("If true, all speakers will say what voice they're using when they speak."));
 
         SynthesisMinSpeed = config.Bind("4. Synthesis", "Min Speed", -2,
                                         new ConfigDescription("Lowest possible speed for speech. Zero being the standard speed.",
@@ -65,6 +74,8 @@ public static partial class BabblerConfig
     {
         SynthesisVoiceFilter.Value = (SynthesisVoiceFilterType)SynthesisVoiceFilter.DefaultValue;
         SynthesisVoiceFilterInput.Value = (string)SynthesisVoiceFilterInput.DefaultValue;
+        SynthesisVoiceLocaleFilter.Value = (string)SynthesisVoiceLocaleFilter.DefaultValue;
+        SynthesisDebugVoiceName.Value = (bool)SynthesisDebugVoiceName.DefaultValue;
         SynthesisMinSpeed.Value = (int)SynthesisMinSpeed.DefaultValue;
         SynthesisMaxSpeed.Value = (int)SynthesisMaxSpeed.DefaultValue;
         SynthesisMinPitchMale.Value = (float)SynthesisMinPitchMale.DefaultValue;

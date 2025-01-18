@@ -3,7 +3,7 @@
     "website_url": "https://github.com/Arsonide/Babbler",
     "description": "Gives NPCs audible voices when they talk in Shadows of Doubt.",
     "dependencies": [
-        "Venomaus-SODCommon-2.0.5"
+        "Venomaus-SODCommon-2.0.6"
     ],
     "version_number": "0.9.6"
 }

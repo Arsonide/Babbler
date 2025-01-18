@@ -21,6 +21,7 @@ public static class SynthesisVoiceRegistry
     private static List<string> NonBinaryVoices = new List<string>();
     private static List<string> AllVoices = new List<string>();
     private static List<string> VoiceFilterInput = new List<string>();
+    private static List<string> VoiceLocaleFilter = new List<string>();
 
     private static readonly List<string>[] VoicePriorities = new List<string>[4];
     
@@ -40,6 +41,7 @@ public static class SynthesisVoiceRegistry
         AllVoices.Clear();
 
         SetupVoiceFilterInput();
+        SetupVoiceLocaleFilter();
         SpeechSynthesizer synthesizer = new SpeechSynthesizer();
 
         try
@@ -58,7 +60,7 @@ public static class SynthesisVoiceRegistry
 
         foreach (InstalledVoice voice in synthesizer.GetInstalledVoices())
         {
-            if (!PassesVoiceFilterInput(voice))
+            if (!PassesVoiceFilters(voice))
             {
                 continue;
             }
@@ -128,6 +130,28 @@ public static class SynthesisVoiceRegistry
         VoiceFilterInput.Clear();
         string input = BabblerConfig.SynthesisVoiceFilterInput.Value.ToLowerInvariant();
         VoiceFilterInput.AddRange(input.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+    }
+
+    private static void SetupVoiceLocaleFilter()
+    {
+        VoiceLocaleFilter.Clear();
+        string input = BabblerConfig.SynthesisVoiceLocaleFilter.Value.ToLowerInvariant();
+        VoiceLocaleFilter.AddRange(input.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+    }
+
+    private static bool PassesVoiceFilters(InstalledVoice voice)
+    {
+        if (!PassesVoiceLocaleFilter(voice)) return false;
+        return PassesVoiceFilterInput(voice);
+    }
+
+    private static bool PassesVoiceLocaleFilter(InstalledVoice voice)
+    {
+        foreach(string filter in VoiceLocaleFilter)
+        {
+            if (voice.VoiceInfo.Culture.Name.ToLowerInvariant().Contains(filter)) return true;
+        }
+        return false;
     }
 
     private static bool PassesVoiceFilterInput(InstalledVoice voice)

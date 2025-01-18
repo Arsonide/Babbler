@@ -62,6 +62,11 @@ public class SynthesisSpeaker : BaseSpeaker
 
     public override void StartSpeaker(string speechInput, SoundContext soundContext, Human speechPerson)
     {
+        if (BabblerConfig.SynthesisDebugVoiceName.Value)
+        {
+            speechInput = _synthesizer.Voice.Name + ": " + speechInput;
+        }
+
         base.StartSpeaker(speechInput, soundContext, speechPerson);
 
         _synthesizer.SpeakCompleted -= OnSpeakCompleted;
