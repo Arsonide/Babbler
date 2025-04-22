@@ -90,5 +90,6 @@ public class SpeakerHost : MonoBehaviour
     private void OnFinishedSpeaking()
     {
         Pool.ReleaseSpeakerHost(this);
+        Speaker.isSpeaking = false;
     }
 }

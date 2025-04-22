@@ -38,7 +38,7 @@ public class SpeakerHostPool
         SpeechMode = speechMode;
     }
     
-    public void Play(string speechInput, SoundContext soundContext, Human speechPerson, float delay = 0f)
+    public SpeakerHost Play(string speechInput, SoundContext soundContext, Human speechPerson, float delay = 0f)
     {
         SpeakerHost speakerHost = GetSpeakerHost();
         
@@ -48,6 +48,7 @@ public class SpeakerHostPool
         }
         
         speakerHost.Speaker.StartSpeaker(speechInput, soundContext, speechPerson);
+        return speakerHost;
     }
     
     private SpeakerHost GetSpeakerHost()

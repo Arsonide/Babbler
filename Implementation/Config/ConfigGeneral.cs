@@ -16,6 +16,7 @@ public static partial class BabblerConfig
     public static ConfigEntry<bool> Enabled;
     public static ConfigEntry<SpeechMode> Mode;
     public static ConfigEntry<ConfigTemplate> Template;
+    public static ConfigEntry<bool> NarrateActions;
 
     public static ConfigEntry<bool> DistortPhoneSpeech;
 
@@ -41,6 +42,9 @@ public static partial class BabblerConfig
 
         DistortPhoneSpeech = config.Bind("1. General", "Distort Phone Speech", true,
                                          new ConfigDescription("When enabled, a band pass is applied to phones to make them sound a little tinnier, like phones."));
+
+        NarrateActions = config.Bind("1. General", "Narrate Actions", false,
+                      new ConfigDescription("If set to true, Babbler will speak non-verbal action text (e.g. *smiles*)"));
 
         FemaleThreshold = config.Bind("2. Gender", "Female Threshold", 0.49f,
                                       new ConfigDescription("Increase for more female voices, decrease for less, defaults to what the stock game uses for citizens.",

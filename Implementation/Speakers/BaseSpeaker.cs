@@ -18,7 +18,9 @@ public abstract class BaseSpeaker
     protected float SpeechPitch { get; private set; }
 
     protected readonly List<Channel> ActiveChannels = new List<Channel>();
-    
+
+    public bool isSpeaking = false;
+
     public virtual void InitializeSpeaker()
     {
         
@@ -32,6 +34,7 @@ public abstract class BaseSpeaker
     public virtual void StopSpeaker()
     {
         ActiveChannels.Clear();
+        isSpeaking = false;
     }
 
     public virtual void StartSpeaker(string speechInput, SoundContext soundContext, Human speechPerson)
@@ -43,6 +46,8 @@ public abstract class BaseSpeaker
 
         SpeechSource = CacheSpeechSource(soundContext, speechPerson);
         SpeechPitch = CacheSpeechPitch(speechPerson, speechInput);
+
+        isSpeaking = true;
     }
 
     public virtual void UpdateSpeaker()

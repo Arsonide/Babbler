@@ -5,6 +5,10 @@ using Babbler.Implementation.Config;
 using Babbler.Implementation.Emotes;
 using Babbler.Implementation.Hosts;
 using UnityEngine;
+using System.Collections;
+using BepInEx;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Babbler.Hooks;
 
@@ -81,8 +85,102 @@ public class SpeechBubbleControllerHook
         }
         else
         {
-            SpeakerHostPool.Speech.Play(speechInput, soundContext, anyHuman);
+            UniverseLib.RuntimeHelper.StartCoroutine(SpeechLoop(__instance, soundContext, anyHuman));
         }
+    }
+
+    /// <summary>
+    /// This method assumes that content is being streamed into the speech bubble in real-time and checks every n seconds for new content.
+    /// </summary>
+    /// <param name="speechBubble"></param>
+    /// <param name="soundContext"></param>
+    /// <param name="anyHuman"></param>
+    /// <param name="checkFrequency"></param>
+    /// <param name="timeout"></param>
+    /// <returns></returns>
+    public static IEnumerator SpeechLoop(SpeechBubbleController speechBubble, SoundContext soundContext, Human anyHuman, float timeout = 5f)
+    {
+        // These variables persist between checks
+        SpeakerHost currentSpeaker = null;
+        int lastSpokenIndex = -1;
+        char[] sentenceDelimiters = { '.', ';', '?', '!', "\n"[0] };
+        char nonverbalDelimiter = '*'; // for denoting actions rather than spoken dialogue, since LLMs love to throw these in
+        float timeSpentWaitingToSpeak = 0, checkFrequency = 0.1f;
+        bool narrateNonverbal = BabblerConfig.NarrateActions.Value;
+
+
+        while (timeSpentWaitingToSpeak < timeout)
+        {
+            yield return new WaitForSeconds(checkFrequency);
+            if (currentSpeaker != null && currentSpeaker.Speaker.isSpeaking)
+                continue;
+            timeSpentWaitingToSpeak += checkFrequency;
+
+            // if the speech bubble is empty or is placeholder text, then we're waiting for streaming to start
+            if (speechBubble.actualString.Length == 0
+                || (speechBubble.actualString.Length > 0 && speechBubble.actualString.Replace(" . ","").IsNullOrWhiteSpace()))
+            {
+                continue;
+            }
+
+            string textToParse =  speechBubble.actualString;
+            string speechInput = "";
+            bool sentenceCompleted = false;
+            int nonverbalCount = 0;
+            int sentenceStart = 0, sentenceEnd = -1;
+
+            //Step 1: replace rich text tags (e.g. <color=#ffffff>) -- SmartCitizens will try to format nonverbal actions this way
+            var rgx = new Regex("<.+?>");
+            textToParse = rgx.Replace(textToParse, nonverbalDelimiter.ToString());
+            //condense tags
+            rgx = new Regex($"\\{nonverbalDelimiter}+");
+            textToParse = rgx.Replace(textToParse, nonverbalDelimiter.ToString());
+
+            //Step 2: iterate over each character in the remaining text until we hit a sentence delimiter
+            for (int index = 0; index < textToParse.Length; index++)
+            {
+                char c = textToParse[index];
+
+                if (nonverbalCount % 2 == 0                // i.e. outside nonverbal section
+                    && (sentenceDelimiters.Contains(c))   // we've hit a sentence ender
+                    && index > lastSpokenIndex)          // this prevents repeating the same sentences
+                {
+                    sentenceCompleted = true;
+                    sentenceEnd = index;
+                    speechInput = textToParse.Substring(sentenceStart, sentenceEnd - sentenceStart + 1);
+                    // Debug.Log($"To speak:{speechInput}");
+                    break;
+                }
+                // restart sentence if...
+                else if (!narrateNonverbal && c == nonverbalDelimiter) // ...beginning of nonverbal section
+                {
+                    nonverbalCount++;
+                    sentenceStart = index+1;
+                }
+                else if (nonverbalCount % 2 == 1) // ...inside nonverbal section
+                {
+                    sentenceStart = index+1;
+                }
+                else if(sentenceDelimiters.Contains(c)) // ...this is a sentence delimiter, but the sentence didn't qualify
+                {
+                    sentenceStart = index+1;
+                }
+            }
+
+            //Step 3: Speak the new sentence
+            if (sentenceCompleted)
+            {
+                lastSpokenIndex = sentenceEnd;
+                if (!speechInput.IsNullOrWhiteSpace())
+                {
+                    speechInput = speechInput.Replace(nonverbalDelimiter.ToString(), ""); // avoids saying 'asterisk' when narrating
+                    currentSpeaker = SpeakerHostPool.Speech.Play(speechInput, soundContext, anyHuman);
+                    timeSpentWaitingToSpeak = 0;
+                }
+            }
+            
+        }
+        
     }
 
     private static SoundContext GetSoundContext(string speechInput, bool isEmote, Human speakingHuman, Human telephoneHuman, SpeechController speechController)
